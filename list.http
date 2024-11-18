@@ -1,0 +1,65 @@
+GET https://api.intra.42.fr/v2/messages?page[number]=1 HTTP/1.1
+# Questa è una richiesta GET all'API di 42 per ottenere i messaggi.
+# La richiesta specifica che vogliamo la pagina 1 dei risultati.
+
+Cache-Control: max-age=0, private, must-revalidate
+# Questa intestazione indica che la risposta non deve essere memorizzata nella cache.
+
+Content-Type: application/json; charset=utf-8
+# Questo indica che il corpo della risposta sarà in formato JSON con codifica UTF-8.
+
+ETag: W/"b326132feb08f61b7de85a13ca83f264"
+# L'ETag è un identificatore univoco per la versione della risorsa. Può essere usato per la cache.
+
+Link: <https://api.intra.42.fr/v2/messages?page=1>; rel="first",
+<https://api.intra.42.fr/v2/messages?page=1>; rel="prev",
+<https://api.intra.42.fr/v2/messages?page=586>; rel="last",
+<https://api.intra.42.fr/v2/messages?page=3>; rel="next"
+# Questa intestazione contiene i link per la paginazione dei risultati.
+# "first" indica la prima pagina, "prev" la pagina precedente,
+# "next" la pagina successiva e "last" l'ultima pagina disponibile.
+
+Transfer-Encoding: chunked
+# Questa intestazione indica che il corpo della risposta sarà inviato in più parti (chunked).
+
+Vary: Origin
+# Indica che il comportamento della risposta può variare a seconda dell'origine della richiesta.
+
+X-Application-Id: 318
+# ID dell'applicazione che ha effettuato la richiesta.
+
+X-Application-Name: test-app
+# Nome dell'applicazione che ha effettuato la richiesta.
+
+X-Application-Roles: None
+# Ruoli associati all'applicazione, se presenti.
+
+X-Content-Type-Options: nosniff
+# Questo indica ai browser di non tentare di indovinare il tipo di contenuto.
+
+X-Frame-Options: SAMEORIGIN
+# Questo protegge dalla visualizzazione della pagina in un iframe da un'altra origine.
+
+X-Meta-Request-Version: 0.4.0
+# Versione della richiesta meta.
+
+X-Page: 2
+# Indica che la risposta è per la pagina 2 dei risultati.
+
+X-Per-Page: 30
+# Indica quanti risultati sono inclusi in ogni pagina.
+
+X-Rack-CORS: preflight-hit; no-origin
+# Questo è un'intestazione per gestire le richieste CORS (Cross-Origin Resource Sharing).
+
+X-Request-Id: c763e95e-95a6-4307-88da-f441038be349
+# Un identificatore univoco per la richiesta, utile per il tracciamento.
+
+X-Runtime: 0.278242
+# Tempo impiegato per elaborare la richiesta, in secondi.
+
+X-Total: 17570
+# Il numero totale di messaggi disponibili.
+
+X-XSS-Protection: 1; mode=block
+# Questo attiva la protezione XSS (Cross-Site Scripting) nel browser.
