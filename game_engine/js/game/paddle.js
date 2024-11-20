@@ -97,7 +97,7 @@ export class Paddle {
         else
             this.y += distance;
         // Limita il movimento della racchetta all'interno dello schermo
-        this.speed = canvas.height * 0.0020;
+        this.speed = canvas.height * 0.0060;
         if (this.y < 0)
             this.y = 0;   
         if (this.y + this.height > window.innerHeight)

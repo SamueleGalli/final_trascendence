@@ -102,6 +102,7 @@ export class AI {
 
     togglePause() {
         if (this.gamePaused) {
+            this.gamePaused = true;
             this.ui.startCountdown();
         }
         else {

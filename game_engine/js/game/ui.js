@@ -52,9 +52,9 @@ export class UI {
     }
 
     startCountdown() {
-        if (game.backToGameTimer || !game.gamePaused) {
+        /*if (game.backToGameTimer || !game.gamePaused) {
             return;
-        }
+        }*/
         game.backToGameTimer = true;
         this.countdownValue = 3;
         
@@ -64,11 +64,11 @@ export class UI {
             this.countdownValue -= 1;
 
             if (this.countdownValue <= 0) {
+                console.log("end countdown");
                 clearInterval(countdownInterval);
                 //this.ball.reset(1);
                 game.gamePaused = false;
                 game.backToGameTimer = false;
-                
             }
         }, 500);
     }
