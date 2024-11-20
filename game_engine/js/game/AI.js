@@ -6,7 +6,7 @@ import { Star } from './star.js';
 import { Particle } from './particle.js';
 
 // Main class
-export class Game {
+export class AI {
     constructor() {
         this.canvas = canvas;
         this.ctx = ctx;
@@ -15,9 +15,9 @@ export class Game {
         this.wallThickness = 10;
         this.ball = new Ball(canvas.width / 2, canvas.height / 2);
         this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
-        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown');
+        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, null, null);
         this.p1Name = "Player1"; 
-        this.p2Name = "Player2";
+        this.p2Name = "AI";
         this.ui = new UI(this.p1Name, this.p2Name);
         this.stars = [];
         this.createStarsBackground(100);
@@ -34,14 +34,12 @@ export class Game {
     addEventListeners() {
         document.addEventListener('keydown', (event) => {
             this.paddle1.handleInput(event.key, true);
-            this.paddle2.handleInput(event.key, true);
             if (event.key === 'p' || event.key === 'P') {
                 this.togglePause();
             }
         });
         document.addEventListener('keyup', (event) => {
             this.paddle1.handleInput(event.key, false);
-            this.paddle2.handleInput(event.key, false);
         });
         window.addEventListener('resize', () => this.resize());
     }
@@ -63,7 +61,8 @@ export class Game {
         if (!this.gamePaused && !this.gameEnd) {
             this.ball.update(this.paddle1, this.paddle2);
             this.paddle1.update();
-            this.paddle2.update();
+            if (this.ball.x > window.innerWidth / 2)
+                this.paddle2.move_ia(this.ball);
             this.updateParticles();
             this.checkBallPosition();
             this.checkScore();
@@ -169,7 +168,7 @@ export class Game {
         canvas.height = window.innerHeight;
 
         this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
-        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown');
+        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, null, null);
         this.ball.resize();
         this.paddle1.resize();
         this.paddle2.resize();
