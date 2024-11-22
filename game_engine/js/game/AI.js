@@ -1,4 +1,4 @@
-import { canvas, ctx } from './globals.js';
+import { canvas, ctx} from './globals.js';
 import { Ball } from './ball.js';
 import { Paddle } from './paddle.js';
 import { UI } from './ui.js';
@@ -23,11 +23,12 @@ export class AI {
         this.createStarsBackground(100);
         this.scoreP1 = 0;
         this.scoreP2 = 0;
+        this.lastMoveTime = 0;
         this.running = false;
         this.particles = [];
         this.gamePaused = false;
-        this.backToGameTimer = false;
         this.gameEnd = false;
+        this.backToGameTimer = false;
         this.addEventListeners();
     }
 
@@ -59,10 +60,10 @@ export class AI {
 
     update() {
         if (!this.gamePaused && !this.gameEnd) {
-            this.ball.update(this.paddle1, this.paddle2);
+            this.ball.update(this);
             this.paddle1.update();
             if (this.ball.x > window.innerWidth / 2)
-                this.paddle2.move_ia(this.ball);
+                this.paddle2.move_ia(this.ball, this.lastMoveTime);
             this.updateParticles();
             this.checkBallPosition();
             this.checkScore();
@@ -96,16 +97,18 @@ export class AI {
     checkScore() {
         if (this.scoreP1 >= 5 || this.scoreP2 >= 5) {
             this.gameEnd = true;
-            this.ui.render(this.scoreP1, this.scoreP2);
+            this.ui.render(this, this.scoreP1, this.scoreP2);
         }
     }
 
     togglePause() {
         if (this.gamePaused) {
-            this.gamePaused = true;
-            this.ui.startCountdown();
-        }
-        else {
+            // Se il gioco è in pausa e non c'è un countdown attivo
+            if (!this.backToGameTimer) {
+                this.ui.startCountdown(this);
+            }
+        } else {
+            // Se il gioco non è in pausa, metti in pausa
             this.gamePaused = true;
         }
     }
@@ -118,7 +121,7 @@ export class AI {
         for (let i = 0; i < 100; i++) {
             this.stars[i].render();
         }
-        this.ui.render(this.scoreP1, this.scoreP2);
+        this.ui.render(this, this.scoreP1, this.scoreP2);
         this.renderWalls();
         this.renderParticles();
     }
@@ -173,12 +176,14 @@ export class AI {
         this.ball.resize();
         this.paddle1.resize();
         this.paddle2.resize();
-        this.ui.resize(this.ui.scoreP1, this.ui.scoreP2);
+        this.ui.resize(this, this.ui.scoreP1, this.ui.scoreP2);
         this.ball.reset(1);
         this.paddle1.y = canvas.height / 2 - this.paddle1.height / 2;
         this.paddle2.y = canvas.height / 2 - this.paddle2.height / 2;
         this.stars = [];
         this.createStarsBackground(100);
-        this.ui.render(this.scoreP1, this.scoreP2);
+        this.ui.render(this, this.scoreP1, this.scoreP2);
     }
 }
+
+export let ai = new AI();

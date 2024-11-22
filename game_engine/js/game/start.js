@@ -1,4 +1,5 @@
-import { canvas, ctx } from './globals.js';
+
+import { canvas, ctx} from './globals.js';
 import { Ball } from './ball.js';
 import { Paddle } from './paddle.js';
 import { UI } from './ui.js';
@@ -26,8 +27,8 @@ export class Game {
         this.running = false;
         this.particles = [];
         this.gamePaused = false;
-        this.backToGameTimer = false;
         this.gameEnd = false;
+        this.backToGameTimer = false;
         this.addEventListeners();
     }
 
@@ -61,7 +62,7 @@ export class Game {
 
     update() {
         if (!this.gamePaused && !this.gameEnd) {
-            this.ball.update(this.paddle1, this.paddle2);
+            this.ball.update(this);
             this.paddle1.update();
             this.paddle2.update();
             this.updateParticles();
@@ -97,15 +98,18 @@ export class Game {
     checkScore() {
         if (this.scoreP1 >= 5 || this.scoreP2 >= 5) {
             this.gameEnd = true;
-            this.ui.render(this.scoreP1, this.scoreP2);
+            this.ui.render(this, this.scoreP1, this.scoreP2);
         }
     }
 
     togglePause() {
         if (this.gamePaused) {
-            this.ui.startCountdown();
-        }
-        else {
+            // Se il gioco è in pausa e non c'è un countdown attivo
+            if (!this.backToGameTimer) {
+                this.ui.startCountdown(this);  // Passa `this` per accedere a gamePaused e backToGameTimer
+            }
+        } else {
+            // Se il gioco non è in pausa, metti in pausa
             this.gamePaused = true;
         }
     }
@@ -118,7 +122,7 @@ export class Game {
         for (let i = 0; i < 100; i++) {
             this.stars[i].render();
         }
-        this.ui.render(this.scoreP1, this.scoreP2);
+        this.ui.render(this, this.scoreP1, this.scoreP2);
         this.renderWalls();
         this.renderParticles();
     }
@@ -165,20 +169,34 @@ export class Game {
     resize() {
         const oldWidth = canvas.width;
         const oldHeight = canvas.height;
+        
+        // Aggiorna le dimensioni del canvas
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
-        this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
-        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown');
+    
+        // Ridimensiona le racchette e il pallone
+        this.paddle1.resize(oldHeight, canvas.height);
+        this.paddle2.resize(oldHeight, canvas.height);
         this.ball.resize();
-        this.paddle1.resize();
-        this.paddle2.resize();
-        this.ui.resize(this.ui.scoreP1, this.ui.scoreP2);
+    
+        // Ridimensiona l'interfaccia utente, se necessario
+        this.ui.resize(this, this.ui.scoreP1, this.ui.scoreP2);
+    
+        // Resetta la posizione del pallone al centro
         this.ball.reset(1);
+    
+        // Ridimensiona e riposiziona le racchette
         this.paddle1.y = canvas.height / 2 - this.paddle1.height / 2;
         this.paddle2.y = canvas.height / 2 - this.paddle2.height / 2;
+    
+        // Crea un nuovo sfondo di stelle per adattarsi alle nuove dimensioni
         this.stars = [];
         this.createStarsBackground(100);
-        this.ui.render(this.scoreP1, this.scoreP2);
+    
+        // Rendi l'interfaccia utente aggiornata
+        this.ui.render(this, this.scoreP1, this.scoreP2);
     }
+    
 }
+
+export let game = new Game();

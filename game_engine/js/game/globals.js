@@ -1,2 +1,2 @@
-export const canvas = document.getElementById('gameCanvas');
-export const ctx = canvas.getContext('2d'); 
+export let canvas = document.getElementById('gameCanvas');
+export let ctx = canvas.getContext('2d'); 

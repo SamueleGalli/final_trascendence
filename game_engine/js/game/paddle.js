@@ -7,7 +7,8 @@ export class Paddle {
         this.x = x - this.width / 2;
         this.y = canvas.height / 2 - this.height / 2;
         this.radius = this.width / 2;
-        this.speed = canvas.height * 0.008;
+        this.baseSpeed = canvas.height * 0.008; // Base speed based on screen height
+        this.speed = this.baseSpeed; // Initialize speed based on canvas height
         this.upKey = upKey;
         this.downKey = downKey;
         this.moveUp = false;
@@ -15,8 +16,7 @@ export class Paddle {
     }
 
     handleInput(key, isPressed) {
-        if (key === 'W' || key === 'S')
-            key = key.toLowerCase();
+        if (key === 'W' || key === 'S') key = key.toLowerCase();
         if (key === this.upKey) this.moveUp = isPressed;
         if (key === this.downKey) this.moveDown = isPressed;
     }
@@ -27,16 +27,14 @@ export class Paddle {
     }
 
     resize(oldCanvasHeight, newCanvasHeight) {
-
-        this.y = canvas.height / 2 - this.height / 2;
-        // Resize paddle height
-        this.height = (canvas.height * 0.2);
-        
-    }
+        // Aggiorna l'altezza e la velocità della racchetta in base alle nuove dimensioni del canvas
+        this.height = newCanvasHeight * 0.2; // Adatta l'altezza della racchetta in base alla nuova altezza del canvas
+        this.speed = (newCanvasHeight / oldCanvasHeight) * this.baseSpeed; // Adatta la velocità in base al cambiamento della altezza
+        this.y = newCanvasHeight / 2 - this.height / 2; // Riposiziona la racchetta al centro
+    }    
 
     // Metodo per muovere la racchetta
-    move(direction) 
-    {
+    move(direction) {
         if (direction === 'up')
             this.y = Math.max(0, this.y - this.speed); //sposto su senza superare 0
         else if (direction === 'down')
@@ -44,68 +42,52 @@ export class Paddle {
     }
 
     // Previsione della posizione Y della palla
-    predictBallY(ball)
-    {
-        // Se la palla si sta muovendo verso la IA
-        if (ball.speedx > 0)
-        {
-            // Tempo necessario affinché la palla raggiunga la IA
+    predictBallY(ball) {
+        if (ball.speedx > 0) {
             let timeToReachAI = (window.innerWidth - ball.x) / ball.speedx;
-
-            // Prevedi la posizione Y della palla in quel momento
             let futureBallY = ball.y + ball.speedy * timeToReachAI;
-            
-            // Inizializza variabili per calcolare eventuali rimbalzi della palla
-            const maxBounces = 10; // Limite massimo di rimbalzi da calcolare per evitare loop infiniti
-            let bounces = 0; // Contatore per il numero di rimbalzi
 
-            // Calcola il rimbalzo se la palla supera i bordi dello schermo
-            while ((futureBallY < 0 || futureBallY > window.innerHeight) && bounces < maxBounces)
-            {
-                bounces++; // Incrementa il contatore dei rimbalzi
-                if (futureBallY < 0)
-                {
-                    // La palla ha colpito il bordo superiore
-                    futureBallY = -futureBallY; // Calcola la nuova posizione Y dopo il rimbalzo
-                }
-                else if (futureBallY > window.innerHeight)
-                {
-                // La palla ha colpito il bordo inferiore
-                futureBallY = 2 * window.innerHeight - futureBallY; // Calcola la nuova posizione Y dopo il rimbalzo
+            const maxBounces = 10;
+            let bounces = 0;
+            while ((futureBallY < 0 || futureBallY > window.innerHeight) && bounces < maxBounces) {
+                bounces++;
+                if (futureBallY < 0) {
+                    futureBallY = -futureBallY;
+                } else if (futureBallY > window.innerHeight) {
+                    futureBallY = 2 * window.innerHeight - futureBallY;
                 }
             }
-        // Restituisci la posizione Y prevista della palla dopo aver considerato i rimbalzi
-        return futureBallY;
+            return futureBallY;
         }
-        // Se la palla non si sta muovendo verso la racchetta dell'IA, restituisci la posizione Y attuale
         return ball.y;
     }
 
-    // Funzione per aggiornare la posizione della racchetta IA
-    move_ia(ball) 
-    {
-        let targetY = this.predictBallY(ball); // Previsione posizione palla
-        // Distanza tra la posizione della palla prevista e il centro della racchetta
-        let distance = targetY - (this.y + this.height / 2);
-        let direction = Math.sign(distance);  // Decidi la direzione del movimento usando Math.sign
+    move_ia(ball, lastMoveTime) {
+        const now = Date.now();
+        if (now - lastMoveTime > 1000) { // 1 second
+            lastMoveTime = now;
 
-        // Usa una velocità basata su un fattore fisso
-        let aiSpeed = this.speed * 0.2;  // Riduce la velocità dell'this in base al fattore
-        // Muovi la racchetta basandosi sulla velocità e sulla distanza
-        if (Math.abs(distance) > aiSpeed)
-            this.y += aiSpeed * direction;
-        else
-            this.y += distance;
-        // Limita il movimento della racchetta all'interno dello schermo
-        this.speed = canvas.height * 0.0060;
-        if (this.y < 0)
-            this.y = 0;   
-        if (this.y + this.height > window.innerHeight)
-            this.y = window.innerHeight - this.height;
-        if (distance < -5) 
-            this.move('up'); // Muovi verso l'alto
-        else if (distance > 5) 
-            this.move('down'); // Muovi verso il basso
+            let targetY = this.predictBallY(ball);
+            let distance = targetY - (this.y + this.height / 2);
+            let direction = Math.sign(distance);
+
+            // Adjust AI speed based on canvas height (this makes the AI move slower on smaller screens)
+            let aiSpeed = this.speed * 0.2; 
+
+            // Move the AI paddle
+            if (Math.abs(distance) > aiSpeed)
+                this.y += aiSpeed * direction;
+            else
+                this.y += distance;
+
+            // Limit AI paddle movement within the screen
+            this.speed = canvas.height * 0.0060;
+            if (this.y < 0) this.y = 0;
+            if (this.y + this.height > window.innerHeight) this.y = window.innerHeight - this.height;
+
+            if (distance < -5) this.move('up');
+            else if (distance > 5) this.move('down');
+        }
     }
 
     render() {
@@ -113,7 +95,6 @@ export class Paddle {
         this.drawRoundedRect(ctx);
     }
 
-    // Draw Paddles (rounded)
     drawRoundedRect(ctx) {
         ctx.beginPath();
         ctx.moveTo(this.x + this.radius, this.y);

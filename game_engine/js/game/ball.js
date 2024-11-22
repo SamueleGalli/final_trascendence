@@ -1,5 +1,4 @@
 import { canvas, ctx } from './globals.js';
-import { game } from '../app.js'
 
 export class Ball {
     constructor(x, y) {
@@ -16,7 +15,7 @@ export class Ball {
         this.out = false;
     }
     
-    update(paddle1, paddle2) {
+    update(pong) {
         let relativeY;
         let bounceAngle;
         
@@ -29,27 +28,27 @@ export class Ball {
         // Wall collisions
 
         //Wall down
-        if (this.y + this.radius > canvas.height - game.wallThickness) {
-            this.y = canvas.height - game.wallThickness - this.radius;
+        if (this.y + this.radius > canvas.height - pong.wallThickness) {
+            this.y = canvas.height - pong.wallThickness - this.radius;
             this.speedY *= -1;
-            game.addParticles(this.x, this.y, 30);
+            pong.addParticles(this.x, this.y, 30);
         }
 
         //Wall up
-        else if(this.y - this.radius < game.wallThickness) {
-            this.y = game.wallThickness + this.radius;
+        else if(this.y - this.radius < pong.wallThickness) {
+            this.y = pong.wallThickness + this.radius;
             this.speedY *= -1;
-            game.addParticles(this.x, this.y, 30);
+            pong.addParticles(this.x, this.y, 30);
         }
             
          // Left Paddle collision
-        if (this.collidesWith(paddle1)) {
-            this.x = paddle1.x + paddle1.width + this.radius;
+        if (this.collidesWith(pong.paddle1)) {
+            this.x = pong.paddle1.x + pong.paddle1.width + this.radius;
             this.speedX *= -1;
-            relativeY = (this.y - (paddle1.y + paddle1.height / 2)) / (paddle1.height / 2)
+            relativeY = (this.y - (pong.paddle1.y + pong.paddle1.height / 2)) / (pong.paddle1.height / 2)
             bounceAngle = relativeY * this.maxAngle;
             this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX)
-            game.addParticles(this.x, this.y, 20); 
+            pong.addParticles(this.x, this.y, 20); 
             if (Math.abs(this.speedX) < this.maxSpeed) {
                 this.speedX *= (1 + this.speedIncreaseFactor);
                 this.speedY *= (1 + this.speedIncreaseFactor);
@@ -58,14 +57,14 @@ export class Ball {
         }
 
         // Right Paddle collision
-        else if (this.collidesWith(paddle2)) {
-            this.x = paddle2.x - this.radius;
+        else if (this.collidesWith(pong.paddle2)) {
+            this.x = pong.paddle2.x - this.radius;
             this.speedX *= -1;
-            relativeY = (this.y - (paddle2.y + paddle2.height / 2)) / (paddle2.height / 2)
+            relativeY = (this.y - (pong.paddle2.y + pong.paddle2.height / 2)) / (pong.paddle2.height / 2)
             bounceAngle = relativeY * this.maxAngle;
             console.log("bounceAngle: " + bounceAngle);
             this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX)
-            game.addParticles(this.x, this.y, 20);
+            pong.addParticles(this.x, this.y, 20);
             if (Math.abs(this.speedX) < this.maxSpeed) {
                 this.speedX *= (1 + this.speedIncreaseFactor);
                 this.speedY *= (1 + this.speedIncreaseFactor);

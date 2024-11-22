@@ -376,3 +376,97 @@ pointer-particles {
     height: 100%;
     background-color: #000;  /* Per vedere il canvas se non ci sono disegni */
 }
+
+.avatar-container {
+    position: fixed;
+    top: 50px;
+    right: 55px;
+    cursor: pointer;
+    z-index: 500;
+    display: inline-block;
+    position: flex;  /* Меню будет позиционироваться внутри этого контейнера */
+}
+
+.avatar-image {
+    width: 40px;  /* Размер аватара */
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.avatar-container:hover .avatar-image {
+    transform: scale(1.1);
+}
+
+/* Меню будет располагаться под аватаром */
+.menu-container {
+    position: absolute;
+    top: 120%; /* Позиционируем меню ниже аватара */
+    right: 0;  /* Позиционируем меню по правому краю */
+    width: 40px; /* Ширина меню теперь равна ширине аватара */
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.5);
+    transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  /* Выравниваем кнопки по вертикали по центру */
+    align-items: center;  /* Выравниваем кнопки по горизонтали по центру */
+    gap: 8px;  /* Уменьшаем расстояние между кнопками */
+    background-color: rgba(1, 76, 74, 0.8);
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Состояние видимости меню */
+.menu-container.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+/* Элементы меню */
+.menu-item {
+    width: 30px;  /* Размер кнопок меню теперь меньше */
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0); /* Прозрачный фон */
+    display: flex;
+    justify-content: center;  /* Центрируем контент внутри кнопки */
+    align-items: center;  /* Центрируем контент внутри кнопки */
+    transition: background-color 0.3s ease;
+}
+
+.menu-item img {
+    width: 20px;  /* Размер иконок кнопок теперь меньше */
+    height: 20px;
+}
+
+.menu-item:hover {
+    background-color: #FF590D;
+}
+
+.menu-item:nth-child(1) {
+    animation: bounce 0.5s ease-in-out forwards;
+}
+
+.menu-item:nth-child(2) {
+    animation: bounce 0.5s ease-in-out forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(0.5);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
