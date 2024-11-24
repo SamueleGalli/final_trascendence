@@ -2,7 +2,7 @@ python3 -m http.server 8080
 
 da fare
 
-sistemare resize
+sistemare resize (errore canvas ctx probabilmente)
 paddle esce leggermente da schermo
 sistemare login
 dare nome a guest
