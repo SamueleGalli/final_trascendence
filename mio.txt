@@ -1,1 +1,8 @@
-python3 -m http.server 8080 --bind 0.0.0.0
+python3 -m http.server 8080
+
+da fare
+
+sistemare resize
+paddle esce leggermente da schermo
+sistemare login
+dare nome a guest
