@@ -1,5 +1,4 @@
-import { canvas, ctx } from './globals.js';
-
+import { canvas, ctx } from './globals.js'; 
 export class Paddle {
     constructor(x, upKey, downKey) {
         this.width = canvas.width * 0.01;
@@ -41,9 +40,9 @@ export class Paddle {
     // Metodo per muovere la racchetta
     move(direction) {
         if (direction === 'up')
-            this.y = Math.max(0, this.y - this.speed); //sposto su senza superare 0
+            this.y = Math.max(15, this.y - this.speed);  // Evita di superare il bordo superiore
         else if (direction === 'down')
-            this.y = Math.min(window.innerHeight - this.height, this.y + this.speed); //sposto giu senza superare la finestra
+            this.y = Math.min(canvas.height - this.height - 15, this.y + this.speed);  // Evita di superare il bordo inferiore
     }
 
     // Previsione della posizione Y della palla
@@ -56,11 +55,10 @@ export class Paddle {
             let bounces = 0;
             while ((futureBallY < 0 || futureBallY > window.innerHeight) && bounces < maxBounces) {
                 bounces++;
-                if (futureBallY < 0) {
+                if (futureBallY < 0)
                     futureBallY = -futureBallY;
-                } else if (futureBallY > window.innerHeight) {
-                    futureBallY = 2 * window.innerHeight - futureBallY;
-                }
+                else if (futureBallY > canvas.height)
+                    futureBallY = 2 * canvas.height - futureBallY;
             }
             return futureBallY;
         }
@@ -69,31 +67,32 @@ export class Paddle {
 
     move_ia(ball, lastMoveTime) {
         const now = Date.now();
-        if (now - lastMoveTime > 1000) { // 1 second
+        if (now - lastMoveTime > 1000) { // 1 secondo
             lastMoveTime = now;
-
-            let targetY = this.predictBallY(ball);
-            let distance = targetY - (this.y + this.height / 2);
-            let direction = Math.sign(distance);
-
-            // Adjust AI speed based on canvas height (this makes the AI move slower on smaller screens)
-            let aiSpeed = this.speed * 0.2; 
-
-            // Move the AI paddle
-            if (Math.abs(distance) > aiSpeed)
-                this.y += aiSpeed * direction;
-            else
-                this.y += distance;
-
-            // Limit AI paddle movement within the screen
-            this.speed = canvas.height * 0.0060;
-            if (this.y < 0) this.y = 0;
-            if (this.y + this.height > window.innerHeight) this.y = window.innerHeight - this.height;
-
-            if (distance < -5) this.move('up');
-            else if (distance > 5) this.move('down');
+    
+            // Controlla se la palla sta andando verso destra (verso la paddle2)
+            if (ball.speedX > 0) {
+                this.speed = this.baseSpeed * 0.40;
+    
+                let targetY = this.predictBallY(ball);  // Prevedi la posizione della palla
+                let distance = targetY - (this.y + this.height / 2);  // Calcola la distanza dalla posizione della paddle
+                let direction = Math.sign(distance);  // Direzione per il movimento della paddle
+                let aiSpeed = this.speed * (canvas.height / 500) * 0.5;  // Applica un rallentamento alla velocità
+    
+                // Muovi la paddle dell'IA in base alla distanza dalla palla
+                if (Math.abs(distance) > aiSpeed)
+                    this.y += aiSpeed * direction;
+                else
+                    this.y += distance;
+    
+                // Limita il movimento della paddle dentro i confini del canvas
+                if (this.y < 0) this.y = 0;
+                if (this.y + this.height > canvas.height) this.y = canvas.height - this.height;
+                if (distance < -5) this.move('up');
+                else if (distance > 5) this.move('down');
+            }
         }
-    }
+    }    
 
     render() {
         ctx.fillStyle = 'white';

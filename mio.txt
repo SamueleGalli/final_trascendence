@@ -2,6 +2,5 @@ python3 -m http.server 8080
 
 da fare
 
-paddle esce leggermente da schermo
 sistemare login
 dare nome a guest

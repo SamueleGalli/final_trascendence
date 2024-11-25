@@ -1,11 +1,10 @@
-import { canvas, ctx} from './globals.js';
+import { canvas, ctx } from './globals.js';
 import { Ball } from './ball.js';
 import { Paddle } from './paddle.js';
 import { UI } from './ui.js';
 import { Star } from './star.js';
 import { Particle } from './particle.js';
 
-// Main class
 export class AI {
     constructor() {
         this.canvas = canvas;
@@ -29,6 +28,7 @@ export class AI {
         this.gamePaused = false;
         this.gameEnd = false;
         this.backToGameTimer = false;
+        this.paddle2Paused = false;  // Aggiungi questa variabile per tenere traccia dello stato del paddle2
         this.addEventListeners();
     }
 
@@ -62,8 +62,9 @@ export class AI {
         if (!this.gamePaused && !this.gameEnd) {
             this.ball.update(this);
             this.paddle1.update();
-            if (this.ball.x > window.innerWidth / 2)
+            if (this.ball.x > window.innerWidth / 2 && !this.paddle2Paused) {
                 this.paddle2.move_ia(this.ball, this.lastMoveTime);
+            }
             this.updateParticles();
             this.checkBallPosition();
             this.checkScore();
@@ -78,18 +79,22 @@ export class AI {
         if (this.ball.x <= 0 && !this.ball.out) {
             this.ball.out = true;
             this.scoreP2++;
+            this.paddle2Paused = true; // Ferma l'IA quando la palla esce a sinistra
             setTimeout(() => {
                 if (!this.gameEnd)
                     this.ball.reset(2); // Reposition ball to center
                 this.ball.out = false;
+                this.paddle2Paused = false; // Riprendi l'IA quando la palla ritorna
             }, 2000);
         } else if (this.ball.x >= canvas.width && !this.ball.out) {
             this.ball.out = true;
             this.scoreP1++;
+            this.paddle2Paused = true; // Ferma l'IA quando la palla esce a destra
             setTimeout(() => {
                 if (!this.gameEnd)
                     this.ball.reset(1); // Reposition ball to center
                 this.ball.out = false;
+                this.paddle2Paused = false; // Riprendi l'IA quando la palla ritorna
             }, 2000);
         }
     }
