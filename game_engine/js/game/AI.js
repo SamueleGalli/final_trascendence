@@ -174,8 +174,8 @@ export class AI {
         this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
         this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, null, null);
         this.ball.resize();
-        this.paddle1.resize();
-        this.paddle2.resize();
+        this.paddle1.resize(oldWidth, oldHeight, canvas.width, canvas.height);
+        this.paddle2.resize(oldWidth, oldHeight, canvas.width, canvas.height);
         this.ui.resize(this, this.ui.scoreP1, this.ui.scoreP2);
         this.ball.reset(1);
         this.paddle1.y = canvas.height / 2 - this.paddle1.height / 2;

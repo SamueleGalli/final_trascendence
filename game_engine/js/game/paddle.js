@@ -26,12 +26,17 @@ export class Paddle {
         if (this.moveDown && this.y + this.height < canvas.height - 15) this.y += this.speed;
     }
 
-    resize(oldCanvasHeight, newCanvasHeight) {
+    resize(oldCanvasWidth, oldCanvasHeight, newCanvasWidth, newCanvasHeight) {
         // Aggiorna l'altezza e la velocità della racchetta in base alle nuove dimensioni del canvas
         this.height = newCanvasHeight * 0.2; // Adatta l'altezza della racchetta in base alla nuova altezza del canvas
-        this.speed = (newCanvasHeight / oldCanvasHeight) * this.baseSpeed; // Adatta la velocità in base al cambiamento della altezza
+        this.speed = (newCanvasHeight / oldCanvasHeight) * this.baseSpeed; // Adatta la velocità in base al cambiamento dell'altezza
         this.y = newCanvasHeight / 2 - this.height / 2; // Riposiziona la racchetta al centro
-    }    
+    
+        if (this.isPaddle2) {  // Aggiungi una verifica per vedere se è la paddle destra
+            this.x = newCanvasWidth - this.width - 10;  // Imposta la posizione orizzontale della paddle2 sulla destra
+        }
+    }
+      
 
     // Metodo per muovere la racchetta
     move(direction) {

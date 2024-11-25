@@ -169,31 +169,20 @@ export class Game {
     resize() {
         const oldWidth = canvas.width;
         const oldHeight = canvas.height;
-        
-        // Aggiorna le dimensioni del canvas
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-    
-        // Ridimensiona le racchette e il pallone
-        this.paddle1.resize(oldHeight, canvas.height);
-        this.paddle2.resize(oldHeight, canvas.height);
+
+        this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
+        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, null, null);
         this.ball.resize();
-    
-        // Ridimensiona l'interfaccia utente, se necessario
+        this.paddle1.resize(oldWidth, oldHeight, canvas.width, canvas.height);
+        this.paddle2.resize(oldWidth, oldHeight, canvas.width, canvas.height);
         this.ui.resize(this, this.ui.scoreP1, this.ui.scoreP2);
-    
-        // Resetta la posizione del pallone al centro
         this.ball.reset(1);
-    
-        // Ridimensiona e riposiziona le racchette
         this.paddle1.y = canvas.height / 2 - this.paddle1.height / 2;
         this.paddle2.y = canvas.height / 2 - this.paddle2.height / 2;
-    
-        // Crea un nuovo sfondo di stelle per adattarsi alle nuove dimensioni
         this.stars = [];
         this.createStarsBackground(100);
-    
-        // Rendi l'interfaccia utente aggiornata
         this.ui.render(this, this.scoreP1, this.scoreP2);
     }
     
