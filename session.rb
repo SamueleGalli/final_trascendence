@@ -1,86 +1,82 @@
 require 'sinatra'
-require_relative 'config'  # Importa `CLIENT` dal file di configurazione
+require_relative 'config'
+require 'json'
 
-# Punto di ingresso per il login OAuth
+# Abilita la gestione delle sessioni
+enable :sessions
+set :session_secret, SecureRandom.hex(64)
+
+# Route principale (home)
 get '/' do
-  if session[:user_authenticated]
-    redirect 'http://localhost:8000/ft_trascendence/game_engine/index.html'
+  send_file File.join(__dir__, 'public', 'index.html')
+end
+
+get '/auth/login' do
+  # Verifica se l'utente è già autenticato (ha un token valido)
+  if session[:access_token]
+    # Se già autenticato, reindirizza l'utente alla home
+    redirect '/'
   else
-    authorization_url = CLIENT.auth_code.authorize_url(redirect_uri: REDIRECT_URI)
-    redirect authorization_url
-  end
-end
-
-before do
-  # Escludi il percorso di logout dalla logica del controllo della sessione
-  if request.path != '/logout'
-    # Se una sessione è già attiva e l'ID della sessione è diverso, mostra un messaggio di avvertimento
-    if $active_session_id && $active_session_id != session.id
-      halt 403, "<html><body><h1>Hai già una sessione attiva con un altro account!</h1><p>Per favore, termina la sessione precedente prima di procedere.</p></body></html>"
-    end
-  end
-end
-
-get '/login' do
-  if session[:user_authenticated]
-    # Se l'utente è già autenticato, reindirizzalo alla home
-    redirect to('/')
-  else
-    # Se non è autenticato, mostra il messaggio di uscita
-    "<html><body><h1>Sei uscito con successo!</h1><p><a href='/'>Clicca qui per accedere di nuovo</a></p></body></html>"
+    # Altrimenti, genera l'URL di autorizzazione OAuth2
+    redirect_uri = ENV['REDIRECT_URI']
+    auth_url = CLIENT.auth_code.authorize_url(redirect_uri: redirect_uri)
+    
+    # Reindirizza l'utente direttamente all'URL di autorizzazione
+    redirect auth_url
   end
 end
 
 
-get '/' do
-  if session[:user_authenticated] && $active_session_id == session.id
-    redirect 'http://localhost:8000/ft_trascendence/game_engine/index.html'
-  else
-    authorization_url = CLIENT.auth_code.authorize_url(redirect_uri: REDIRECT_URI)
-    redirect authorization_url
-  end
-end
-
-get '/callback' do
-  if session[:user_authenticated]
-    redirect 'http://localhost:8000/ft_trascendence/game_engine/index.html'
-  end
+get '/auth/callback' do
+  auth_code = params[:code]
+  redirect_uri = ENV['REDIRECT_URI']
 
   begin
-    code = params[:code]
-    token = CLIENT.auth_code.get_token(code, redirect_uri: REDIRECT_URI)
-    user_info = token.get("/v2/me").parsed
-    username = user_info["login"]
-    email = user_info["email"]
+    # Otteniamo il token di accesso usando il codice di autorizzazione
+    token = CLIENT.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
 
+    # Salviamo il token nella sessione
     session[:access_token] = token.token
-    session[:user_authenticated] = true
-    $active_session_id = session.id
 
-    redirect 'http://localhost:8000/ft_trascendence/game_engine/index.html'
+    # Redirect alla home page o una pagina protetta
+    redirect '/'
   rescue OAuth2::Error => e
-    settings.logger.error("Autenticazione fallita: #{e.message}")
-    halt 500, "Errore nell'autenticazione. Per favore, riprova più tardi."
+    # In caso di errore nell'autenticazione, mostra un messaggio
+    puts "Errore nell'autenticazione: #{e.message}"
+    redirect '/'
   end
 end
 
-# Route per il logout
-post '/logout' do
+
+# Endpoint per verificare se l'utente è autenticato
+get '/check_auth' do
   if session[:access_token]
-    begin
-      token = OAuth2::AccessToken.new(CLIENT, session[:access_token])
-      revoke_url = CLIENT.site + '/oauth/revoke'
-      response = CLIENT.request(:post, revoke_url, body: { token: token.token })
-      
-      if response.status != 200
-        settings.logger.error("Errore durante la revoca del token: #{response.status}")
-      end
-    rescue OAuth2::Error => e
-      settings.logger.error("Errore durante la revoca del token: #{e.message}")
-    ensure
-      session.clear
-    end
+    content_type :json
+    { authenticated: true }.to_json
+  else
+    content_type :json
+    { authenticated: false }.to_json
   end
-
-  redirect to('/')
 end
+
+# Endpoint per il logout
+get '/logout' do
+  session.clear
+  redirect '/'
+end
+
+# Definisci la route /callback
+get '/callback' do
+  auth_code = params[:code]
+  redirect_uri = ENV['REDIRECT_URI']
+
+  # Recupera il token usando il codice di autorizzazione
+  token = CLIENT.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
+
+  # Salva il token nella sessione
+  session[:access_token] = token.token
+
+  # Redirect alla home page dopo il login
+  redirect '/'
+end
+

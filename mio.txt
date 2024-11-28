@@ -1,6 +1,9 @@
 python3 -m http.server 8080
+http://localhost:4567/
 
 da fare
 
-sistemare login
-dare nome a guest
+1)non ti fa accedere al sito di login ma ti fa accedere direttamente alle modalita dandoti un errore di cookie di terze parti
+info)se fai login ti fa entrare nella pagina di scelta modalita(se ricarichi ti salva che sei registrato)
+3)implementare logout tramite tasto e chiusura pagina con revoke_token
+4)dare nome a guest e avatar default
