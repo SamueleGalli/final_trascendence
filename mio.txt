@@ -1,9 +1,12 @@
 python3 -m http.server 8080
 http://localhost:4567/
 
-da fare
 
-1)non ti fa accedere al sito di login ma ti fa accedere direttamente alle modalita dandoti un errore di cookie di terze parti
-info)se fai login ti fa entrare nella pagina di scelta modalita(se ricarichi ti salva che sei registrato)
+(quando faccio l'accesso con login mi da questo
+{"success":true,"access_token":"cfafcc0efa111b7f8a82156425453222eb6859ace3bd44cf548949faa1167277"})
+
+da fare
+0)studia logi.js guest.js e i file ruby
+1)portarti alla pagina senza redirezione (cioe in modo SPA)
+2)salvare nome guest e login nella pagina in alto a destra (per login cercarlo nell'autenticatore)
 3)implementare logout tramite tasto e chiusura pagina con revoke_token
-dopo)dare nome a guest e avatar default

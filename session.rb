@@ -12,41 +12,21 @@ get '/' do
 end
 
 get '/auth/login' do
-  # Verifica se l'utente è già autenticato (ha un token valido)
   if session[:access_token]
-    # Se già autenticato, reindirizza l'utente alla home
-    redirect '/'
+    content_type :json
+    { authenticated: true }.to_json
   else
-    # Altrimenti, genera l'URL di autorizzazione OAuth2
     redirect_uri = ENV['REDIRECT_URI']
     auth_url = CLIENT.auth_code.authorize_url(redirect_uri: redirect_uri)
-    
-    # Reindirizza l'utente direttamente all'URL di autorizzazione
-    redirect auth_url
+    content_type :json
+    { auth_url: auth_url }.to_json
   end
 end
-
 
 get '/auth/callback' do
-  auth_code = params[:code]
-  redirect_uri = ENV['REDIRECT_URI']
-
-  begin
-    # Otteniamo il token di accesso usando il codice di autorizzazione
-    token = CLIENT.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
-
-    # Salviamo il token nella sessione
-    session[:access_token] = token.token
-
-    # Redirect alla home page o una pagina protetta
-    redirect '/'
-  rescue OAuth2::Error => e
-    # In caso di errore nell'autenticazione, mostra un messaggio
-    puts "Errore nell'autenticazione: #{e.message}"
-    redirect '/'
-  end
+  content_type :json
+  { success: true }.to_json
 end
-
 
 # Endpoint per verificare se l'utente è autenticato
 get '/check_auth' do
@@ -59,24 +39,29 @@ get '/check_auth' do
   end
 end
 
-# Endpoint per il logout
 get '/logout' do
   session.clear
-  redirect '/'
+  content_type :json
+  { success: true }.to_json
 end
 
-# Definisci la route /callback
 get '/callback' do
   auth_code = params[:code]
   redirect_uri = ENV['REDIRECT_URI']
 
-  # Recupera il token usando il codice di autorizzazione
-  token = CLIENT.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
+  begin
+    # Recupera il token usando il codice di autorizzazione
+    token = CLIENT.auth_code.get_token(auth_code, redirect_uri: redirect_uri)
 
-  # Salva il token nella sessione
-  session[:access_token] = token.token
+    # Salva il token nella sessione
+    session[:access_token] = token.token
 
-  # Redirect alla home page dopo il login
-  redirect '/'
+    # Invia la risposta JSON senza fare un redirect
+    content_type :json
+    { success: true, access_token: token.token }.to_json
+  rescue OAuth2::Error => e
+    # In caso di errore nell'autenticazione, invia un messaggio di errore
+    content_type :json
+    { success: false, error: e.message }.to_json
+  end
 end
-

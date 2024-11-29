@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'webrick'
 require_relative 'session'
-
+require_relative 'guest'
 # Avvia il server WEBrick per servire i file statici del gioco
 ia_path = File.expand_path('', __dir__)
 
