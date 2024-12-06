@@ -1,0 +1,169 @@
+# naming conventions:
+#   - volume names SHOULD end by "_db"
+#   - services CAN have full name
+#   - every service/volume/network name SHOULD be lowercase
+#   - any hidden service/volume/network SHOULD be named in a different way (e.g.: ".servicename")
+
+
+# notices:
+#   - EVERY service MUST depend on the logger
+#   - EVERY service CAN access common_tools
+
+
+
+# sample volume
+  # logger:
+  #   driver: local
+  #   name: logger
+  #   driver_opts:
+  #     o: bind
+  #     device: /home/leonardo/data/logger
+  #     type: none
+
+
+# sample container: receiver
+  # receiver:																# container
+  #   container_name: receiver							# coniainer name (alias)
+  #   build: ./requirements/receiver				# Dockerfile directory
+  #   image: mariadb:42
+  #   depends_on:														# container is built after ...
+  #     - logger
+  #   networks:															# connected to networks ...
+  #     - app-network
+  #   env_file:															# path to .env
+  #     - .env
+  #   volumes:															# accessible volumes
+  #     - wp:/var/www/html
+  #   ports:																# communication ports with outer environment
+  #     - "443:443"
+  #   command: ["bash", "echo"]							# execute a command outside (?) container
+  #   restart: always												# in case of crash restarts service
+
+
+version: "3.5"
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
+
+
+volumes:
+  logger_db:
+    driver: local
+    name: lg
+    driver_opts:
+      o: bind
+      device: /home/leonardo/Desktop/42_Transcendence/srcs/logger
+      type: none
+
+  pages_db:
+    driver: local
+    name: pg
+    driver_opts:
+      o: bind
+      device: /home/leonardo/Desktop/42_Transcendence/pages
+      type: none
+
+  common_tools:
+    driver: local
+    name: ct
+    driver_opts:
+      o: bind
+      device: /home/leonardo/Desktop/42_Transcendence/srcs/common_tools/tools
+      type: none
+
+
+services:
+
+  postgres:                                            # database service
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - logger_db:/var/www/logger
+      - pages_db:/var/lib/postgresql/pages
+      - /var/run/docker.sock:/var/run/docker.sock
+      - common_tools:/var/www/common
+    networks:
+      - app-network
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+
+  logger:                                             # logger service
+    image: ruby:latest
+    restart: always
+    volumes:
+      - logger_db:/var/www/log
+      - /var/run/docker.sock:/var/run/docker.sock
+      - common_tools:/var/www/common
+      - ./logger:/var/www
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    entrypoint: /var/www/init.sh
+    working_dir: /var/www
+
+  receiver:                                             # net open service. Creates gateways
+    image: ruby:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - common_tools:/var/www/common
+      - ./receiver:/var/www
+    depends_on:
+      - logger
+      - postgres
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "8008:8008"
+    entrypoint: ruby /var/www/main.rb
+    working_dir: /var/www
+
+  request_manager:
+    image: ruby:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - common_tools:/var/www/common
+      - ./request_manager:/var/www
+    depends_on:
+      - receiver
+      - logger
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "9000:9000"
+    entrypoint: /var/www/init.sh
+    working_dir: /var/www
+
+  auth:                                             # net open service. Creates gateways
+    image: ruby:latest
+    restart: always
+    volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock
+      - common_tools:/var/www/common
+      - ./auth:/var/www
+    depends_on:
+      - logger
+      - postgres
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "4567:4567"
+      - "8005:8005"
+    entrypoint: /var/www/init.sh
+    working_dir: /var/www

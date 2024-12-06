@@ -1,0 +1,472 @@
+/*Общие настройки*/
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "Liberty";
+    src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/907368/liberty.otf');
+}
+
+html, body {
+    height: 100%;
+    margin: 0; /* Удаляем отступы по умолчанию */
+}
+
+body {
+    margin: 0; /* Убираем отступы */
+    overflow: hidden; /* Убираем прокрутку */
+    background-color: #000; /* Черный фон */
+}
+
+/* Контейнер главного приложения */
+#app {
+    width: 100vw; /* Занимает 100% ширины окна */
+    height: 100vh; /* Занимает 100% высоты окна */
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Выравнивание элементов по колонкам */
+    align-items: center; /* Центрирование элементов по горизонтали */
+    justify-content: center; /* Центрирование элементов по вертикали */
+    overflow: hidden; /* Скрываем переполнение */
+    z-index: 1; /* Убедитесь, что находится над анимацией */
+}
+
+#main_pageCanvas {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 0;
+    left: 0;
+    width: 100%; /* Занимает всю ширину */
+    height: 100%; /* Занимает всю высоту */
+    z-index: -1; /* Канвас на заднем плане */
+}
+/*----------------*/
+
+/*Основной текст основной экран*/
+.text {
+    color: #0fffcf; /* Ярко-бирюзовый для улучшенной видимости */
+    font-family: 'Liberty';
+    font-weight: 100;
+    font-size: 6rem;
+    letter-spacing: -0.24em;
+    z-index: 1;
+    text-align: center;
+    margin: 0;
+    padding-bottom: 20px;
+    user-select: none;
+    opacity: 0;
+    transform: translateY(-30px);
+    animation: fadeInUp 1s forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1; /* Полная непрозрачность */
+        transform: translateY(0); /* Конечная позиция */
+    }
+}
+
+.letter {
+    color: #09a09b;
+    text-shadow: 
+        0 0 5px rgba(9, 160, 155, 0.5),
+        0 0 10px rgba(9, 160, 155, 0.3),
+        0 0 15px #014C4A;
+    display: inline-block;
+
+    &.letter-6 {
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+        animation: flicker 2s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 1;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+    5% {
+        opacity: 1;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+    5.5% {
+        opacity: 0;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+    6% {
+        opacity: 1;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+    6.5% {
+        opacity: 1;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+    7% {
+        opacity: 0;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+    8% {
+        opacity: 1;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-0.2rem, 1rem) rotate(13deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-0.2rem, 1rem) rotate(10deg);
+    }
+}
+/*----------------*/
+
+/* Эффекты частиц */
+pointer-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Убедитесь, что находится под текстом */
+    pointer-events: none;
+}
+/*----------------*/
+
+/* Кнопка */
+.start-button {
+    font-family: 'Liberty';
+    font-size: 2rem;
+    padding: 15px 30px;
+    color: #0fffcf; /* Совпадает с основным текстом */
+    background-color: transparent;
+    border: 2px solid #0fffcf;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out; /* Плавное изменение всех свойств */
+    outline: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    margin-top: 300px;
+    width: 250px;
+}
+
+.start-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(9, 160, 155, 0.2);
+    z-index: -1;
+    transition: transform 0.6s ease-in-out; /* Плавное изменение масштаба */
+    transform: scale(0);
+}
+
+.start-button:hover::before {
+    transform: scale(1);
+}
+
+.start-button .text-animation {
+    display: inline-block; /* Позволяет анимацию на уровне текста */
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Эффекты при наведении на текст */
+.start-button:hover .text-animation {
+    color: #fff; /* Изменение цвета текста */
+    transform: translateY(-7px) scale(1.1); /* Эффект подъема текста */
+    text-shadow: 
+        0 0 7px rgba(15, 255, 207, 0.8),
+        0 0 15px rgba(15, 255, 207, 0.6),
+        0 0 20px rgba(15, 255, 207, 0.4);
+}
+
+/* Эффект пульсации */
+.start-button:hover .text-animation {
+    animation: pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+.start-button:active {
+    transform: scale(0.95);
+}
+
+/* Скрытые элементы */
+.hidden {
+    display: none;
+}
+
+.new-button {
+    font-family: 'Liberty', sans-serif;
+    font-size: 2rem;
+    padding: 15px 30px;
+    color: #0fffcf;
+    background-color: rgba(0, 0, 0, 0.8); /* Темный фон для кнопок */
+    border: 2px solid #0fffcf;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    margin: 20px;
+    margin-top: 240px;
+    width: 300px;
+    opacity: 0; /* Начальная непрозрачность */
+    transform: scale(0.9) translateY(50px); /* Начальная позиция кнопки */
+    transition: all 0.4s ease-in-out; /* Плавные переходы */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Плавное появление кнопок */
+.show-new-buttons .new-button {
+    animation: transitionIn 0.5s ease-out forwards;
+}
+
+@keyframes transitionIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(0) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Задержка анимации для разных кнопок */
+.show-new-buttons .new-button:nth-child(1) {
+    animation-delay: 0s;
+}
+.show-new-buttons .new-button:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.show-new-buttons .new-button:nth-child(3) {
+    animation-delay: 0.4s;
+}
+.show-new-buttons .new-button:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+/* Эффект при наведении на кнопки */
+.new-button:hover {
+    color: #fff;
+    background-color: rgba(0, 255, 255, 0.2); /* Легкое свечение */
+    transform: scale(1.05); /* Легкое увеличение */
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* Мягкое свечение */
+}
+
+/* Effetto al click per i nuovi pulsanti */
+.new-button:active {
+    transform: scale(0.95); /* Leggera riduzione della scala per dare l'impressione di pressione */
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.3); /* Cambia il bagliore per enfatizzare */
+    background-color: rgba(0, 255, 255, 0.15); /* Aumenta la trasparenza per un effetto 'premuto' */
+    transition: all 0.3s ease; /* Velocità della transizione quando il pulsante viene rilasciato */
+}
+
+/* Плавное свечение для всех кнопок */
+@keyframes complexHover {
+    0% {
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), 0 0 30px rgba(0, 255, 255, 0.2);
+        background-color: rgba(0, 255, 255, 0.05);
+    }
+    50% {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), 0 0 40px rgba(0, 255, 0, 0.3);
+        background-color: rgba(0, 255, 255, 0.1);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), 0 0 60px rgba(0, 255, 255, 0.5);
+        background-color: rgba(0, 255, 255, 0.2);
+    }
+}
+
+
+.button-container {
+    position: relative; /* Устанавливает относительное позиционирование для контейнера */
+    display: inline-block; /* Поддерживает размещение кнопок в одном ряду */
+    margin: 20px;
+}
+
+.tooltip {
+    position: absolute;
+    bottom: -90px; /* Позиционирование всплывающего окна под кнопкой */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    background-color: rgba(0, 255, 255, 0.1); /* Более прозрачный фон с неоновым оттенком */
+    color: #0fffcf;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    opacity: 0; /* Прозрачность для более легкого неонового эффекта */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.3); /* Эффект свечения */
+    z-index: 2;
+    pointer-events: none; /* Запрещает взаимодействие с всплывающим окном */
+}
+
+/* Показ описания при наведении на кнопку */
+.new-button:hover + .tooltip {
+    visibility: visible; /* Показываем всплывающее окно при наведении на кнопку */
+    opacity: 0.85;
+}
+
+/* Кнопки OSPITE и LOGIN */
+.auth-button {
+    font-family: 'Liberty';
+    font-size: 2rem;
+    padding: 15px 30px;
+    color: #0fffcf;
+    background-color: transparent;
+    border: 2px solid #0fffcf;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+    outline: none;
+    position: relative;
+    margin: 40px; /* Устанавливаем одинаковые отступы для всех сторон, как у new-button */
+    margin-top: 260px; /* Оставляем такой же отступ сверху, как и у new-button */
+    width: 250px;
+}
+
+.auth-button:hover {
+    color: #fff;
+    background-color: rgba(0, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.auth-button:active {
+    transform: scale(0.95);
+}
+
+/* Скрытые элементы */
+.hidden {
+    display: none;
+}
+
+#gameContainer {
+    display: none;  /* Questo nasconde il contenitore all'inizio */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;  /* Assicurati che il contenitore sia sopra agli altri elementi */
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    background-color: #000;  /* Per vedere il canvas se non ci sono disegni */
+}
+
+.avatar-container {
+    position: fixed;
+    top: 50px;
+    right: 55px;
+    cursor: pointer;
+    z-index: 500;
+    display: inline-block;
+    position: flex;  /* Меню будет позиционироваться внутри этого контейнера */
+}
+
+.avatar-image {
+    width: 40px;  /* Размер аватара */
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.avatar-container:hover .avatar-image {
+    transform: scale(1.1);
+}
+
+/* Меню будет располагаться под аватаром */
+.menu-container {
+    position: absolute;
+    top: 120%; /* Позиционируем меню ниже аватара */
+    right: 0;  /* Позиционируем меню по правому краю */
+    width: 40px; /* Ширина меню теперь равна ширине аватара */
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.5);
+    transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  /* Выравниваем кнопки по вертикали по центру */
+    align-items: center;  /* Выравниваем кнопки по горизонтали по центру */
+    gap: 8px;  /* Уменьшаем расстояние между кнопками */
+    background-color: rgba(1, 76, 74, 0.8);
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Состояние видимости меню */
+.menu-container.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+/* Элементы меню */
+.menu-item {
+    width: 30px;  /* Размер кнопок меню теперь меньше */
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0); /* Прозрачный фон */
+    display: flex;
+    justify-content: center;  /* Центрируем контент внутри кнопки */
+    align-items: center;  /* Центрируем контент внутри кнопки */
+    transition: background-color 0.3s ease;
+}
+
+.menu-item img {
+    width: 20px;  /* Размер иконок кнопок теперь меньше */
+    height: 20px;
+}
+
+.menu-item:hover {
+    background-color: #FF590D;
+}
+
+.menu-item:nth-child(1) {
+    animation: bounce 0.5s ease-in-out forwards;
+}
+
+.menu-item:nth-child(2) {
+    animation: bounce 0.5s ease-in-out forwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(0.5);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
