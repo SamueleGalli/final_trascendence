@@ -3,13 +3,14 @@ require_relative 'config'
 require 'json'
 require 'oauth2'
 require 'net/http'
+require 'pg'
+load ((File.file? '/var/www/common/BetterPG.rb') ? '/var/www/common/BetterPG.rb' : '../common_tools/tools/BetterPG.rb')
+
+login = BetterPG::SimplePG.new "users", ["name TEXT", "email TEXT", "token TEXT", "image TEXT"]
 
 # Abilita la gestione delle sessioni
 enable :sessions
 set :session_secret, SecureRandom.hex(64)
-
-# Hash globale per memorizzare gli utenti in memoria (prova)
-$users = {}
 
 # Route principale (home)
 get '/' do
@@ -66,7 +67,10 @@ get '/callback' do
     name = user_data['login']  # Nome
     email = user_data['email']      # Email
     image = user_data['image_url']  # URL dell'immagine del profilo
+    login.addValues ["'" + name + "'", "'" + email + "'", "'" + token.token + "'", "'" + image + "'"], ["name", "email", "token", "image"]    
     
+    #login.select ['token', 'name', 'email', 'image'] ['', '', '@', ''] 
+
     puts 'Name: ' + name
     puts 'Email: ' + email
 
