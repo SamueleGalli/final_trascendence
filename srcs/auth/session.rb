@@ -60,7 +60,16 @@ get '/callback' do
     token = CLIENT.auth_code.get_token(code, redirect_uri: redirect_uri)
     session[:access_token] = token.token
 
-    # Rispondi con un JSON che segnala il successo
+    user_info = token.get('https://api.intra.42.fr/v2/me')
+    user_data = JSON.parse(user_info.body)
+
+    name = user_data['login']  # Nome
+    email = user_data['email']      # Email
+    image = user_data['image_url']  # URL dell'immagine del profilo
+    
+    puts 'Name: ' + name
+    puts 'Email: ' + email
+
     content_type :json
     # Mostra una pagina HTML con il messaggio di successo
     html_content = <<-HTML

@@ -1,3 +1,5 @@
+import { configureAvatar } from './authenticated.js';
+
 let guestName = null; // Nome temporaneo dell'ospite
 
 // Pulsante per accedere come ospite
@@ -43,10 +45,11 @@ document.getElementById('guestButton').addEventListener('click', function () {
 function updateUIForGuest() {
     // Nascondi i pulsanti di autenticazione
     document.getElementById('authButtonsContainer').classList.add('hidden');
-
+    
     // Mostra i pulsanti del gioco
     const container = document.getElementById('newButtonsContainer');
     container.classList.remove('hidden');
     container.classList.add('show-new-buttons');
+    configureAvatar(false);
     console.log("Guest name:", guestName);
 }

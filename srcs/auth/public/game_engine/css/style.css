@@ -383,7 +383,7 @@ pointer-particles {
     right: 55px;
     cursor: pointer;
     z-index: 500;
-    display: inline-block;
+    display: none;
     position: flex;  /* Меню будет позиционироваться внутри этого контейнера */
 }
 
