@@ -54,7 +54,7 @@ volumes:
     name: lg
     driver_opts:
       o: bind
-      device: /home/leonardo/Desktop/42_Transcendence/srcs/logger
+      device: ./logger
       type: none
 
   pages_db:
@@ -62,7 +62,7 @@ volumes:
     name: pg
     driver_opts:
       o: bind
-      device: /home/leonardo/Desktop/42_Transcendence/pages
+      device: ../pages
       type: none
 
   common_tools:
@@ -70,7 +70,7 @@ volumes:
     name: ct
     driver_opts:
       o: bind
-      device: /home/leonardo/Desktop/42_Transcendence/srcs/common_tools/tools
+      device: ./common_tools/tools
       type: none
 
 
@@ -164,6 +164,5 @@ services:
       - .env
     ports:
       - "4567:4567"
-      - "8005:8005"
     entrypoint: /var/www/init.sh
     working_dir: /var/www

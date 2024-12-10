@@ -1,13 +1,14 @@
 all: prep_dirs
 	make -C ./srcs/common_tools/ all
 	@docker-compose -f ./srcs/docker-compose.yml up
+
 down:
 	@docker-compose -f ./srcs/docker-compose.yml down
 
 re: prep_dirs
 	make -C srcs/common_tools/ re
-	@docker stop $$(docker ps -qa);
-	@docker rm $$(docker ps -qa);
+	@docker stop $$(docker ps -qa)
+	@docker rm $$(docker ps -qa)
 	@docker-compose -f ./srcs/docker-compose.yml up --build
 
 prep_dirs:
@@ -17,14 +18,12 @@ prep_dirs:
 clean:
 	make -C srcs/common_tools/ clean
 	@docker-compose -f srcs/docker-compose.yml stop
-	@docker stop $$(docker ps -qa);\
-	docker rm $$(docker ps -qa);\
-	docker rmi -f $$(docker images -qa);\
-	docker volume rm $$(docker volume ls -q);\
-	docker network rm $$(docker network ls -q)
-
+	@docker ps -qa | xargs -r docker stop
+	@docker ps -qa | xargs -r docker rm
+	@docker images -qa | xargs -r docker rmi -f
+	@docker volume ls -q | xargs -r docker volume rm
+	# @docker network ls -q | awk '!$(echo bridge|host|none) {print}' | xargs -r docker network rm
 	# Destroy all directories
-	rm -rf /home/leonardo/data/wordpress
-
+	rm -rf /data/wordpress
 
 .PHONY: all re down clean

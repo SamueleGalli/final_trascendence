@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gem install "sinatra" "webrick" "securerandom" "json" "oauth2" "dotenv" "logger" "rackup" "puma"
+gem install "puma" "json" "oauth2" "dotenv" "logger" "rack" 
 # ruby -exec bundle add "rackup" "puma"
 
 # GEMS=("sinatra" "webrick" "securerandom" "json" "oauth2" "dotenv" "logger")
