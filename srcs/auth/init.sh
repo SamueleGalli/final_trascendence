@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gem install "puma" "json" "oauth2" "dotenv" "logger" "rack" 
+gem install "puma" "json" "oauth2" "dotenv" "logger" "rack" "rack/session/cookie"
 # ruby -exec bundle add "rackup" "puma"
 
 # GEMS=("sinatra" "webrick" "securerandom" "json" "oauth2" "dotenv" "logger")
@@ -15,4 +15,4 @@ gem install "puma" "json" "oauth2" "dotenv" "logger" "rack"
 
 echo "finished installing"
 
-ruby auth.rb
+rackup config.ru

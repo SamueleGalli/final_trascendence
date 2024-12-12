@@ -163,6 +163,6 @@ services:
     env_file:
       - .env
     ports:
-      - "4567:4567"
+      - "9292:9292"
     entrypoint: /var/www/init.sh
     working_dir: /var/www
