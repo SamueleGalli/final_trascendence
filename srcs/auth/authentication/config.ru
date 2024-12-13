@@ -13,5 +13,5 @@ session_manager = SessionManager.new
 logger = Logger.new(STDOUT)
 logger.level = Logger::INFO
 
-use Rack::Static, urls: ["/game_engine/css", "/game_engine/js", "/game_engine/images"], root: File.join(File.dirname(__FILE__), 'public')
+use Rack::Static, urls: ["/favicon.ico", "/game_engine/css", "/game_engine/js", "/game_engine/images"], root: File.join(File.dirname(__FILE__), '../public')
 run App.new(client, session_manager, logger)

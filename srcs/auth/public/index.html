@@ -15,7 +15,7 @@
             <div class="menu-container hidden">
                 <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile"></div>
                 <div class="menu-item"><img src="game_engine/images/answer.png" alt="Settings"></div>
-                <div class="menu-item"><img src="game_engine/images/logout.png" alt="Logout" onclick="logout()"></div>
+                <div class="menu-item"><img src="game_engine/images/logout.png" alt="Logout" id="logout"></div>
             </div>
         </div>   
         <canvas id="main_pageCanvas"></canvas>
@@ -67,8 +67,9 @@
 
     <!-- Altri script -->
     <script src="game_engine/js/app.js" type="module"></script>
-    <script src="game_engine/js/login.js" type="module"></script>
-    <script src="game_engine/js/guest.js" type="module"></script>
+    <script src="game_engine/js/authentication/login.js" type="module"></script>
+    <script src="game_engine/js/authentication/authenticated.js" type="module"></script>
+    <script src="game_engine/js/authentication/guest.js" type="module"></script>
     <script src="game_engine/js/main_page/MainPageEffect.js" type="module"></script>
     <script src="game_engine/js/main_page/MainPageBall.js" type="module"></script>
     <script src="game_engine/js/main_page/MainPageMovingStar.js" type="module"></script>

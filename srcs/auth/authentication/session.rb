@@ -20,7 +20,7 @@ class App
 
     case request.path
     when '/'
-      response.write(File.read(File.join(__dir__, 'public', 'index.html')))
+      response.write(File.read(File.join(__dir__, '../public', 'index.html')))
       response.content_type = 'text/html'
 
     when '/auth/login'

@@ -54,7 +54,7 @@ volumes:
     name: lg
     driver_opts:
       o: bind
-      device: ./logger
+      device: ./srcs/logger
       type: none
 
   pages_db:
@@ -62,7 +62,7 @@ volumes:
     name: pg
     driver_opts:
       o: bind
-      device: ../pages
+      device: ./pages
       type: none
 
   common_tools:
@@ -70,7 +70,7 @@ volumes:
     name: ct
     driver_opts:
       o: bind
-      device: ./common_tools/tools
+      device: ./srcs/common_tools/tools
       type: none
 
 

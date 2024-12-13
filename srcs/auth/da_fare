@@ -1,0 +1,7 @@
+1)check_authentication per qualche motivo e true quando sloggi e ti fa riloggare subito
+2)docker da sistemare
+3)sistemare fluidita avatar e pagina
+4)testa comandi in fase di autenticazione (es login,ospite)
+5)usare il database per i dati
+6)Be carefull, the management of duplicate usernames/emails is at your
+discretion. You must provide a solution that makes sense.

@@ -1,33 +1,34 @@
 import { configureAvatar } from './authenticated.js';
 
 let success = localStorage.getItem('authenticated') === 'true'; // Recupera lo stato di autenticazione dal localStorage
+
 function performLogin() {
-    // Se l'utente è già autenticato, non fare nulla
     if (success) {
-        renderAuthenticatedPage(); // Mostra la UI autenticata
+        console.log("Gia autenticato");
+        renderAuthenticatedPage();
         return;
     }
 
-    // Procedura di login se l'utente non è autenticato
     fetch('/auth/login')
-        .then(response => response.json()) // Parsing della risposta
+        .then(response => response.json())
         .then(data => {
             const popup = window.open(data.auth_url, 'Login', 'width=600,height=400');
 
-            // Aggiungi un listener per il messaggio dalla popup quando "Continua" viene premuto
             window.addEventListener('message', function(event) {
+                console.log("Messaggio ricevuto: " + event.data.authenticated);
                 if (event.data.authenticated) {
                     success = true;
-                    localStorage.setItem('authenticated', 'true'); // Salva lo stato di autenticazione
-                    popup.close(); // Chiudi la popup
-                    renderAuthenticatedPage(); // Aggiorna la UI principale
+                    localStorage.setItem('authenticated', 'true'); 
+                    popup.close(); 
+                    renderAuthenticatedPage(); 
                 }
             });
         })
         .catch(error => {
-            console.error('Errore nella richiesta di login:', error);
+            console.error("Errore di rete:", error);
         });
 }
+
 
 // Funzione per aggiornare la UI dopo l'autenticazione
 function renderAuthenticatedPage() {
@@ -42,7 +43,7 @@ function renderAuthenticatedPage() {
         container.classList.remove('hidden');
         container.classList.add('show-new-buttons');
         configureAvatar(true);
-    }, 100);  // Imposta il ritardo a 100 ms (puoi aumentarlo se necessario)
+    }, 300);  // Imposta il ritardo a 100 ms (puoi aumentarlo se necessario)
 }
 
 

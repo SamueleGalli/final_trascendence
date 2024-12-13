@@ -7,4 +7,3 @@ class SessionManager
       request.session.clear
     end
   end
-  
