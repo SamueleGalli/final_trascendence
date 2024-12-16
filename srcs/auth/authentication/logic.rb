@@ -4,7 +4,6 @@ require 'json'
 
 module AuthMethods
   def login(request, response, client)
-    puts "request.session[:access_token]: |" + request.session[:access_token].to_s
     if request.session[:access_token]
       response.content_type = 'application/json'
       response.write({ authenticated: true }.to_json)
@@ -15,55 +14,42 @@ module AuthMethods
     end
   end
 
-  def check_authentication(request, response)
-    if request.session[:access_token]
-      response.content_type = 'application/json'
-      response.write({ authenticated: true }.to_json)
-    else
-      response.content_type = 'application/json'
-      response.write({ authenticated: false }.to_json)
-    end
-  end
-
   def revoke_token(access_token)
     uri = URI.parse('https://oauth2.provider.com/revoke') # URL dell'endpoint di revoca del token
     request = Net::HTTP::Post.new(uri)
     request.set_form_data({ 'token' => access_token })
-
-    # Esegui la richiesta di revoca con gestione degli errori
     begin
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
         http.request(request)
-      end
-
+      end  
       if response.code == '200'
-        puts "Token revocato con successo."
+        return { success: true }
       else
-        puts "Errore nella revoca del token: #{response.code} #{response.body}"
+        return { success: false, error: "Revoca fallita con codice #{response.code}: #{response.body}" }
       end
     rescue => e
-      puts "Errore durante la revoca del token: #{e.message}"
+      return { success: false, error: "Errore durante la revoca del token: #{e.message}" }
     end
-  end
+  end   
 
   def logout(request, session_manager, response)
-    # Recupera il token di accesso dalla sessione o dal contesto
-    access_token = request.cookies['access_token'] # O il metodo che stai usando per memorizzare il token
-    
-    # Se il token esiste, revoca il token
+    access_token = request.session[:access_token]  # Retrieve the token from the session
     if access_token
-      revoke_token(access_token)
+      revoke_response = revoke_token(access_token)
+      unless revoke_response[:success]
+        puts "Errore durante la revoca del token: #{revoke_response[:error]}"
+      end
     end
-
-    # Pulisci la sessione
+    
+    # Clear the session
     session_manager.clear(request)
-
-    response.delete_cookie('access_token')
-
-    # Risposta al client
+    
+    # Delete cookies (if necessary)
+    response.delete_cookie('access_token', path: '/auth/login')
+    
     response.content_type = 'application/json'
     response.write({ success: true }.to_json)
-  end
+  end   
 
   def guest(request, response)
     # Gestione della route POST /guest

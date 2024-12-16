@@ -1,3 +1,4 @@
+
 export function configureAvatar(success) {
     // Ottieni gli elementi
     const avatarContainer = document.querySelector('.avatar-container');
@@ -40,30 +41,32 @@ export function configureAvatar(success) {
 }
 
 export function revokeToken() {
-    // Esegui la richiesta di revoca del token al server
-    fetch('/logout', {  // Supponiamo che '/logout' sia l'endpoint per revocare il token
+    fetch('/auth/logout', {
         method: 'POST',
-        credentials: 'same-origin', // Invia i cookie di sessione se necessari
+        credentials: 'include' // Include i cookie nella richiesta
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             localStorage.removeItem('authenticated');
-            const authButtonsContainer = document.getElementById('authButtonsContainer');
-            authButtonsContainer.classList.remove('hidden');
-            setTimeout(() => {
-                const container = document.getElementById('newButtonsContainer');
-                container.classList.remove('show-new-buttons');
-                container.classList.add('hidden');
-            }, 0);
-            configureAvatar(false);
+            renderUnauthenticatedPage();
         } else {
-            alert('Errore nella revoca del token');
+            console.error('Errore durante il logout:', data.error);
         }
     })
     .catch(error => {
-        console.error('Errore nella richiesta di revoca del token:', error);
+        console.error('Errore di rete durante il logout:', error);
     });
+}
+
+function renderUnauthenticatedPage() {
+    // Mostra i pulsanti di login
+    document.getElementById('authButtonsContainer').classList.remove('hidden');
+    console.log("Logout updating UI");
+    // Nasconde i pulsanti del gioco
+    const container = document.getElementById('newButtonsContainer');
+    container.classList.add('hidden');
+    container.classList.remove('show-new-buttons');
 }
 
 document.getElementById('logout').addEventListener('click', revokeToken);

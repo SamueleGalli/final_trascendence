@@ -1,10 +1,10 @@
 import { configureAvatar } from './authenticated.js';
 
-let success = localStorage.getItem('authenticated') === 'true'; // Recupera lo stato di autenticazione dal localStorage
+export let success = localStorage.getItem('authenticated') === 'true'; // Recupera lo stato di autenticazione dal localStorage
 
 function performLogin() {
-    if (success) {
-        console.log("Gia autenticato");
+    if (localStorage.getItem('authenticated') === 'true') {
+        console.log("User already in");
         renderAuthenticatedPage();
         return;
     }
@@ -13,14 +13,16 @@ function performLogin() {
         .then(response => response.json())
         .then(data => {
             const popup = window.open(data.auth_url, 'Login', 'width=600,height=400');
-
             window.addEventListener('message', function(event) {
-                console.log("Messaggio ricevuto: " + event.data.authenticated);
                 if (event.data.authenticated) {
+                    console.log("User logged in");
                     success = true;
                     localStorage.setItem('authenticated', 'true'); 
                     popup.close(); 
                     renderAuthenticatedPage(); 
+                }
+                else {
+                    console.log("User not logged in");
                 }
             });
         })
@@ -28,7 +30,6 @@ function performLogin() {
             console.error("Errore di rete:", error);
         });
 }
-
 
 // Funzione per aggiornare la UI dopo l'autenticazione
 function renderAuthenticatedPage() {
