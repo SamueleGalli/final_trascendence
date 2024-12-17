@@ -15,41 +15,58 @@ module AuthMethods
   end
 
   def revoke_token(access_token)
-    uri = URI.parse('https://oauth2.provider.com/revoke') # URL dell'endpoint di revoca del token
+    uri = URI.parse('https://api.42.fr/oauth2/revoke') # URL dell'endpoint di revoca del token
     request = Net::HTTP::Post.new(uri)
     request.set_form_data({ 'token' => access_token })
+  
     begin
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
         http.request(request)
-      end  
+      end
       if response.code == '200'
         return { success: true }
       else
-        return { success: false, error: "Revoca fallita con codice #{response.code}: #{response.body}" }
+        return { success: false, error: "Errore nella revoca del token: #{response.code} #{response.body}" }
       end
     rescue => e
       return { success: false, error: "Errore durante la revoca del token: #{e.message}" }
     end
-  end   
+  end  
 
   def logout(request, session_manager, response)
-    access_token = request.session[:access_token]  # Retrieve the token from the session
-    if access_token
+    access_token = request.session[:access_token]  # Recupera il token dalla sessione
+    
+    if access_token.nil?
+      puts "Nessun token trovato nella sessione."
+    else
+      puts "token da eliminare = #{access_token}"
+      
+      # Passa il token effettivo (access_token.token) alla funzione revoke_token
       revoke_response = revoke_token(access_token)
-      unless revoke_response[:success]
+      
+      if revoke_response[:success]
+        puts "Token revocato con successo."
+      else
         puts "Errore durante la revoca del token: #{revoke_response[:error]}"
       end
     end
     
-    # Clear the session
+    # Dopo la revoca, assicurati che il token non sia più disponibile
+    if access_token.nil?
+      puts "Token già revocato o non presente."
+    else
+      puts "token eliminato?? = #{access_token}"
+    end
+    
+    # Pulizia della sessione
     session_manager.clear(request)
-    
-    # Delete cookies (if necessary)
+  
+    # Eliminazione dei cookie (se necessario)
     response.delete_cookie('access_token', path: '/auth/login')
-    
+  
     response.content_type = 'application/json'
     response.write({ success: true }.to_json)
-  end   
+  end
 
   def guest(request, response)
     # Gestione della route POST /guest
@@ -79,6 +96,7 @@ module AuthMethods
     end
     # Ottieni il token
     token = client.get_token(code)
+    puts "token creato = #{token.token}"
     session_manager.store_access_token(request, token)
 
     # Recupera i dati dell'utente

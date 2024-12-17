@@ -1,4 +1,14 @@
-1)check_authentication per qualche motivo e true quando sloggi e ti fa riloggare subito possibile causa "https://oauth2.provider.com/revoke"
+1)token salvato non viene revokato
+log passaggi:
+token creato =
+0d4a5456975ead73376c41f2610c57765339e143d09a771557b476c540718d4d
+token da eliminare =
+0d4a5456975ead73376c41f2610c57765339e143d09a771557b476c540718d4d
+Errore durante la revoca del token: Errore durante la revoca del token: Failed to open TCP connection to api.42.fr:443 (getaddrinfo: Name or service not known)
+token eliminato?? = se vedo e lo stesso token di sopra quindi non lo leva
+0d4a5456975ead73376c41f2610c57765339e143d09a771557b476c540718d4d
+token creato =
+0d4a5456975ead73376c41f2610c57765339e143d09a771557b476c540718d4d
 2)docker da sistemare
 3)sistemare fluidita avatar e pagina
 4)testa comandi in fase di autenticazione (es login,ospite)
