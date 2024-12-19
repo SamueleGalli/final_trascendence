@@ -2,15 +2,14 @@ require 'rack'
 require 'json'
 require 'oauth2'
 require_relative 'Oauth'
-require_relative 'manager'
 require_relative 'logic'
+require_relative 'other_logic'
 
 class App
   include AuthMethods  # Include i metodi di autenticazione
-
-  def initialize(client, session_manager, logger)
+  include Other_logic
+  def initialize(client, logger)
     @client = client
-    @session_manager = session_manager
     @logger = logger
   end
 
@@ -27,10 +26,10 @@ class App
       login(request, response, @client)
 
     when '/auth/logout'
-      logout(request, @session_manager, response)
+      logout(request, response)
 
     when '/callback'
-      callback(request, response, @client, @session_manager)
+      callback(request, response, @client)
     
     when '/guest'
       guest(request, response)

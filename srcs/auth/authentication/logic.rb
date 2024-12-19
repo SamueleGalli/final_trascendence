@@ -1,6 +1,8 @@
 require 'net/http'
 require 'uri'
 require 'json'
+require 'cgi'
+require_relative 'other_logic'
 
 module AuthMethods
   def login(request, response, client)
@@ -14,80 +16,16 @@ module AuthMethods
     end
   end
 
-  def revoke_token(access_token)
-    uri = URI.parse('https://api.42.fr/oauth2/revoke') # URL dell'endpoint di revoca del token
-    request = Net::HTTP::Post.new(uri)
-    request.set_form_data({ 'token' => access_token })
-  
-    begin
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
-        http.request(request)
-      end
-      if response.code == '200'
-        return { success: true }
-      else
-        return { success: false, error: "Errore nella revoca del token: #{response.code} #{response.body}" }
-      end
-    rescue => e
-      return { success: false, error: "Errore durante la revoca del token: #{e.message}" }
-    end
-  end  
-
-  def logout(request, session_manager, response)
-    access_token = request.session[:access_token]  # Recupera il token dalla sessione
-    
-    if access_token.nil?
-      puts "Nessun token trovato nella sessione."
-    else
-      puts "token da eliminare = #{access_token}"
-      
-      # Passa il token effettivo (access_token.token) alla funzione revoke_token
-      revoke_response = revoke_token(access_token)
-      
-      if revoke_response[:success]
-        puts "Token revocato con successo."
-      else
-        puts "Errore durante la revoca del token: #{revoke_response[:error]}"
-      end
-    end
-    
-    # Dopo la revoca, assicurati che il token non sia più disponibile
-    if access_token.nil?
-      puts "Token già revocato o non presente."
-    else
-      puts "token eliminato?? = #{access_token}"
-    end
-    
-    # Pulizia della sessione
-    session_manager.clear(request)
-  
-    # Eliminazione dei cookie (se necessario)
-    response.delete_cookie('access_token', path: '/auth/login')
-  
+  def logout(request, response)
+    # Rimuovi il cookie contenente il token
+    response.delete_cookie('access_token', path: '/')
+    request.session.delete(:access_token)  # Il token non c'è più
+    # Rispondi
     response.content_type = 'application/json'
-    response.write({ success: true }.to_json)
+    response.write({ success: true, message: 'Logout effettuato con successo.' }.to_json)
   end
 
-  def guest(request, response)
-    # Gestione della route POST /guest
-    if request.request_method == 'POST'
-      guest_name = request.params['guest_name']
-
-      if guest_name.nil? || guest_name.strip.empty?
-        response.status = 400
-        response.write({ success: false, error: "Guest name is required" }.to_json)
-      else
-        # Salva il nome del guest nella sessione
-        request.session[:guest_name] = guest_name
-        response.write({ success: true, guest_name: guest_name }.to_json)
-      end
-    else
-      response.status = 404
-      response.write({ success: false, error: "Not Found" }.to_json)
-    end
-  end
-
-  def callback(request, response, client, session_manager)
+  def callback(request, response, client)
     code = request.params['code']
     if code.nil? || code.empty?
       response.content_type = 'application/json'
@@ -97,44 +35,25 @@ module AuthMethods
     # Ottieni il token
     token = client.get_token(code)
     puts "token creato = #{token.token}"
-    session_manager.store_access_token(request, token)
-
+    response.set_cookie('access_token', {
+      value: token.token,
+      path: '/',
+      max_age: 3600,
+      secure: true,    # Solo su HTTPS
+      httponly: true   # Non accessibile tramite JavaScript
+    })
+    
+    request.session[:authenticated] = true
     # Recupera i dati dell'utente
     user_data = get_user_data_from_oauth_provider(token)
 
-    name = user_data['login']
-    email = user_data['email']
-    image = user_data['avatar_url']
+    name = CGI.escapeHTML(user_data['login'])  # Escapare il nome
+    email = CGI.escapeHTML(user_data['email'])  # Escapare l'email
+    image = CGI.escapeHTML(user_data['avatar_url'])  # Escapare l'URL dell'immagine
 
     html_content = File.read('../login_module/auth_page.html')
 
     response.content_type = 'text/html'
     response.write(html_content)
-  end
-
-  def get_user_data_from_oauth_provider(token)
-    uri = URI("https://api.github.com/user")
-    request = Net::HTTP::Get.new(uri)
-    request["Authorization"] = "Bearer #{token}"
-
-    # Fai la richiesta
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-      http.request(request)
-    end
-
-    # Elabora la risposta JSON
-    user_data = JSON.parse(response.body)
-
-    {
-      'name' => user_data['name'],
-      'email' => user_data['email'],
-      'avatar_url' => user_data['avatar_url']
-    }
-  end
-
-  def not_found(response)
-    response.status = 404
-    response.content_type = 'application/json'
-    response.write({ success: false, error: "Not Found" }.to_json)
   end
 end

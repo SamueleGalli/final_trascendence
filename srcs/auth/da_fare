@@ -1,4 +1,5 @@
-1)token salvato non viene revokato
+1)rendere il sito https.ora non mi trova .env
+2)token salvato non viene revokato
 log passaggi:
 token creato =
 0d4a5456975ead73376c41f2610c57765339e143d09a771557b476c540718d4d
@@ -9,9 +10,8 @@ token eliminato?? = se vedo e lo stesso token di sopra quindi non lo leva
 0d4a5456975ead73376c41f2610c57765339e143d09a771557b476c540718d4d
 token creato =
 0d4a5456975ead73376c41f2610c57765339e143d09a771557b476c540718d4d
-2)docker da sistemare
-3)sistemare fluidita avatar e pagina
-4)testa comandi in fase di autenticazione (es login,ospite)
+3)docker da sistemare
+4)sistemare fluidita avatar e pagina
 5)usare il database per i dati
 6)Be carefull, the management of duplicate usernames/emails is at your
 discretion. You must provide a solution that makes sense.
