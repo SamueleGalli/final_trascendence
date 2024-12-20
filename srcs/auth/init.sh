@@ -1,31 +1,42 @@
 #!/bin/bash
 
-# Pulire la console
 clear
 
-# Installa le gemme necessarie
-sudo gem install "json" "oauth2" "dotenv" "logger" "rack" "puma"
+echo "installing gems..."
+gems=("json" "oauth2" "dotenv" "logger" "rack" "puma" "openssl")
 
-# Creare directory per certificato SSL temporaneo
-mkdir -p https  # Crea la directory 'https' se non esiste
+for gem in "${gems[@]}"
+do
+  if gem list "$gem" -i > /dev/null 2>&1; then
+    echo "$gem is already installed."
+  else
+    echo "$gem is not installed. Installing..."
+    sudo gem install "$gem"
+  fi
+done
 
-# Percorsi per il certificato e la chiave
-CERT_FILE="https/server.crt"
-KEY_FILE="https/server.key"
+clear
 
-# Genera certificato SSL autofirmato senza output interattivo
-openssl req -newkey rsa:2048 -nodes -keyout "$KEY_FILE" -x509 -out "$CERT_FILE" -days 1 \
-    -subj "/C=US/ST=California/L=LosAngeles/O=MyCompany/OU=IT/CN=localhost/emailAddress=youremail@example.com" \
-    > /dev/null 2>&1
+# Controlla lo stato di Apache2
+echo "Controllo stato apache2..."
+sudo systemctl status apache2
 
-# Avvia il server Puma con il certificato temporaneo
-echo "Avvio il server con il certificato SSL temporaneo..."
-RACK_ENV=production rackup authentication/config.ru
+# Avvia Apache2
+echo "Avvio apache2..."
+sudo systemctl start apache2
 
-# Pulire i file del certificato una volta che il server è stato avviato
-# Nota: Il server continuerà a funzionare anche dopo che i file sono stati eliminati
-echo "Eliminazione dei certificati temporanei..."
-rm -rf https  # Elimina la directory https che contiene il certificato e la chiave
+# Avvia Puma in background e prendi il suo PID
+echo "Avvio Puma..."
+RACK_ENV=production rackup authentication/config.ru &
 
-# Fine script
-echo "Certificato temporaneo eliminato. Server in esecuzione su https://localhost:9292"
+# Salva il PID di Puma
+PUMA_PID=$!
+
+# Attendi che Puma si spenga e poi ferma Apache
+wait $PUMA_PID
+
+# Una volta che Puma si è fermato, ferma Apache
+echo "Puma è stato fermato, fermo Apache..."
+sudo systemctl stop apache2
+
+echo "Apache fermato."

@@ -1,6 +1,6 @@
 require 'oauth2'
 require 'dotenv'
-Dotenv.load
+Dotenv.load('./authentication/.env')
 
 class OAuthClient
   def initialize
@@ -9,9 +9,7 @@ class OAuthClient
     @client_id = ENV['CLIENT_ID']
     @client_secret = ENV['CLIENT_SECRET']
     @redirect_uri = ENV['REDIRECT_URI']
-    puts "CLIENT_ID: #{@client_id}, CLIENT_SECRET: #{@client_secret}, REDIRECT_URI: #{@redirect_uri}"
     raise "CLIENT_ID, CLIENT_SECRET, o REDIRECT_URI non sono configurati nel file .env" if @client_id.nil? || @client_secret.nil? || @redirect_uri.nil?
-    puts "variable loaded"
     @client = OAuth2::Client.new(
       @client_id,
       @client_secret,
