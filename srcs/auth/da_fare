@@ -1,3 +1,5 @@
+token serve salvarlo?
+
 1)login non fuziona errre di sito intra e uri
 2)rendere il sito https. valutare che posso usare rackup perche non e a un estenzione .rb.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect)
 3)docker da sistemare
