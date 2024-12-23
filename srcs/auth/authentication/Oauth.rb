@@ -1,6 +1,6 @@
 require 'oauth2'
 require 'dotenv'
-Dotenv.load('./authentication/.env')
+Dotenv.load
 
 class OAuthClient
   def initialize

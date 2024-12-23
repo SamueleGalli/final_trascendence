@@ -27,23 +27,22 @@ module Other_logic
   end
 
   def get_user_data_from_oauth_provider(token)
-      uri = URI("https://api.github.com/user")
-      request = Net::HTTP::Get.new(uri)
-      request["Authorization"] = "Bearer #{token}"
+    uri = URI("https://api.github.com/user")
+    request = Net::HTTP::Get.new(uri)
+    request["Authorization"] = "Bearer #{token}"
   
-      # Fai la richiesta
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-        http.request(request)
-      end
-  
-      # Elabora la risposta JSON
-      user_data = JSON.parse(response.body)
-  
-      {
-        'name' => CGI.escapeHTML(user_data['name']),
-        'email' => CGI.escapeHTML(user_data['email']),
-        'avatar_url' => CGI.escapeHTML(user_data['avatar_url'])
-      }
+    # Fai la richiesta
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+      http.request(request)
     end
-    
+  
+    # Elabora la risposta JSON
+    user_data = JSON.parse(response.body)
+  
+    {
+      'name' => user_data['name'],
+      'email' => user_data['email'],
+      'avatar_url' => user_data['avatar_url']  # Corrected to use the correct key
+    }
+  end
 end

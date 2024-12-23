@@ -32,9 +32,11 @@ module AuthMethods
       response.write({ success: false, error: "No authorization code received" }.to_json)
       return
     end
+  
     # Ottieni il token
     token = client.get_token(code)
     puts "token creato = #{token.token}"
+    
     response.set_cookie('access_token', {
       value: token.token,
       path: '/',
@@ -44,16 +46,18 @@ module AuthMethods
     })
     
     request.session[:authenticated] = true
+  
     # Recupera i dati dell'utente
     user_data = get_user_data_from_oauth_provider(token)
-
-    name = CGI.escapeHTML(user_data['login'])  # Escapare il nome
-    email = CGI.escapeHTML(user_data['email'])  # Escapare l'email
-    image = CGI.escapeHTML(user_data['avatar_url'])  # Escapare l'URL dell'immagine
-
+  
+    # Handle possible nil values before escaping HTML
+    name = CGI.escapeHTML(user_data['name'] || '')  # Use empty string if nil
+    email = CGI.escapeHTML(user_data['email'] || '')  # Use empty string if nil
+    image = CGI.escapeHTML(user_data['avatar_url'] || '')  # Use empty string if nil
+  
     html_content = File.read('../login_module/auth_page.html')
-
+  
     response.content_type = 'text/html'
     response.write(html_content)
-  end
+  end  
 end
