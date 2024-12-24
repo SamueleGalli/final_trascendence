@@ -1,9 +1,12 @@
-import { mainPageCanvas, mainPageCtx, mainPageEffect } from './MainPageEffect.js';
 import { MainPageParticle } from './MainPageParticle.js';
-export class MainPageBall { // Rinominato Ball a MainPageBall
-    constructor() {
-        this.x = mainPageCanvas.width / 2;
-        this.y = mainPageCanvas.height / 2;
+
+export class MainPageBall {
+    constructor(mainPageCanvas, mainPageCtx, mainPageEffect) {
+        this.mainPageCanvas = mainPageCanvas;
+        this.mainPageCtx = mainPageCtx;
+        this.mainPageEffect = mainPageEffect;
+        this.x = Math.random() * (mainPageCanvas.width - 2 );
+        this.y = Math.random() * (mainPageCanvas.height - 2);
         this.radius = mainPageCanvas.width * 0.01;
         this.speedX = 3;
         this.speedY = 3;
@@ -17,12 +20,12 @@ export class MainPageBall { // Rinominato Ball a MainPageBall
     update() {
         this.x += this.speedX;
         this.y += this.speedY;
-    
+
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > this.trailLength) this.trail.shift();
-    
-        if (this.y + this.radius > mainPageCanvas.height - 10) {
-            this.y = mainPageCanvas.height - 10 - this.radius;
+
+        if (this.y + this.radius > this.mainPageCanvas.height - 10) {
+            this.y = this.mainPageCanvas.height - 10 - this.radius;
             this.speedY *= -1;
             this.addParticles(this.x, this.y, 30);
         } else if (this.y - this.radius < 10) {
@@ -30,9 +33,9 @@ export class MainPageBall { // Rinominato Ball a MainPageBall
             this.speedY *= -1;
             this.addParticles(this.x, this.y, 30);
         }
-    
-        if (this.x + this.radius > mainPageCanvas.width - 10) {
-            this.x = mainPageCanvas.width - 10 - this.radius;
+
+        if (this.x + this.radius > this.mainPageCanvas.width - 10) {
+            this.x = this.mainPageCanvas.width - 10 - this.radius;
             this.speedX *= -1;
             this.addParticles(this.x, this.y, 30);
         } else if (this.x - this.radius < 10) {
@@ -40,7 +43,7 @@ export class MainPageBall { // Rinominato Ball a MainPageBall
             this.speedX *= -1;
             this.addParticles(this.x, this.y, 30);
         }
-    }       
+    }
 
     addParticles(x, y, count) {
         for (let i = 0; i < count; i++) {
@@ -49,7 +52,7 @@ export class MainPageBall { // Rinominato Ball a MainPageBall
             particle.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
             particle.spreadX = (Math.random() - 0.5) * 10;
             particle.spreadY = (Math.random() - 0.5) * 10;
-            mainPageEffect.particles.push(particle);
+            this.mainPageEffect.particles.push(particle);
         }
     }
 
@@ -57,35 +60,35 @@ export class MainPageBall { // Rinominato Ball a MainPageBall
         for (let i = 0; i < this.trail.length; i++) {
             const pos = this.trail[i];
             const alpha = (i + 1) / this.trail.length * 0.5;
-            mainPageCtx.globalAlpha = alpha;
-    
-            mainPageCtx.fillStyle = "#014C4A"; 
-            mainPageCtx.shadowColor = "#014C4A";
-            mainPageCtx.shadowBlur = 20;
-    
-            mainPageCtx.beginPath();
-            mainPageCtx.arc(pos.x, pos.y, this.radius, 0, Math.PI * 2);
-            mainPageCtx.fill();
+            this.mainPageCtx.globalAlpha = alpha;
+
+            this.mainPageCtx.fillStyle = "#014C4A";
+            this.mainPageCtx.shadowColor = "#014C4A";
+            this.mainPageCtx.shadowBlur = 20;
+
+            this.mainPageCtx.beginPath();
+            this.mainPageCtx.arc(pos.x, pos.y, this.radius, 0, Math.PI * 2);
+            this.mainPageCtx.fill();
         }
-        mainPageCtx.globalAlpha = 1;
-        
-        mainPageCtx.fillStyle = 'white';
-        mainPageCtx.shadowColor = 'white';
-        mainPageCtx.shadowBlur = 20;
-        mainPageCtx.beginPath();
-        mainPageCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        mainPageCtx.fill();
-        mainPageCtx.closePath();
+        this.mainPageCtx.globalAlpha = 1;
+
+        this.mainPageCtx.fillStyle = 'white';
+        this.mainPageCtx.shadowColor = 'white';
+        this.mainPageCtx.shadowBlur = 20;
+        this.mainPageCtx.beginPath();
+        this.mainPageCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        this.mainPageCtx.fill();
+        this.mainPageCtx.closePath();
     }
 
     resize() {
-        this.radius = mainPageCanvas.width * 0.01;
-        this.trailLength = Math.max(8, Math.floor(mainPageCanvas.width * 0.01));
+        this.radius = this.mainPageCanvas.width * 0.01;
+        this.trailLength = Math.max(8, Math.floor(this.mainPageCanvas.width * 0.01));
     }
 
     reset() {
-        this.x = mainPageCanvas.width / 2;
-        this.y = mainPageCanvas.height / 2;
+        this.x = this.mainPageCanvas.width / 2;
+        this.y = this.mainPageCanvas.height / 2;
         this.speedX = (Math.random() > 0.5 ? 1 : -1) * 3;
         this.speedY = (Math.random() > 0.5 ? 1 : -1) * 3;
     }

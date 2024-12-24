@@ -12,8 +12,13 @@ re: prep_dirs
 	@docker-compose -f ./srcs/docker-compose.yml up --build
 
 prep_dirs:
-	@# Create all directories for databases and services
-	@# @mkdir -p /path/here
+	@mkdir -p ./srcs/logger
+	@mkdir -p ./pages
+	@mkdir -p ./srcs/common_tools/tools
+	@mkdir -p ./srcs/receiver
+	@mkdir -p ./srcs/request_manager
+	@mkdir -p ./srcs/auth
+
 
 clean:
 	make -C srcs/common_tools/ clean

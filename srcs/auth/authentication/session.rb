@@ -6,8 +6,9 @@ require_relative 'logic'
 require_relative 'other_logic'
 
 class App
-  include AuthMethods  # Include i metodi di autenticazione
+  include AuthMethods
   include Other_logic
+
   def initialize(client, logger)
     @client = client
     @logger = logger

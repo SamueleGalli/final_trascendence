@@ -1,9 +1,10 @@
-import { configureAvatar } from './authenticated.js';
+import { navigate } from "../game_engine/js/main.js";
 
 let guestName = null; // Nome temporaneo dell'ospite
 
 // Pulsante per accedere come ospite
-document.getElementById('guestButton').addEventListener('click', function () {
+export function guest_login()
+{
     const name = prompt("Enter your guest name:").trim();
 
     if (!name) {
@@ -39,17 +40,10 @@ document.getElementById('guestButton').addEventListener('click', function () {
         console.error('Error caught in .catch():', error); // Aggiungi questo per diagnosticare l'errore
         alert('Network error. Please try again later.');
     });
-});
+}
 
 // Funzione per aggiornare l'interfaccia utente in base al nome dell'ospite
 function updateUIForGuest() {
-    // Nascondi i pulsanti di autenticazione
-    document.getElementById('authButtonsContainer').classList.add('hidden');
-    
-    // Mostra i pulsanti del gioco
-    const container = document.getElementById('newButtonsContainer');
-    container.classList.remove('hidden');
-    container.classList.add('show-new-buttons');
-    configureAvatar(false);
+    navigate("/modes", "Modalità di gioco");
     console.log("Guest name:", guestName);
 }

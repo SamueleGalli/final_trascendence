@@ -1,12 +1,12 @@
-import { canvas, ctx } from './globals.js';
-
 export class Star {
-    constructor() {
+    constructor(canvas, ctx) {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 1.5 + 0.5; 
         this.twinkleSpeed = Math.random() * 0.02 + 0.02;
         this.alpha = Math.random();
+        this.canvas = canvas;
+        this.ctx = ctx;
     }
     
     update() {
@@ -16,10 +16,11 @@ export class Star {
             this.twinkleSpeed *= -1; 
         }
     }
+
     render() {
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`; 
-        ctx.beginPath(); // Inizia un nuovo percorso
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
+        this.ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`; 
+        this.ctx.beginPath(); // Start a new path
+        this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        this.ctx.fill();
     }
 }

@@ -1,18 +1,22 @@
-require_relative 'session'
-require_relative 'Oauth'
-require_relative 'logic'
-require 'rack/session/cookie'
+require 'rack'
 require 'puma'
-require 'openssl'
+require 'securerandom'
+require 'logger'
+require 'rack/session/cookie'
+require 'socket'
+require 'timeout'
+require_relative 'Oauth'
+require_relative 'session'
 
 $stdout.sync = true
 
-# Crea l'app con i giusti argomenti
 client = OAuthClient.new
 logger = Logger.new(STDOUT)
 logger.level = Logger::INFO
 
 use Rack::Session::Cookie, secret: SecureRandom.hex(64)
+use Rack::Static, urls: ["/game_engine/authentication", "/game_engine/js", "/game_engine/images", "/game_engine/css"], root: File.expand_path('public', __dir__)
 
-use Rack::Static, urls: ["/favicon.ico", "/game_engine/css", "/game_engine/js", "/game_engine/images"], root: File.join(File.dirname(__FILE__), '../public')
-run App.new(client, logger)
+app = App.new(client, logger)
+
+run app

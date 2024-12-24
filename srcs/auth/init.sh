@@ -3,7 +3,7 @@
 clear
 
 echo "Installing gems..."
-gems=("json" "oauth2" "dotenv" "logger" "rack" "puma" "openssl")
+gems=("json" "oauth2" "dotenv" "logger" "rack" "puma" "rack-session" "rack" "pg")
 
 for gem in "${gems[@]}"
 do
@@ -11,7 +11,7 @@ do
     echo "$gem is already installed."
   else
     echo "$gem is not installed. Installing..."
-    sudo gem install "$gem"
+    gem install "$gem"
   fi
 done
 

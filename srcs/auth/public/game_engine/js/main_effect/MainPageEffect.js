@@ -5,15 +5,26 @@ import { MainPageMovingStar } from './MainPageMovingStar.js';
 export const mainPageCanvas = document.getElementById('main_pageCanvas');
 export const mainPageCtx = mainPageCanvas.getContext('2d');
 
-export class MainPageEffect { // Rinominato MainPageEffect a MainPageEffect
+export class MainPageEffect {
     constructor() {
-        this.mainPageCanvas = mainPageCanvas;
-        this.mainPageCtx = mainPageCtx;
+        this.mainPageCanvas = document.getElementById('main_pageCanvas');
+        if (!this.mainPageCanvas) {
+            console.error('Canvas not found');
+            return;
+        }
+        this.mainPageCtx = this.mainPageCanvas.getContext('2d');
+        if (!this.mainPageCtx) {
+            console.error('Canvas context not found');
+            return;
+        }
+
         this.mainPageCanvas.width = window.innerWidth;
         this.mainPageCanvas.height = window.innerHeight;
+
         this.particles = [];
+        this.maxParticles = 100;
         this.stars = [];
-        this.ball = new MainPageBall();
+        this.ball = new MainPageBall(this.mainPageCanvas, this.mainPageCtx, this);
         this.mouseX = 0;
         this.mouseY = 0;
         this.running = false;
@@ -42,8 +53,13 @@ export class MainPageEffect { // Rinominato MainPageEffect a MainPageEffect
         if (this.running) {
             this.update();
             this.render();
-            requestAnimationFrame(() => this.loop());
+            this.animationFrame = requestAnimationFrame(() => this.loop());
         }
+    }
+
+    clearResources() {
+        this.particles = [];
+        this.stars = [];
     }
 
     update() {
@@ -61,14 +77,17 @@ export class MainPageEffect { // Rinominato MainPageEffect a MainPageEffect
     }
 
     addParticles(x, y, count) {
+        if (this.particles.length > 1000) return;
         for (let i = 0; i < count; i++) {
             const particle = new MainPageParticle(x, y);
-            particle.speedX = (Math.random() - 0.5) * 6;
-            particle.speedY = (Math.random() - 0.5) * 6;
-            particle.hue = Math.random() * 360;
-            mainPageEffect.particles.push(particle);
+            particle.size = Math.random() * 2 + 2;
+            particle.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            particle.spreadX = (Math.random() - 0.5) * 5;
+            particle.spreadY = (Math.random() - 0.5) * 5;
+            this.particles.push(particle);
         }
     }
+    
 
     updateParticles() {
         for (let i = this.particles.length - 1; i >= 0; i--) {
@@ -83,24 +102,22 @@ export class MainPageEffect { // Rinominato MainPageEffect a MainPageEffect
     }
 
     renderWalls() {
-        this.wallThickness = 15; // Imposta lo spessore del muro
-    
+        this.wallThickness = 15;
+
         this.mainPageCtx.fillStyle = "#014C4A";
         this.mainPageCtx.shadowColor = "#014C4A";
         this.mainPageCtx.shadowBlur = 20;
-    
-        // Muri superiori e inferiori con ombra
-        this.mainPageCtx.fillRect(10, 0, mainPageCanvas.width - 20, this.wallThickness); // muro superiore
-        this.mainPageCtx.fillRect(10, mainPageCanvas.height - this.wallThickness, mainPageCanvas.width - 20, this.wallThickness); // muro inferiore
-        
-        // Muri laterali con ombra
-        this.mainPageCtx.fillRect(0, 0, this.wallThickness, mainPageCanvas.height); // muro sinistro
-        this.mainPageCtx.fillRect(mainPageCanvas.width - this.wallThickness, 0, this.wallThickness, mainPageCanvas.height); // muro destro
-    }    
+
+        this.mainPageCtx.fillRect(10, 0, mainPageCanvas.width - 20, this.wallThickness);
+        this.mainPageCtx.fillRect(10, mainPageCanvas.height - this.wallThickness, mainPageCanvas.width - 20, this.wallThickness);
+
+        this.mainPageCtx.fillRect(0, 0, this.wallThickness, mainPageCanvas.height);
+        this.mainPageCtx.fillRect(mainPageCanvas.width - this.wallThickness, 0, this.wallThickness, mainPageCanvas.height);
+    }
 
     createStarsBackground(starCount) {
         for (let i = 0; i < starCount; i++) {
-            this.stars.push(new MainPageMovingStar());
+            this.stars.push(new MainPageMovingStar(this.mainPageCanvas, this.mainPageCtx));
         }
     }
 

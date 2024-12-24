@@ -1,15 +1,20 @@
 require 'json'
+require 'pg'
+#load ((File.file? '/var/www/common/BetterPG.rb') ? '/var/www/common/BetterPG.rb' : '../../common_tools/tools/BetterPG.rb')
+
+#login = BetterPG::SimplePG.new "users", ["name TEXT", "email TEXT", "image TEXT"]
+
 module Other_logic
   def guest(request, response)
     # Gestione della route POST /guest
     if request.request_method == 'POST'
       guest_name = CGI.escapeHTML(request.params['guest_name'])
-      response.write({ success: true, guest_name: guest_name }.to_json)
-      
+     # login.addValues ["'" + guest_name + "'", "'" + NULL + "'" , "'" + NULL + "'"], ["name", "email", "image"] 
       if guest_name.nil? || guest_name.strip.empty?
         response.status = 400
         response.write({ success: false, error: "Guest name is required" }.to_json)
       else
+        response.write({ success: true, guest_name: guest_name }.to_json)
         # Salva il nome del guest nella sessione
         request.session[:guest_name] = guest_name
         response.write({ success: true, guest_name: guest_name }.to_json)
@@ -39,10 +44,9 @@ module Other_logic
     # Elabora la risposta JSON
     user_data = JSON.parse(response.body)
   
-    {
-      'name' => user_data['name'],
-      'email' => user_data['email'],
-      'avatar_url' => user_data['avatar_url']  # Corrected to use the correct key
-    }
+    name = user_data['name']
+    email = user_data['email']
+    image = user_data['avatar_url']  
+    #login.addValues ["'" + name + "'", "'" + email + "'" , "'" + image + "'"], ["name", "email", "image"] 
   end
 end

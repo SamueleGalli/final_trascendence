@@ -1,8 +1,7 @@
-import { configureAvatar } from './authenticated.js';
-
 export let success = localStorage.getItem('authenticated') === 'true'; // Recupera lo stato di autenticazione dal localStorage
+import { navigate } from "../game_engine/js/main.js";
 
-function performLogin() {
+export function performLogin() {
     if (localStorage.getItem('authenticated') === 'true') {
         console.log("User already in");
         renderAuthenticatedPage();
@@ -31,27 +30,10 @@ function performLogin() {
         });
 }
 
-// Funzione per aggiornare la UI dopo l'autenticazione
-function renderAuthenticatedPage() {
-    // Nasconde il contenitore con i pulsanti di login
-    const authButtonsContainer = document.getElementById('authButtonsContainer');
-    authButtonsContainer.classList.add('hidden');
-    
-    // Attendi un breve periodo per far sì che il browser elabori il cambiamento, quindi mostra i nuovi pulsanti
-    setTimeout(() => {
-        // Mostra il contenitore con i nuovi pulsanti di gioco
-        const container = document.getElementById('newButtonsContainer');
-        container.classList.remove('hidden');
-        container.classList.add('show-new-buttons');
-        configureAvatar(true);
-    }, 300);  // Imposta il ritardo a 100 ms (puoi aumentarlo se necessario)
-}
-
-
 // Funzione per controllare lo stato di autenticazione
 function checkAuthentication() {
     if (success)
-        renderAuthenticatedPage(); // Mostra la pagina autenticata se il token esiste
+        navigate("/modes", "Modalità di gioco");
 }
 
 // Esegui il controllo dello stato al caricamento della pagina
@@ -59,4 +41,3 @@ window.onload = () => {
     checkAuthentication(); // Verifica lo stato di autenticazione
 };
 
-document.getElementById('loginButton').addEventListener('click', performLogin);

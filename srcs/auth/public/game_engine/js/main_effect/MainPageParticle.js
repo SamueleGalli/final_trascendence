@@ -1,4 +1,4 @@
-export class MainPageParticle { // Rinominato Particle a MainPageParticle
+export class MainPageParticle {
     constructor(x, y) {
         this.x = x;
         this.y = y;

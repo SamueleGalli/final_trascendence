@@ -2,9 +2,8 @@ posso?
 1)token serve salvarlo?
 2)valutare che posso usare rackup perche non e a un estenzione .rb?
 ---------------------------------------------------------
-1)docker da sistemare
-3)usare il database per i dati
-4)Be carefull, the management of duplicate usernames/emails is at your discretion. You must provide a solution that makes sense.
-5)implementare la parte di rostik al codice
+1)il server non trova i contenuti del codice di rostik
+2)Be carefull, the management of duplicate usernames/emails is at your discretion. You must provide a solution that makes sense.
+1)docker avvia server ma server non parte e passare i dati a javascript
 ---------------------------------------------------------
 (rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
