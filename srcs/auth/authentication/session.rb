@@ -31,9 +31,10 @@ class App
 
     when '/callback'
       callback(request, response, @client)
-    
+
     when '/guest'
       guest(request, response)
+
     else
       not_found(response)
     end
