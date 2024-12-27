@@ -1,5 +1,6 @@
-import { guest_login } from "../../authentication/guest_logic.js";
-import { performLogin } from "../game_engine/authentication/login_logic.js";
+import { guest_login } from "../../login/guest_logic.js";
+import { performLogin, success } from "../../login/login_logic.js";
+import { navigate } from "../main.js";
 export default function Login() {
     return `
         <h1 class="text">
@@ -34,7 +35,10 @@ export const addLoginPageHandlers = () => {
 
     if (loginButton && guestButton) {
         loginButton.addEventListener("click", () => {
-            performLogin();
+            if (success == true)
+                alert("user already logged in.\nTry guest");
+            else
+                performLogin();
         });
 
         guestButton.addEventListener("click", () => {

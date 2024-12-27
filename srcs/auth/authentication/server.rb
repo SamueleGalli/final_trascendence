@@ -3,8 +3,8 @@ require 'colorize'
 require_relative 'Oauth'
 require_relative 'session'
 
-# Creazione del logger
 logger = Logger.new(STDOUT)
+logger.level = Logger::ERROR
 
 # Creazione dell'oggetto WebApp con OAuth client e logger
 app = App.new(OAuthClient.new, logger)
@@ -26,33 +26,42 @@ server.mount_proc '/' do |req, res|
 end
 
 def log_error_details(req, status, body)
-    ip = req.peeraddr[3]
-    method = req.request_method
-    path = req.path
-    headers = req.header.to_s
-    body_content = body.join
+    # Log degli errori dettagliati solo per gli errori più gravi
+    if status >= 400
+        ip = req.peeraddr[3]
+        method = req.request_method
+        path = req.path
+        headers = req.header.to_s
+        body_content = body.join
 
-    error_message = "ERROR #{status} - #{method} #{path} from #{ip}\n"
-    error_message += "Request Headers: #{headers}\n"
-    error_message += "Response Body: #{body_content[0..500]}\n"
-    case status
-    when 404
-        logger.error(error_message.red)
-    when 500
-        logger.error(error_message.bold.red)
-    when 403
-        logger.error(error_message.yellow)
-    when 400
-        logger.error(error_message.light_red)
-    else
-        logger.error(error_message)
+        error_message = "ERROR #{status} - #{method} #{path} from #{ip}\n"
+        error_message += "Request Headers: #{headers}\n"
+        error_message += "Response Body: #{body_content[0..500]}\n"
+        
+        case status
+        when 404
+        logger.error(error_message.red)  # 404 in rosso
+        when 500
+        logger.error(error_message.bold.red)  # 500 in rosso e bold
+        when 403
+        logger.error(error_message.yellow)  # 403 in giallo
+        when 400
+        logger.error(error_message.light_red)  # 400 in rosso chiaro
+        else
+        logger.error(error_message)  # Errori generali
+        end
     end
 end
 
-# Montaggio dei file statici
-['game_engine/css', 'game_engine/js', 'game_engine/images', 'game_engine/login', 'favicon.ico'].each do |path|
-    server.mount "/#{path}", WEBrick::HTTPServlet::FileHandler, File.join(__dir__, "..", 'public', path)
-end  
+public_dir = File.expand_path("../../public", __FILE__)
+game_engine_dir = File.join(public_dir, "game_engine")
+
+server.mount "/game_engine/css", WEBrick::HTTPServlet::FileHandler, File.join(game_engine_dir, "css")
+server.mount "/game_engine/js", WEBrick::HTTPServlet::FileHandler, File.join(game_engine_dir, "js")
+server.mount "/game_engine/images", WEBrick::HTTPServlet::FileHandler, File.join(game_engine_dir, "images")
+server.mount "/game_engine/login", WEBrick::HTTPServlet::FileHandler, File.join(game_engine_dir, "login")
+
+server.mount "/favicon.ico", WEBrick::HTTPServlet::FileHandler, File.join(public_dir, "favicon.ico")
 
 # Gestione dell'arresto del server
 trap 'INT' do

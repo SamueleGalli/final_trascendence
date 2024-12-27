@@ -1,8 +1,3 @@
-posso?
-1)token serve salvarlo?
----------------------------------------------------------
-1)il server non trova i contenuti del codice di rostik
-2)docker avvia server ma server non parte e passare i dati a javascript
-3)se hai piu tab non puoi accedere piu volte ma solo 1.
+1)docker avvia server ma server non parte e passare i dati a javascript per postgres(attenzione verificare che i dati siano salvati)
 ---------------------------------------------------------
 (rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))

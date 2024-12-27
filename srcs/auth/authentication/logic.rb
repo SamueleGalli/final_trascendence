@@ -16,15 +16,6 @@ module AuthMethods
     end
   end
 
-  def logout(request, response)
-    # Rimuovi il cookie contenente il token
-    response.delete_cookie('access_token', path: '/')
-    request.session.delete(:access_token)  # Il token non c'è più
-    # Rispondi
-    response.content_type = 'application/json'
-    response.write({ success: true, message: 'Logout effettuato con successo.' }.to_json)
-  end
-
   def callback(request, response, client)
     code = request.params['code']
     if code.nil? || code.empty?
@@ -33,9 +24,7 @@ module AuthMethods
       return
     end
   
-    # Ottieni il token
     token = client.get_token(code)
-    puts "token creato = #{token.token}"
     
     response.set_cookie('access_token', {
       value: token.token,
@@ -47,17 +36,22 @@ module AuthMethods
     
     request.session[:authenticated] = true
   
-    # Recupera i dati dell'utente
-    user_data = get_user_data_from_oauth_provider(token)
+    user_data = get_user_data_from_oauth_provider(token.token)
   
-    # Handle possible nil values before escaping HTML
-    name = CGI.escapeHTML(user_data['name'] || '')  # Use empty string if nil
-    email = CGI.escapeHTML(user_data['email'] || '')  # Use empty string if nil
-    image = CGI.escapeHTML(user_data['avatar_url'] || '')  # Use empty string if nil
+    if user_data.nil? || user_data.empty?
+      response.content_type = 'application/json'
+      response.write({ success: false, error: "Failed to fetch user data" }.to_json)
+      return
+    end
+
+    name = CGI.escapeHTML(user_data['name'])
+    email = CGI.escapeHTML(user_data['email'])
+    image = CGI.escapeHTML(user_data['avatar_url'])
+    
   
     html_content = File.read('../login_module/auth_page.html')
   
     response.content_type = 'text/html'
     response.write(html_content)
-  end  
+  end 
 end
