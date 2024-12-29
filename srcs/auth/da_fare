@@ -1,3 +1,4 @@
-1)docker avvia server ma server non parte e passare i dati a javascript per postgres(attenzione verificare che i dati siano salvati)
+1)verificare se la pagina e aperta per garantire l'accesso login o meno
+2)docker avvia server ma server non parte. Passare i dati a javascript per postgres(attenzione verificare che i dati siano salvati)
 ---------------------------------------------------------
-(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
+non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
