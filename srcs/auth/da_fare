@@ -1,4 +1,4 @@
-1)verificare se la pagina e aperta per garantire l'accesso login o meno
+1)funziona solo che se chiudo una pagina in cui non ho fatto l'accesso mi fa accedere a un altra di nuovoall'altra
 2)docker avvia server ma server non parte. Passare i dati a javascript per postgres(attenzione verificare che i dati siano salvati)
 ---------------------------------------------------------
 non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))

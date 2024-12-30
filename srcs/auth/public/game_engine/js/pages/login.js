@@ -1,5 +1,5 @@
 import { guest_login } from "../../login/guest_logic.js";
-import { performLogin, success } from "../../login/login_logic.js";
+import { performLogin } from "../../login/login_logic.js";
 import { navigate } from "../main.js";
 export default function Login() {
     return `
@@ -35,9 +35,6 @@ export const addLoginPageHandlers = () => {
 
     if (loginButton && guestButton) {
         loginButton.addEventListener("click", () => {
-            if (success == true)
-                alert("user already logged in.\nTry guest");
-            else
                 performLogin();
         });
 
