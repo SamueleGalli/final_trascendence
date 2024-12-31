@@ -1,60 +1,84 @@
 import { navigate } from "../js/main.js";
 
 let success = localStorage.getItem('authenticated') === 'true';
-let one_time = localStorage.getItem('one_time') === '1' ? 1 : 0;
+let isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
+export let popupOpened = localStorage.getItem('popup_opened') === 'true';
+let auth = localStorage.getItem('auth_done') === 'true';
 
 function syncState() {
     success = localStorage.getItem('authenticated') === 'true';
-    one_time = localStorage.getItem('one_time') === '1' ? 1 : 0;
+    isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
+    popupOpened = localStorage.getItem('popup_opened') === 'true';
+    auth = localStorage.getItem('auth_done') === 'true';
 }
 
-window.addEventListener('unload', () => {
-    if (success === true) {
-        updateOneTime(0);
-    }
-});
 
-// Rimuovi il setInterval
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         syncState();
     }
 });
 
-export function performLogin() {
+window.addEventListener('unload', () => {
+    if (isCurrentTabLogged) {
+        localStorage.setItem('authenticated', 'false');
+    }
+    sessionStorage.setItem('tab_authenticated', 'false');
+    sessionStorage.removeItem('popup_opened');
+    localStorage.removeItem('popup_opened');
+});
+
+function already_logged()
+{
     syncState();
-    if (success === true && one_time === 1) {
-        alert("User already logged in. Please close the tab and click again on login.");
-        return;
+    if (isCurrentTabLogged) {
+        alert("User already logged in this tab.");
+        return (1);
     }
-    else if (success === true && one_time === 0)
-    {
-        updateOneTime(1);
-        navigate("/modes", "Modalità di gioco");
-        return;
+    if (success && !isCurrentTabLogged) {
+        alert("User already logged in from another tab. Close the other tab to continue.");
+        return (1);
     }
-    fetch('/auth/login')
-        .then(response => response.json())
-        .then(data => {
-            const popup = window.open(data.auth_url, 'Login', 'width=800,height=800');
-            window.addEventListener('message', function(event) {
-                if (event.data.authenticated && success === false && one_time === 0) {
-                    success = true;
-                    localStorage.setItem('authenticated', 'true');
-                    updateOneTime(1);
-                    popup.close();
-                    navigate("/modes", "Modalità di gioco");
-                    return;
-                }
-            });
-        })
-        .catch(error => {
-            console.error("Errore di rete:", error);
-            localStorage.setItem('authenticated', 'false');
-        });
+    if (popupOpened === true && !auth) {
+        alert("Authenticating in progress....\nPlease wait.");
+        return (1);
+    }
+    return (0);
 }
 
-function updateOneTime(value) {
-    one_time = value;
-    localStorage.setItem('one_time', value === 0 ? '0' : '1');
+export function performLogin() {
+    syncState();
+    if (already_logged() == 1)
+        return;
+    fetch('/auth/login')
+    .then(response => response.json())
+    .then(data => {
+        if (auth === true) {
+            localStorage.setItem('authenticated', 'true');
+            sessionStorage.setItem('tab_authenticated', 'true');
+            navigate("/modes", "Modalità di gioco");
+            return;
+        }
+        localStorage.setItem('popup_opened', 'true');
+        const popup = window.open(data.auth_url, 'Login', 'width=800,height=800');
+
+        const messageListener = (event) => {
+            if (event.data.authenticated && !success) {
+                success = true;
+                isCurrentTabLogged = true;
+                localStorage.setItem('authenticated', 'true');
+                sessionStorage.setItem('tab_authenticated', 'true');
+                popup.close();
+                navigate("/modes", "Modalità di gioco");
+                localStorage.setItem('auth_done', 'true');
+                window.removeEventListener('message', messageListener);
+            }
+        };
+
+        window.addEventListener('message', messageListener);
+    })
+    .catch(error => {
+        console.error("Errore di rete:", error);
+        localStorage.setItem('authenticated', 'false');
+    });
 }

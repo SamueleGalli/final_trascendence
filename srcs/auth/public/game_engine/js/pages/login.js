@@ -1,6 +1,6 @@
 import { guest_login } from "../../login/guest_logic.js";
-import { performLogin } from "../../login/login_logic.js";
-import { navigate } from "../main.js";
+import { performLogin, popupOpened} from "../../login/login_logic.js";
+
 export default function Login() {
     return `
         <h1 class="text">
@@ -39,7 +39,10 @@ export const addLoginPageHandlers = () => {
         });
 
         guestButton.addEventListener("click", () => {
-            guest_login();
+            if (popupOpened === true)
+                alert("Authenticating in progress....\nPlease wait.");
+            else
+                guest_login();
         });
     }
 };

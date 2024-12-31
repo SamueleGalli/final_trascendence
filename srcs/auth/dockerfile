@@ -1,0 +1,19 @@
+FROM ruby:2.7
+
+RUN apt-get update -y && apt-get install -y \
+    lsof \
+    build-essential \
+    libpq-dev \
+    nodejs \
+    && gem install bundler
+
+WORKDIR /var/www
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY . .
+
+EXPOSE 9292
+
+CMD ["bundle", "exec", "ruby", "server.rb"]
