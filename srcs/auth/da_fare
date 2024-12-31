@@ -45,6 +45,7 @@ auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/exe/bundle:32
 auth_1             |    from /usr/local/bundle/bin/bundle:25:in 'Kernel#load'
 auth_1             |    from /usr/local/bundle/bin/bundle:25:in '<main>'
 srcs_auth_1 exited with code 1))
-3)controllare che il database funzioni correttamente(postgress)
+3)gestione nome avatar e immagine
+4)controllare che il database funzioni correttamente(postgress)
 ---------------------------------------------------------
 non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
