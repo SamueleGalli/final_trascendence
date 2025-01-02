@@ -1,6 +1,12 @@
-all: prep_dirs
+all: stop_containers prep_dirs
 	make -C ./srcs/common_tools/ all
 	@docker-compose -f ./srcs/docker-compose.yml up
+
+stop_containers:
+	@echo "Stopping existing containers..."
+	@docker-compose -f ./srcs/docker-compose.yml stop
+	@docker ps -qa | xargs -r docker stop
+	@docker ps -qa | xargs -r docker rm
 
 down:
 	@docker-compose -f ./srcs/docker-compose.yml down
@@ -19,7 +25,6 @@ prep_dirs:
 	@mkdir -p ./srcs/request_manager
 	@mkdir -p ./srcs/auth
 
-
 clean:
 	make -C srcs/common_tools/ clean
 	@docker-compose -f srcs/docker-compose.yml stop
@@ -31,4 +36,4 @@ clean:
 	# Destroy all directories
 	rm -rf /data/wordpress
 
-.PHONY: all re down clean
+.PHONY: all stop_containers down re clean
