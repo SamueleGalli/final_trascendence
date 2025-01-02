@@ -1,51 +1,7 @@
-1)problemi di login risolti controllare errori possibili con gli altri
-2)docker-compose da (
-srcs_auth_1 exited with code 1
-auth_1             | true
-auth_1             | Processes using port 9292 (before kill):
-auth_1             | Killing processes using port 9292...
-auth_1             | Processes using port 9292 (after kill):
-auth_1             | TERM environment variable not set.
-auth_1             | Installing gems using Bundler...
-auth_1             | /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/error.rb:105:in '<class:Thor>': uninitialized constant DidYouMean::SPELL_CHECKERS (NameError)
-auth_1             | 
-auth_1             |     DidYouMean::SPELL_CHECKERS.merge!(
-auth_1             |               ^^^^^^^^^^^^^^^^
-auth_1             | Did you mean?  DidYouMean::SpellChecker
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/error.rb:1:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/base.rb:3:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/base.rb:3:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor.rb:1:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor.rb:1:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendored_thor.rb:8:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendored_thor.rb:8:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/friendly_errors.rb:3:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/friendly_errors.rb:3:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/exe/bundle:32:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/exe/bundle:32:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/bin/bundle:25:in 'Kernel#load'
-auth_1             |    from /usr/local/bundle/bin/bundle:25:in '<main>'
-auth_1             | Starting server...
-auth_1             | /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/error.rb:105:in '<class:Thor>': uninitialized constant DidYouMean::SPELL_CHECKERS (NameError)
-auth_1             | 
-auth_1             |     DidYouMean::SPELL_CHECKERS.merge!(
-auth_1             |               ^^^^^^^^^^^^^^^^
-auth_1             | Did you mean?  DidYouMean::SpellChecker
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/error.rb:1:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/base.rb:3:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor/base.rb:3:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor.rb:1:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendor/thor/lib/thor.rb:1:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendored_thor.rb:8:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/vendored_thor.rb:8:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/friendly_errors.rb:3:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/lib/bundler/friendly_errors.rb:3:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/exe/bundle:32:in 'Kernel#require_relative'
-auth_1             |    from /usr/local/bundle/gems/bundler-2.2.22/exe/bundle:32:in '<top (required)>'
-auth_1             |    from /usr/local/bundle/bin/bundle:25:in 'Kernel#load'
-auth_1             |    from /usr/local/bundle/bin/bundle:25:in '<main>'
-srcs_auth_1 exited with code 1))
-3)gestione nome avatar e immagine
-4)controllare che il database funzioni correttamente(postgress)
+1)controllare che il database funzioni correttamente(postgress) (database impostato manca controllare che tutto vadi bene)
+2)gestione nome avatar e immagine con database postgress
+fine login
+1)gestione studio e inizio profilo utente con dati raccolti
 ---------------------------------------------------------
 non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
+(problemi di login risolti controllare errori possibili con gli altri)
