@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+
+gem 'json'
+gem 'oauth2'
+gem 'dotenv'
+gem 'rack'
+gem 'pg'
+gem 'webrick'
+gem 'colorize'
+gem 'bundler'
+gem 'did_you_mean', '~> 1.0'

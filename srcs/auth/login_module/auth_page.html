@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>Accesso Consentito</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      #timer {
+        font-size: 30px;
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Accesso consentito</h1>
+      <p>La pagina si chiudera tra <span id="timer">5</span> secondi.<br> Oppure puoi chiuderla direttamente</p>
+    </div>
+    <script>
+      window.onbeforeunload = function() {
+        sendAuthMessage();
+      };
+      let countdown = 5;
+      const timerElement = document.getElementById('timer');
+      function sendAuthMessage() {
+        if (window.opener) {
+          window.opener.postMessage({ authenticated: true }, window.location.origin);
+        } else {
+          console.error('window.opener non trovato');
+        }
+      }
+      const timerInterval = setInterval(function() {
+        countdown--;
+        timerElement.textContent = countdown;
+
+        if (countdown === 0) {
+          clearInterval(timerInterval);
+          sendAuthMessage();
+          window.close();
+        }
+      }, 1000);
+      </script>
+  </body>
+</html>

@@ -1,50 +1,50 @@
-import { canvas, ctx } from './globals.js';
-
 export class UI {
-    constructor(p1, p2) {
+    constructor(p1, p2, canvas, ctx) {
         this.player1Name = p1;
         this.player2Name = p2;
+        this.canvas = canvas;
+        this.ctx = ctx;
         this.originalFontSize = 50;
-        this.fontSize = (this.originalFontSize / 1600) * canvas.width;
+        this.fontSize = (this.originalFontSize / 1600) * this.canvas.width;
         this.isCountingDown = false;
         this.countdownValue = 3;
     }
 
     updateFontSize() {
-        this.fontSize = (this.originalFontSize / 1600) * canvas.width;
-        ctx.font = `${this.fontSize}px Liberty`;
+        this.fontSize = (this.originalFontSize / 1600) * this.canvas.width;
+        this.ctx.font = `${this.fontSize}px Liberty`;
     }
 
     render(pong, scoreP1, scoreP2) {
         this.updateFontSize();
-        ctx.fillStyle = 'white';
+        this.ctx.fillStyle = 'white';
     
-        const player1X = canvas.width * 0.05; // 5% from left
-        const player2X = canvas.width * 0.95 - (ctx.measureText(this.player2Name).width); // 5% from right
-        const scoreY = canvas.height * 0.08 + 10; // 10% from top
+        const player1X = this.canvas.width * 0.05; // 5% from left
+        const player2X = this.canvas.width * 0.95 - (this.ctx.measureText(this.player2Name).width); // 5% from right
+        const scoreY = this.canvas.height * 0.08 + 10; // 10% from top
     
-        // Disegna i punteggi
-        ctx.fillText(scoreP1, canvas.width * 0.4, scoreY); 
-        ctx.fillText(scoreP2, canvas.width * 0.6, scoreY);
+        // Draw scores
+        this.ctx.fillText(scoreP1, this.canvas.width * 0.4, scoreY); 
+        this.ctx.fillText(scoreP2, this.canvas.width * 0.6, scoreY);
     
-        // Disegna i nomi dei giocatori
-        ctx.fillText(this.player1Name, player1X, scoreY);
-        ctx.fillText(this.player2Name, player2X, scoreY);
+        // Draw player names
+        this.ctx.fillText(this.player1Name, player1X, scoreY);
+        this.ctx.fillText(this.player2Name, player2X, scoreY);
     
-        ctx.fillStyle = '#02BFB9';
-        // Disegna il messaggio di pausa
+        this.ctx.fillStyle = '#02BFB9';
+        // Draw pause message
         if (pong.gamePaused && !pong.gameEnd && !pong.backToGameTimer) {
-            ctx.fillText("GAME PAUSED", canvas.width / 2 - (this.fontSize * 3.4), canvas.height / 2);
+            this.ctx.fillText("GAME PAUSED", this.canvas.width / 2 - (this.fontSize * 3.4), this.canvas.height / 2);
         }
         else if (pong.backToGameTimer && !pong.gameEnd) {
-            // Mostra il countdown
-                ctx.fillText(this.countdownValue, canvas.width / 2, canvas.height / 2);
+            // Show countdown
+            this.ctx.fillText(this.countdownValue, this.canvas.width / 2, this.canvas.height / 2);
         }
         else if (pong.gameEnd) {
             if (scoreP1 > scoreP2) {
-                ctx.fillText(this.player1Name + " WIN!", canvas.width / 2 - (this.fontSize * 3.4), canvas.height / 2);
+                this.ctx.fillText(this.player1Name + " WIN!", this.canvas.width / 2 - (this.fontSize * 3.4), this.canvas.height / 2);
             } else {
-                ctx.fillText(this.player2Name + " WIN!", canvas.width / 2 - (this.fontSize * 3.4), canvas.height / 2);
+                this.ctx.fillText(this.player2Name + " WIN!", this.canvas.width / 2 - (this.fontSize * 3.4), this.canvas.height / 2);
             }
         }
     }     
@@ -54,21 +54,22 @@ export class UI {
             return;
         }
         if (this.countdownInterval) {
-            clearInterval(this.countdownInterval); // Rimuovi qualsiasi intervallo attivo precedente
+            clearInterval(this.countdownInterval); // Remove any active intervals
         }
-        this.countdownValue = 3; // Ripristina il valore del countdown a 3
-        pong.backToGameTimer = true;  // Imposta `backToGameTimer` su true
+        this.countdownValue = 3; // Reset countdown value to 3
+        pong.backToGameTimer = true;  // Set `backToGameTimer` to true
         this.countdownInterval = setInterval(() => {
             this.countdownValue -= 1;
     
             if (this.countdownValue <= 0) {
-                clearInterval(this.countdownInterval); // Cancella l'interval
-                this.countdownInterval = null; // Resetta la proprietà
-                pong.gamePaused = false; // Sospendi la pausa
-                pong.backToGameTimer = false; // Disattiva il timer del countdown
+                clearInterval(this.countdownInterval); // Clear the interval
+                this.countdownInterval = null; // Reset the interval property
+                pong.gamePaused = false; // Resume the game
+                pong.backToGameTimer = false; // Disable countdown timer
             }
-        }, 1000); // 1 secondo di intervallo
+        }, 1000); // 1 second interval
     }
+
     resize(pong, scoreP1, scoreP2) {
         this.render(pong, scoreP1, scoreP2);
     }
