@@ -9,14 +9,70 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <main id="app">
-        <!-- Contenuto dinamico -->
-    </main> 
-    <canvas id="main_pageCanvas"></canvas>
-    <canvas id="gameCanvas"></canvas>
-    <script src="game_engine/js/main.js" type="module"></script>
+    <div id="app" class="container">
+        <div class="avatar-container">
+            <img src="game_engine/images/rbakhaye.jpg" alt="Avatar" class="avatar-image" id="avatarImage">
+            <div class="menu-container hidden">
+                <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile"></div>
+                <div class="menu-item"><img src="game_engine/images/answer.png" alt="Settings"></div>
+                <div class="menu-item"><img src="game_engine/images/logout.png" alt="Logout" onclick="logout()"></div>
+            </div>
+        </div>   
+        <canvas id="main_pageCanvas"></canvas>
+        <h1 class="text">
+            <span class="letter letter-1">F</span>
+            <span class="letter letter-2">T</span>
+            <span class="letter letter-3">_</span>
+            <span class="letter letter-4">T</span>
+            <span class="letter letter-5">R</span>
+            <span class="letter letter-6">A</span>
+            <span class="letter letter-7">N</span>
+            <span class="letter letter-8">S</span>
+            <span class="letter letter-9">C</span>
+            <span class="letter letter-10">E</span>
+            <span class="letter letter-11">N</span>
+            <span class="letter letter-12">D</span>
+            <span class="letter letter-13">E</span>
+            <span class="letter letter-14">N</span>
+            <span class="letter letter-15">C</span>
+            <span class="letter letter-16">E</span>
+        </h1>
+
+        <!-- Pulsanti per il login -->
+        <div id="authButtonsContainer">
+            <button class="auth-button" id="loginButton"name="login"><span class="text-animation">LOGIN</span></button>
+            <button class="auth-button" id="guestButton"name="guest"><span class="text-animation">OSPITE</span></button>
+        </div>
+
+        <!-- Pulsanti del gioco, visibili solo dopo il login -->
+        <div id="newButtonsContainer" class="hidden">
+            <div class="button-container">
+                <button class="new-button" id="mode1Button"><span class="text-animation">CLASSIC</span></button>
+                <div class="tooltip">Descrizione modalità 1: Partita rapida con limite di tempo</div>
+            </div>
+            <div class="button-container">
+                <button class="new-button"><span class="text-animation">TOURNAMENT</span></button>
+                <div class="tooltip">Descrizione modalità 2: Torneo prolungato</div>
+            </div>
+            <div class="button-container">
+                <button class="new-button" id="IA_wars"><span class="text-animation">AI Wars</span></button>
+                <div class="tooltip">AI mode: Face off against advanced AI in a series of challenging matches.</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameContainer" class="hidden">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- Altri script -->
+    <script src="game_engine/js/app.js" type="module"></script>
+    <script src="game_engine/js/login.js" type="module"></script>
+    <script src="game_engine/js/guest.js" type="module"></script>
+    <script src="game_engine/js/main_page/MainPageEffect.js" type="module"></script>
+    <script src="game_engine/js/main_page/MainPageBall.js" type="module"></script>
+    <script src="game_engine/js/main_page/MainPageMovingStar.js" type="module"></script>
+    <script src="game_engine/js/main_page/MainPageParticle.js" type="module"></script>
     <script src="game_engine/js/game/start.js" type="module"></script>
-    <script src="game_engine/login/guest_logic.js" type="module"></script>
-    <script src="game_engine/login/login_logic.js" type="module"></script>
 </body>
 </html>

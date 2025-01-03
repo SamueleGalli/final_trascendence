@@ -1,8 +1,0 @@
-1)se apri il popup di login e lo chiudo subito non mi fa riloggare
-2)controllare che il database funzioni correttamente(postgress) (database impostato manca controllare che tutto vadi bene)
-3)gestione nome avatar e immagine con database postgress
-fine login
-4)gestione studio e inizio profilo utente con dati raccolti
----------------------------------------------------------
-non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
-(problemi di login risolti controllare errori possibili con gli altri)

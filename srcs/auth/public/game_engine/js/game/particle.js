@@ -1,5 +1,7 @@
-export class Particle {
-    constructor(x, y, ctx) {
+import { ctx } from './globals.js';
+
+export  class Particle {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
         this.size = Math.random() + 1;
@@ -10,7 +12,6 @@ export class Particle {
         this.spreadX = (Math.random() - 0.5) * this.spread * this.speed; // Random variation of particle direction X
         this.spreadY = (Math.random() - 0.5) * this.spread * this.speed; // Random variation of particle direction Y
         this.color = `hsl(${this.hue}deg 90% 60%)`;
-        this.ctx = ctx;
     }
 
     update() {
@@ -20,9 +21,10 @@ export class Particle {
     }
 
     render() {
-        this.ctx.fillStyle = this.color;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        this.ctx.fill();
+        ctx.fillStyle = this.color; 
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#014C4A";
     }
 }

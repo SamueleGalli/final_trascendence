@@ -1,39 +1,25 @@
+
+import { canvas, ctx} from './globals.js';
 import { Ball } from './ball.js';
 import { Paddle } from './paddle.js';
 import { UI } from './ui.js';
 import { Star } from './star.js';
 import { Particle } from './particle.js';
 
-export const canvas = document.getElementById('gameCanvas');
-export const ctx = canvas.getContext('2d');
-
+// Main class
 export class Game {
     constructor() {
-        // Otteniamo il canvas e il contesto
-        this.canvas = document.getElementById('gameCanvas');
-        if (!this.canvas) {
-            console.error('Canvas non trovato');
-            return;
-        }
-
-        this.ctx = this.canvas.getContext('2d');
-        if (!this.ctx) {
-            console.error('Contesto del canvas non trovato');
-            return;
-        }
-
-        // Impostiamo le dimensioni del canvas
+        this.canvas = canvas;
+        this.ctx = ctx;
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-
-        // Inizializzazione del resto del gioco
         this.wallThickness = 10;
-        this.ball = new Ball(this.canvas, this.ctx, this.canvas.width / 2, this.canvas.height / 2);
-        this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's', this.canvas, this.ctx);
-        this.paddle2 = new Paddle(this.canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown', this.canvas, this.ctx);
-        this.p1Name = "Player1";
+        this.ball = new Ball(canvas.width / 2, canvas.height / 2);
+        this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
+        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown');
+        this.p1Name = "Player1"; 
         this.p2Name = "Player2";
-        this.ui = new UI(this.p1Name, this.p2Name, this.canvas, this.ctx);
+        this.ui = new UI(this.p1Name, this.p2Name);
         this.stars = [];
         this.createStarsBackground(100);
         this.scoreP1 = 0;
@@ -47,7 +33,6 @@ export class Game {
     }
 
     addEventListeners() {
-        // Aggiungiamo i listener per gli eventi della tastiera
         document.addEventListener('keydown', (event) => {
             this.paddle1.handleInput(event.key, true);
             this.paddle2.handleInput(event.key, true);
@@ -63,13 +48,11 @@ export class Game {
     }
 
     start() {
-        // Avviamo il loop del gioco
         this.running = true;
         this.loop();
     }
 
     loop() {
-        // Ciclo principale del gioco
         if (this.running) {
             this.update();
             this.render();
@@ -78,7 +61,6 @@ export class Game {
     }
 
     update() {
-        // Aggiorniamo lo stato del gioco
         if (!this.gamePaused && !this.gameEnd) {
             this.ball.update(this);
             this.paddle1.update();
@@ -94,28 +76,26 @@ export class Game {
     }
 
     checkBallPosition() {
-        // Controlliamo la posizione della palla
         if (this.ball.x <= 0 && !this.ball.out) {
             this.ball.out = true;
             this.scoreP2++;
             setTimeout(() => {
                 if (!this.gameEnd)
-                    this.ball.reset(2); // Reposizioniamo la palla al centro
+                    this.ball.reset(2); // Reposition ball to center
                 this.ball.out = false;
             }, 2000);
-        } else if (this.ball.x >= this.canvas.width && !this.ball.out) {
+        } else if (this.ball.x >= canvas.width && !this.ball.out) {
             this.ball.out = true;
             this.scoreP1++;
             setTimeout(() => {
                 if (!this.gameEnd)
-                    this.ball.reset(1); // Reposizioniamo la palla al centro
+                    this.ball.reset(1); // Reposition ball to center
                 this.ball.out = false;
             }, 2000);
         }
     }
 
     checkScore() {
-        // Controlliamo il punteggio
         if (this.scoreP1 >= 5 || this.scoreP2 >= 5) {
             this.gameEnd = true;
             this.ui.render(this, this.scoreP1, this.scoreP2);
@@ -123,19 +103,19 @@ export class Game {
     }
 
     togglePause() {
-        // Mettiamo in pausa o riprendiamo il gioco
         if (this.gamePaused) {
+            // Se il gioco è in pausa e non c'è un countdown attivo
             if (!this.backToGameTimer) {
-                this.ui.startCountdown(this); // Avviamo il conto alla rovescia
+                this.ui.startCountdown(this);  // Passa `this` per accedere a gamePaused e backToGameTimer
             }
         } else {
+            // Se il gioco non è in pausa, metti in pausa
             this.gamePaused = true;
         }
     }
 
     render() {
-        // Renderizziamo il gioco
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.ball.render();
         this.paddle1.render();
         this.paddle2.render();
@@ -148,62 +128,55 @@ export class Game {
     }
 
     addParticles(x, y, count) {
-        // Aggiungiamo particelle
         for (let i = 0; i < count; i++) {
-            const particle = new Particle(x, y, this.ctx);
+            const particle = new Particle(x, y);
             this.particles.push(particle);
         }
     }
 
     updateParticles() {
-        // Aggiorniamo le particelle
         for (let i = this.particles.length - 1; i >= 0; i--) {
             this.particles[i].update();
             if (this.particles[i].size <= 0) {
-                this.particles.splice(i, 1); // Rimuoviamo particelle terminate
+                this.particles.splice(i, 1); // Remove dead particles
             }
         }
     }
 
     renderParticles() {
-        // Renderizziamo le particelle
         for (const particle of this.particles) {
             particle.render();
         }
     }
 
     createStarsBackground(count) {
-        // Creiamo lo sfondo con stelle
         for (let i = 0; i < count; i++) {
-            const star = new Star(this.canvas, this.ctx);
+            const star = new Star();
             this.stars.push(star);
         }
     }
 
     renderWalls() {
-        // Renderizziamo i muri
-        this.ctx.fillStyle = "#014C4A";
-        this.ctx.shadowColor = "#014C4A";
-        this.ctx.shadowBlur = 20;
-        this.ctx.fillRect(10, 0, this.canvas.width - 20, this.wallThickness);
-        this.ctx.fillRect(10, this.canvas.height - this.wallThickness, this.canvas.width - 20, this.wallThickness);
-        this.ctx.fillRect(0, 0, this.wallThickness, this.canvas.height);
-        this.ctx.fillRect(this.canvas.width - this.wallThickness, 0, this.wallThickness, this.canvas.height);
+        ctx.fillStyle = "#014C4A";
+        ctx.shadowColor = "#014C4A";
+        ctx.shadowBlur = 20;
+        ctx.fillRect(10, 0, canvas.width - 20, this.wallThickness);
+        ctx.fillRect(10, canvas.height - this.wallThickness, canvas.width - 20, this.wallThickness);
+        ctx.fillRect(0, 0, this.wallThickness, canvas.height);
+        ctx.fillRect(canvas.width - this.wallThickness, 0, this.wallThickness, canvas.height);
     }
 
     resize() {
-        // Gestiamo il ridimensionamento del canvas
-        const oldWidth = this.canvas.width;
-        const oldHeight = this.canvas.height;
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        const oldWidth = canvas.width;
+        const oldHeight = canvas.height;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's', this.canvas, this.ctx);
-        this.paddle2 = new Paddle(this.canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown', this.canvas, this.ctx);
+        this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
+        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, null, null);
         this.ball.resize();
-        this.paddle1.resize(oldWidth, oldHeight, this.canvas.width, this.canvas.height);
-        this.paddle2.resize(oldWidth, oldHeight, this.canvas.width, this.canvas.height);
-
+        this.paddle1.resize(oldWidth, oldHeight, canvas.width, canvas.height);
+        this.paddle2.resize(oldWidth, oldHeight, canvas.width, canvas.height);
         this.ui.resize(this, this.ui.scoreP1, this.ui.scoreP2);
         this.ball.reset(1);
         this.paddle1.y = canvas.height / 2 - this.paddle1.height / 2;
@@ -212,11 +185,7 @@ export class Game {
         this.createStarsBackground(100);
         this.ui.render(this, this.scoreP1, this.scoreP2);
     }
-
-    stop() {
-        // Fermiamo il gioco
-        this.running = false;
-    }
+    
 }
 
 export let game = new Game();

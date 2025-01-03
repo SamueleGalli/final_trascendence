@@ -1,7 +1,6 @@
+import { canvas, ctx } from './globals.js'; 
 export class Paddle {
-    constructor(x, upKey, downKey, canvas, ctx) {
-        this.canvas = canvas;
-        this.ctx = ctx;
+    constructor(x, upKey, downKey) {
         this.width = canvas.width * 0.01;
         this.height = canvas.height * 0.2;
         this.x = x - this.width / 2;
@@ -23,41 +22,43 @@ export class Paddle {
 
     update() {
         if (this.moveUp && this.y > 15) this.y -= this.speed;
-        if (this.moveDown && this.y + this.height < this.canvas.height - 15) this.y += this.speed;
+        if (this.moveDown && this.y + this.height < canvas.height - 15) this.y += this.speed;
     }
 
     resize(oldCanvasWidth, oldCanvasHeight, newCanvasWidth, newCanvasHeight) {
-        // Update paddle size and speed based on new canvas dimensions
-        this.height = newCanvasHeight * 0.2;
-        this.speed = (newCanvasHeight / oldCanvasHeight) * this.baseSpeed;
-        this.y = newCanvasHeight / 2 - this.height / 2;
-
-        if (this.isPaddle2) {
-            this.x = newCanvasWidth - this.width - 10;
+        // Aggiorna l'altezza e la velocità della racchetta in base alle nuove dimensioni del canvas
+        this.height = newCanvasHeight * 0.2; // Adatta l'altezza della racchetta in base alla nuova altezza del canvas
+        this.speed = (newCanvasHeight / oldCanvasHeight) * this.baseSpeed; // Adatta la velocità in base al cambiamento dell'altezza
+        this.y = newCanvasHeight / 2 - this.height / 2; // Riposiziona la racchetta al centro
+    
+        if (this.isPaddle2) {  // Aggiungi una verifica per vedere se è la paddle destra
+            this.x = newCanvasWidth - this.width - 10;  // Imposta la posizione orizzontale della paddle2 sulla destra
         }
     }
+      
 
+    // Metodo per muovere la racchetta
     move(direction) {
         if (direction === 'up')
-            this.y = Math.max(15, this.y - this.speed);  // Prevent from going out of bounds at the top
+            this.y = Math.max(15, this.y - this.speed);  // Evita di superare il bordo superiore
         else if (direction === 'down')
-            this.y = Math.min(this.canvas.height - this.height - 15, this.y + this.speed);  // Prevent from going out of bounds at the bottom
+            this.y = Math.min(canvas.height - this.height - 15, this.y + this.speed);  // Evita di superare il bordo inferiore
     }
 
-    // Predict the ball's Y position based on its current trajectory
+    // Previsione della posizione Y della palla
     predictBallY(ball) {
         if (ball.speedx > 0) {
-            let timeToReachAI = (this.canvas.width - ball.x) / ball.speedx;
+            let timeToReachAI = (window.innerWidth - ball.x) / ball.speedx;
             let futureBallY = ball.y + ball.speedy * timeToReachAI;
 
             const maxBounces = 10;
             let bounces = 0;
-            while ((futureBallY < 0 || futureBallY > this.canvas.height) && bounces < maxBounces) {
+            while ((futureBallY < 0 || futureBallY > window.innerHeight) && bounces < maxBounces) {
                 bounces++;
                 if (futureBallY < 0)
                     futureBallY = -futureBallY;
-                else if (futureBallY > this.canvas.height)
-                    futureBallY = 2 * this.canvas.height - futureBallY;
+                else if (futureBallY > canvas.height)
+                    futureBallY = 2 * canvas.height - futureBallY;
             }
             return futureBallY;
         }
@@ -76,7 +77,7 @@ export class Paddle {
                 let targetY = this.predictBallY(ball);  // Prevedi la posizione della palla
                 let distance = targetY - (this.y + this.height / 2);  // Calcola la distanza dalla posizione della paddle
                 let direction = Math.sign(distance);  // Direzione per il movimento della paddle
-                let aiSpeed = this.speed * (this.canvas.height / 500) * 0.5;  // Usa this.canvas.height al posto di canvas.height
+                let aiSpeed = this.speed * (canvas.height / 500) * 0.5;  // Applica un rallentamento alla velocità
     
                 // Muovi la paddle dell'IA in base alla distanza dalla palla
                 if (Math.abs(distance) > aiSpeed)
@@ -86,16 +87,16 @@ export class Paddle {
     
                 // Limita il movimento della paddle dentro i confini del canvas
                 if (this.y < 0) this.y = 0;
-                if (this.y + this.height > this.canvas.height) this.y = this.canvas.height - this.height;
+                if (this.y + this.height > canvas.height) this.y = canvas.height - this.height;
                 if (distance < -5) this.move('up');
                 else if (distance > 5) this.move('down');
             }
         }
-    }      
+    }    
 
     render() {
-        this.ctx.fillStyle = 'white';
-        this.drawRoundedRect(this.ctx);
+        ctx.fillStyle = 'white';
+        this.drawRoundedRect(ctx);
     }
 
     drawRoundedRect(ctx) {
