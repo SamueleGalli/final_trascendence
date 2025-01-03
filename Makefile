@@ -24,6 +24,9 @@ prep_dirs:
 	@mkdir -p ./srcs/receiver
 	@mkdir -p ./srcs/request_manager
 	@mkdir -p ./srcs/auth
+	@chmod +x ./srcs/logger/init.sh 
+	@chmod +x ./srcs/auth/init.sh
+	@chmod +x ./srcs/request_manager/init.sh
 
 clean:
 	make -C srcs/common_tools/ clean

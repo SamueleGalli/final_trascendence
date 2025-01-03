@@ -425,3 +425,12 @@ label:after {
     color: #014C4A;
     font-weight: 700;
 }
+
+/*#avatarName {
+    position: absolute;
+    right: 120px;
+    top: 10px;
+    font-size: 20px;
+    color: #00ff3cc5;
+    z-index: 8;
+}*/

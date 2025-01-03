@@ -47,7 +47,7 @@ module AuthMethods
     name = CGI.escapeHTML(user_data['name'])
     email = CGI.escapeHTML(user_data['email'])
     image = CGI.escapeHTML(user_data['avatar_url'].to_s)
-    
+    login_name = CGI.escapeHTML(user_data['login_name'])
   
     html_content = File.read('../login_module/auth_page.html')
   

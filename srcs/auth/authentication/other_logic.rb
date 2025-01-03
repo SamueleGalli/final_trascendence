@@ -40,9 +40,8 @@ module Other_logic
     if image.nil? || image.empty?
       image = 'nulla'
     end
-    STDERR.puts "adding to database: " + [login_name, name, email, image, token].to_s
-    # LOGIN.addValues([login_name, name, email, image, token], ["login_name", "name", "email", "image", "token"])
-    LOGIN.addValues ["'"+login_name.to_s+"'", "'"+name.to_s+"'", "'"+email.to_s+"'", "'"+token.to_s+"'"], ["login_name", "name", "email", "token"]
+    #STDERR.puts "adding to database: " + [login_name, name, email, image, token].to_s
+    LOGIN.addValues ["'" + login_name.to_s + "'", "'" + name.to_s+ "'" , "'" + email.to_s + "'", "'" + token.to_s + "'"], ["login_name", "name", "email", "token"]
     return { 'login_name' => login_name, 'name' => name, 'email' => email, 'avatar_url' => image }
   end
 end

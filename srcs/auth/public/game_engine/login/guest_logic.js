@@ -1,21 +1,19 @@
 import { navigate } from "../js/main.js";
+import { update_image } from "../js/pages/modes.js";
 
-let guestName = null; // Nome temporaneo dell'ospite
-
-// Pulsante per accedere come ospite
 export function guest_login() {
     const name = prompt("Enter your guest name:").trim();
-
+    
     if (!name) {
         alert('Please enter a valid name.');
-        return;
+        return ;
     }
-    guestName = name;
-    updateUIForGuest();
+    updateUIForGuest(name);
 }
 
-// Funzione per aggiornare l'interfaccia utente in base al nome dell'ospite
-function updateUIForGuest() {
+function updateUIForGuest(name) {
     navigate("/modes", "Modalità di gioco");
-    console.log("Guest name:", guestName);  // Mostra il nome dell'ospite nel log
+    update_image("game_engine/images/guest.jpg");
+    /*const avatarName = document.getElementById('avatarName');
+    avatarName.textContent = name;*/
 }

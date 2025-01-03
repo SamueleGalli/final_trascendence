@@ -1,4 +1,5 @@
 import { navigate } from "../js/main.js";
+import { update_image } from "../js/pages/modes.js";
 
 let success = localStorage.getItem('authenticated') === 'true';
 let isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
@@ -25,7 +26,6 @@ window.addEventListener('unload', () => {
     }
     sessionStorage.setItem('tab_authenticated', 'false');
     sessionStorage.removeItem('popup_opened');
-    localStorage.removeItem('popup_opened');
 });
 
 function already_logged()
@@ -57,10 +57,18 @@ export function performLogin() {
             localStorage.setItem('authenticated', 'true');
             sessionStorage.setItem('tab_authenticated', 'true');
             navigate("/modes", "Modalità di gioco");
+            update_image('game_engine/images/rbakhaye.jpg');
             return;
         }
         localStorage.setItem('popup_opened', 'true');
         const popup = window.open(data.auth_url, 'Login', 'width=800,height=800');
+        
+        const popupMonitor = setInterval(() => {
+            if (popup.closed && auth === false) {
+                clearInterval(popupMonitor);
+                localStorage.setItem('popup_opened', 'false'); // Reset popup_opened
+            }
+        }, 500);
 
         const messageListener = (event) => {
             if (event.data.authenticated && !success) {
@@ -70,6 +78,7 @@ export function performLogin() {
                 sessionStorage.setItem('tab_authenticated', 'true');
                 popup.close();
                 navigate("/modes", "Modalità di gioco");
+                update_image('game_engine/images/rbakhaye.jpg');
                 localStorage.setItem('auth_done', 'true');
                 window.removeEventListener('message', messageListener);
             }
