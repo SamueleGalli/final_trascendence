@@ -1,6 +1,6 @@
 1)se loggo e faccio guest poi chiudo il login mi di permanentemente authentication in progress
 2)controllare che il database funzioni correttamente(postgress) (database impostato manca controllare che tutto vadi bene)
-3)gestione nome avatar e immagine con database postgress
+3)gestione nome avatar e immagine con database postgress(le freccette togliono la immagine)
 fine login
 1)gestione studio e inizio profilo utente con dati raccolti
 ---------------------------------------------------------
