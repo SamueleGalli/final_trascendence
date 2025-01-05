@@ -1,5 +1,4 @@
 import { navigate } from "../main.js";
-import { setupKnockoutPlayers } from "./knockout.js";
 
 export default function Tournament() {
     return `
@@ -54,9 +53,6 @@ export const addTournamentPageHandlers = () => {
 
     knockoutTournament?.addEventListener('click', () => {
         navigate("/tournament/knockout", "Knockout");
-        setTimeout(() => {
-            setupKnockoutPlayers();
-        }, 0);
     });
 
     roundrobinTournament?.addEventListener('click', () => {

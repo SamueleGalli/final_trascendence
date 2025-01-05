@@ -38,26 +38,20 @@ export default function Roundrobin() {
         </h1>
         <div class="container" id="playerSelectionRobin">
             <input type="radio" id="radio-1" name="players" value="4" class="radio">
-            <label for="radio-1">4</label>
+            <label class="label_knockout" for="radio-1">4</label>
 
             <input type="radio" id="radio-2" name="players" value="5" class="radio">
-            <label for="radio-2">5</label>
+            <label class="label_knockout" for="radio-2">5</label>
 
             <input type="radio" id="radio-3" name="players" value="6" class="radio">
-            <label for="radio-3">6</label>
+            <label class="label_knockout" for="radio-3">6</label>
 
             <input type="radio" id="radio-4" name="players" value="7" class="radio">
-            <label for="radio-4">7</label>
+            <label class="label_knockout" for="radio-4">7</label>
 
             <input type="radio" id="radio-5" name="players" value="8" class="radio">
-            <label for="radio-5">8</label>
+            <label class="label_knockout" for="radio-5">8</label>
         </div>
-        <div id="nameInputRobin" style="display:none;">
-            <h2>Insert Player Names</h2>
-            <div id="playerNamesRobin"></div>
-            <button id="startRobinTournamentButton">Start Tournament</button>
-        </div>
-
     `;
 }
 
@@ -81,13 +75,10 @@ export function setupRoundRobinPlayers() {
             const selectedPlayers = selectedRadio.value;
             console.log("Selected players: ", selectedPlayers);
 
-            // Показать поле для ввода
             nameInputRobin.style.display = 'block';
 
-            // Очистить предыдущие поля
             playerNamesRobin.innerHTML = '';
 
-            // Создаем новые поля
             for (let i = 1; i <= selectedPlayers; i++) {
                 const input = document.createElement('input');
                 input.type = 'text';
@@ -102,36 +93,14 @@ export function setupRoundRobinPlayers() {
             alert('Please select the number of players.');
         }
     });
+}
 
-    startRobinTournamentButton.addEventListener('click', () => {
-        const selectedPlayers = document.querySelector('input[name="players"]:checked')?.value;
-        if (!selectedPlayers) {
-            alert('Please select the number of players.');
-            return;
-        }
+export const addRoundbinPageHandlers = () => {
+    const radioButtons = document.querySelectorAll("input[name='players']");
 
-        const players = [];
-        let allNamesFilled = true;
-
-        for (let i = 1; i <= selectedPlayers; i++) {
-            const playerInput = document.getElementById('player' + i);
-            const playerName = playerInput?.value;
-
-            if (playerName) {
-                players.push(playerName);
-            } else {
-                allNamesFilled = false;
-                console.error("Player name missing for Player ", i);
-                break;
-            }
-        }
-
-        if (!allNamesFilled) {
-            alert('Please fill in all player names.');
-        } else {
-            console.log("Players: ", players);
-            sessionStorage.setItem('players', JSON.stringify(players));
+    radioButtons.forEach(radioButton => {
+        radioButton.addEventListener('change', (event) => {
             navigate("/tournament/roundrobin/robindraw", "robindraw");
-        }
+        });
     });
 }

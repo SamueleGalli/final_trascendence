@@ -38,87 +38,23 @@ export default function Knockout() {
         </h1>
         <div class="container" id="playerSelection">
             <input type="radio" id="radio-1" name="players" value="4" class="radio">
-            <label for="radio-1">4</label>
+            <label class="label_knockout" for="radio-1">4</label>
 
             <input type="radio" id="radio-2" name="players" value="8" class="radio">
-            <label for="radio-2">8</label>
+            <label class="label_knockout" for="radio-2">8</label>
 
             <input type="radio" id="radio-3" name="players" value="16" class="radio">
-            <label for="radio-3">16</label>
+            <label class="label_knockout" for="radio-3">16</label>
         </div>
-        <h3 id="playerNamesTitle" style="display: none;">Enter player names:</h3>
-        <div id="playerNames" style="display: none;"></div>
-        <button id="bracketButton" style="display: none;">Draw Tournament</button>
     `;
 }
 
-export function setupKnockoutPlayers() {
-  const bracketButton = document.getElementById('bracketButton');
-  const playerNamesTitle = document.getElementById('playerNamesTitle');
-  const playerSelection = document.getElementById('playerSelection');
-  const playerInputNames = document.getElementById('playerNames');
-
-  if (!bracketButton || !playerSelection || !playerInputNames || !playerNamesTitle) {
-      console.error("Missing required elements for Knockout setup.");
-      return;
-  }
-
-  // Radio button selection listener
-  playerSelection.addEventListener('change', (event) => {
-      playerInputNames.style.display = 'block';
-      bracketButton.style.display = 'block';
-      playerNamesTitle.style.display = 'block';
-
-      const selectedPlayers = event.target.value;
-      if (selectedPlayers) {
-          playerInputNames.innerHTML = '';
-
-          for (let i = 1; i <= selectedPlayers; i++) {
-              const input = document.createElement('input');
-              input.type = 'text';
-              input.id = 'player' + i;
-              input.placeholder = 'Player ' + i;
-              input.autocomplete = 'off';
-              playerInputNames.appendChild(input);
-          }
-      } else {
-          alert('Please select the number of players.');
-      }
-  });
-}
-
 export const addKnockoutPageHandlers = () => {
-    const bracketButton = document.getElementById("bracketButton");
-
-    bracketButton.addEventListener('click', (event) => {
-        const selectedPlayers = document.querySelector('input[name="players"]:checked')?.value;
-        const players = [];
-        let allNamesFilled = true;
-        
-        for (let i = 1; i <= selectedPlayers; i++) {
-            const playerInput = document.getElementById('player' + i);
-            const playerName = playerInput.value;
+    const radioButtons = document.querySelectorAll("input[name='players']");
     
-            if (playerName) {
-                players.push(playerName);
-            } 
-            else
-            {
-                allNamesFilled = false;
-                break;
-            }
-        }
-  
-        if (!allNamesFilled)
-        {
-          alert('Please fill in all player names.');
-          return;
-        } 
-        else
-        {
-          localStorage.removeItem('players');
-          sessionStorage.setItem('players', JSON.stringify(players));
-          navigate("/tournament/knockout/bracket", "Bracket");
-        }
+    radioButtons.forEach(radioButton => {
+        radioButton.addEventListener('change', (event) => {
+            navigate("/tournament/knockout/bracket", "Bracket");
+        });
     });
 };

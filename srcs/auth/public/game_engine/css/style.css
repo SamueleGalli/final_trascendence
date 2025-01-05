@@ -13,10 +13,6 @@ html, body {
     margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6, label {
-    color: #1a74b1;
-}
-
 body {
     margin: 0;
     overflow: hidden;
@@ -24,17 +20,17 @@ body {
 }
 
 #app {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: 5%;
     padding: 1rem;
+    height: 100vh;
+    width: 100vw;
     user-select: none;
 }
+
 
 #main_pageCanvas, #gameCanvas {
     position: absolute;
@@ -43,6 +39,20 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
+}
+
+#bracketCanvas {
+    position: relative;
+    top: -100px;
+    background-color: rgba(9, 160, 155, 0.1);
+    box-shadow: 0 0 8px rgba(9, 160, 155, 0.3);
+}
+
+#rankingRobinCanvas {
+    position: relative;
+    top: -100px;
+    background-color: rgba(9, 160, 155, 0.1);
+    box-shadow: 0 0 8px rgba(9, 160, 155, 0.3);
 }
 
 .text {
@@ -273,7 +283,7 @@ body {
     }
 }
 
-/*-----------Radio button style-------------*/
+/*-----------Radio button style start-------------*/
 @keyframes dot-anim {
     0%, 100% {
         top: 0;
@@ -291,7 +301,7 @@ body {
     flex-wrap: wrap;
 }
 
-label {
+.label_knockout {
     display: inline-block;
     width: 5vw;
     height: 5vw;
@@ -317,11 +327,11 @@ label {
     top: 0;
 }
 
-.radio:checked + label {
+.radio:checked + .label_knockout {
     animation-play-state: paused;
 }
 
-label:after {
+.label_knockout:after {
     content: "";
     position: absolute;
     width: 5vw;
@@ -333,33 +343,33 @@ label:after {
     left: 50%;
 }
 
-.radio:checked + label:after {
+.radio:checked + .label_knockout:after {
     background: transparent;
     transition: all .5s;
     transform: translate(-50%, -50%) scale(1);
 }
 
-#radio-1 + label {
+#radio-1 + .label_knockout {
     background: #014C4A;
     animation-delay: 0s;
 }
 
-#radio-2 + label {
+#radio-2 + .label_knockout {
     background: #014C4A;
     animation-delay: .2s;
 }
 
-#radio-3 + label {
+#radio-3 + .label_knockout {
     background: #014C4A;
     animation-delay: .4s;
 }
 
-#radio-4 + label {
+#radio-4 + .label_knockout {
     background: #014C4A;
     animation-delay: .6s;
 }
 
-#radio-5 + label {
+#radio-5 + .label_knockout {
     background: #014C4A;
     animation-delay: .8s;
 }
@@ -367,7 +377,7 @@ label:after {
 [type="radio"] {
     display: none;
 }
-/****************Radio button style***************/
+/****************Radio button style end***************/
 .form__group {
     position: absolute;
     padding: 15px 0 0;
@@ -412,7 +422,7 @@ label:after {
     padding-bottom: 6px;
     font-weight: 700;
     border-width: 3px;
-    border-image: linear-gradient(to right, #07fff7, #fc49029f);
+    border-image: linear-gradient(to right, #fc49029f, #07fff7);
     border-image-slice: 1;
 }
 
@@ -426,11 +436,255 @@ label:after {
     font-weight: 700;
 }
 
-/*#avatarName {
+/*------------------------------------------ Page Customize Styles start----------------------------------------*/
+.customize-title {
+    font-family: "Liberty", sans-serif;
+    font-size: 36px;
+    text-align: center;
+    color: #09a09b;
+    text-shadow: 0 0 5px rgba(9, 160, 155, 0.5), 0 0 10px rgba(9, 160, 155, 0.3), 0 0 15px #014C4A;
+    margin: 50px 0 20px;
+}
+
+.section-title {
+    font-family: "Liberty", sans-serif;
+    font-size: 24px;
+    text-align: center;
+    color: #09a09b;
+    text-shadow: 0 0 5px rgba(9, 160, 155, 0.5), 0 0 10px rgba(9, 160, 155, 0.3), 0 0 15px #014C4A;
+    margin-bottom: 8px;
+}
+
+#customize-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 15px;
+    padding: 20px 10px;
+    box-sizing: border-box;
+}
+
+.customize-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+#game-customize {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.color-picker-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.color-picker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    background-color: rgba(9, 160, 155, 0.1);
+    box-shadow: 0 0 8px rgba(9, 160, 155, 0.3);
+}
+
+.color-picker label {
+    font-family: "Liberty", sans-serif;
+    font-size: 14px;
+    color: #09a09b;
+}
+
+.color-picker input {
+    width: 45px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#preview {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.preview-canvas {
+    width: 100%;
+    height: 230px;
+    border: 2px solid #09a09b;
+    border-radius: 15px;
+    box-shadow: 0 0 8px rgba(9, 160, 155, 0.3);
+    margin-top: 15px;
+}
+
+.backgrounds-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.backgrounds-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-items: center;
+}
+
+.background-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.background-canvas {
+    width: 210px;
+    height: 130px;
+    border: 1px solid #09a09b;
+    border-radius: 10px;
+}
+
+.background-label {
+    display: inline-flex;
+    width: clamp(110px, 12vw, 200px);
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: rgb(0 255 247 / 16%);;
+    box-shadow: 0 0 8px rgba(9, 160, 155, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.background-checkbox {
+    display: none;
+}
+
+.background-text {
+    font-family: "Liberty", sans-serif;
+    font-size: 18px;
+    color: #6c6c6c;
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+    user-select: none;
+    margin-left: 12px;
+}
+
+.background-checkbox:checked + .background-text {
+    color: #09a09b;
+    transform: scale(1.1);
+    text-shadow: 0 0 5px rgba(9, 160, 155, 0.5), 0 0 10px rgba(9, 160, 155, 0.3), 0 0 15px #014C4A;
+}
+
+.background-label:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(9, 160, 155, 0.4);
+}
+
+.background-label:active {
+    color: #09a09b;
+    text-shadow: 0 0 5px rgba(9, 160, 155, 0.5), 0 0 10px rgba(9, 160, 155, 0.3), 0 0 15px #014C4A;
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(9, 160, 155, 0.3);
+}
+
+.customization-button {
+    font-family: 'Liberty', sans-serif;
+    font-size: clamp(0.8rem, 1.5vw, 1.4rem);
+    padding: 0.3em 0.6em;
+    color: #0fffcf;
+    background-color: transparent;
+    border: 2px solid #0fffcf;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+    outline: none;
+    margin: 15px;
+    width: clamp(120px, 12vw, 220px);
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.customization-button:hover {
+    color: #fff;
+    background-color: rgba(0, 255, 255, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.powerup-container {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.powerup-checkbox {
+    display: none;
+}
+
+.powerup-text {
+    font-family: "Liberty", sans-serif;
+    font-size: 18px;
+    color: #6c6c6c;
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.powerup-checkbox:checked + .powerup-text {
+    color: #09a09b;
+    transform: scale(1.1);
+    text-shadow: 0 0 5px rgba(9, 160, 155, 0.5), 0 0 10px rgba(9, 160, 155, 0.3), 0 0 15px #014C4A;
+}
+
+.powerup-label {
+    display: inline-flex;
+    width: clamp(110px, 12vw, 200px);
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: rgb(0 255 247 / 16%);
+    box-shadow: 0 0 8px rgba(9, 160, 155, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.powerup-label:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(9, 160, 155, 0.4);
+}
+
+.powerup-label:active {
+    color: #09a09b;
+    text-shadow: 0 0 5px rgba(9, 160, 155, 0.5), 0 0 10px rgba(9, 160, 155, 0.3), 0 0 15px #014C4A;
+}/*------------------------------------------ Page Customize Styles end----------------------------------------*/
+
+#avatarName {
     position: absolute;
-    right: 120px;
-    top: 10px;
-    font-size: 20px;
-    color: #00ff3cc5;
+    font-family: 'Liberty', sans-serif;
+    right: 99px;
+    top: 57px;
+    font-size: 25px;
+    color: #09a09b;
+    text-shadow: 0 0 5px rgba(9, 160, 155, 0.5), 0 0 10px rgba(9, 160, 155, 0.3), 0 0 15px #014C4A;
     z-index: 8;
-}*/
+}

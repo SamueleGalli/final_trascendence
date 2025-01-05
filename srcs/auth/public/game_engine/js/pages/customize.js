@@ -1,62 +1,73 @@
 import { navigate } from "../main.js";
+import { ballColor, paddleColor, ballTrailColor, wallsColor } from "../game/game_global.js";
+import { setBallColor, setBallTrailColor, setPaddleColor, setWallsColor, setPowerUpState, setBackground} from "../game/game_global.js";
 
 export default function Customize() {
-    const html = `
-        <h1>Customize</h1>
-        <div id="customize-container">
-            <div id="game-customize" style="font-size: 25px; display: flex; flex-direction: row;">
-                <div id="game-elements-color" style="font-size: 25px;">
-                    <div>
-                        <label for="paddleColor">Select Paddle Color:</label>
-                        <input type="color" id="paddleColorPicker" value="#ffffff">
-                    </div>
-                    <div>
-                        <label for="ballColor">Select Ball Color:</label>
-                        <input type="color" id="ballColorPicker" value="#ffffff">
-                    </div>
-                    <div>
-                        <label for="ballTrailColor">Select Ball Trail Color:</label>
-                        <input type="color" id="ballTrailColorPicker" value="#014C4A">
-                    </div>
-                    <div>
-                        <label for="wallsColor">Select Walls Color:</label>
-                        <input type="color" id="wallsColorPicker" value="#014C4A">
+    return `
+        <h1 class="customize-title">Customize</h1>
+        <div id="customize-container" class="customize-wrapper">
+            <div class="customize-content">
+                <div id="game-customize" class="customize-section">
+                    <h2 class="section-title">Game Elements</h2>
+                    <div id="game-elements-color" class="color-picker-section">
+                        <div class="color-picker">
+                            <label for="paddleColorPicker">Paddle:</label>
+                            <input type="color" id="paddleColorPicker" value="#ffffff">
+                        </div>
+                        <div class="color-picker">
+                            <label for="ballColorPicker">Ball:</label>
+                            <input type="color" id="ballColorPicker" value="#ffffff">
+                        </div>
+                        <div class="color-picker">
+                            <label for="ballTrailColorPicker">Ball Trail:</label>
+                            <input type="color" id="ballTrailColorPicker" value="#014C4A">
+                        </div>
+                        <div class="color-picker">
+                            <label for="wallsColorPicker">Walls:</label>
+                            <input type="color" id="wallsColorPicker" value="#014C4A">
+                        </div>
                     </div>
                 </div>
-                <div id="preview">
-                    <label for="previewCanvas" align="left" style="font-size: 30px;">Preview</label>
-                    <canvas id="previewCanvas"></canvas>
-                </div>
-            </div>
-            <div id="backgrounds">
-                <label for="backgrounds" align="left" style="text-align: left; font-size: 30px;">Backgrounds</label>
-                <div id="backgrounds-container" style="display: flex; flex-direction: row;">
-                    <div id="backgrounds-container1" style="display: flex; flex-direction: column;">
-                        <canvas id="backgroundCanvas1" style="background-color: #000; width: 300px; height: 200px; margin: 10px;"></canvas>
-                        <button id="buttonBackground1" style="font-size: 30px; margin-top: 50px;">Space</button>
-                    </div>
-                    <div id="backgrounds-container2" style="display: flex; flex-direction: column;">
-                        <canvas id="backgroundCanvas2" style="background-color: #000; width: 300px; height: 200px; margin: 10px;"></canvas>
-                        <button id="buttonBackground2" style="font-size: 30px; margin-top: 50px;">Classic</button>
-                    </div>
-                    <div id="backgrounds-container3" style="display: flex; flex-direction: column;">
-                        <canvas id="backgroundCanvas3" style="background-color: #000; width: 300px; height: 200px; margin: 10px;"></canvas>
-                        <button id="buttonBackground3" style="font-size: 30px; margin-top: 50px;">Ping Pong</button>
-                    </div>
+                <div id="preview" class="preview-section">
+                    <h2 class="section-title">Preview</h2>
+                    <canvas id="previewCanvas" class="preview-canvas"></canvas>
                 </div>
             </div>
-            <label id="background-selected" style="font-size: 20px; margin-top: 20px;">Background Selected: </label>
         </div>
-        <div id="powerup-checkbox-container" style="display: flex; margin-top: 100px;">
-            <label id="powerupLabel" style="font-size: 30px; margin-left: 20px;">
-                <input type="checkbox" id="powerup-checkbox" style="width: 30px; height: 30px; margin-right: 10px;" />
-                Power-ups
+        <div id="backgrounds" class="backgrounds-section">
+            <h2 class="section-title">Backgrounds</h2>
+            <div id="backgrounds-container" class="backgrounds-grid">
+                <div class="background-item">
+                    <canvas id="backgroundCanvas1" class="background-canvas"></canvas>
+                    <label class="background-label">
+                        <input type="radio" id="backgroundCheckbox1" name="background" class="background-checkbox" />
+                        <span class="background-text">Space</span>
+                    </label>
+                </div>
+                <div class="background-item">
+                    <canvas id="backgroundCanvas2" class="background-canvas"></canvas>
+                    <label class="background-label">
+                        <input type="radio" id="backgroundCheckbox2" name="background" class="background-checkbox" checked />
+                        <span class="background-text">Classic</span>
+                    </label>
+                </div>
+                <div class="background-item">
+                    <canvas id="backgroundCanvas3" class="background-canvas"></canvas>
+                    <label class="background-label">
+                        <input type="radio" id="backgroundCheckbox3" name="background" class="background-checkbox" />
+                        <span class="background-text">Ping Pong</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="powerup-checkbox-container" class="powerup-container">
+            <label class="powerup-label">
+                <input type="checkbox" id="powerup-checkbox" class="powerup-checkbox" />
+                <span class="powerup-text">Power-ups</span>
             </label>
-            
         </div>
-        <button id="applyCustomization" style="font-size: 30px; margin-top: 50px;">Apply</button>
-   `;
-   return html;
+        <button id="applyCustomization" class="customization-button">Apply</button>
+    `;
 }
 
 export function addCustomizeGame() {
@@ -76,7 +87,7 @@ export function addCustomizeGame() {
     paddleColorPicker.value = paddleColor;
     ballTrailColorPicker.value = ballTrailColor;
     wallsColorPicker.value = wallsColor;
-     
+
     powerupCheckbox.addEventListener('change', (event) => {
         if (powerupCheckbox.checked) {
             setPowerUpState(true);

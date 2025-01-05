@@ -1,4 +1,4 @@
-FROM ruby:3.0
+FROM ruby:latest
 
 RUN apt-get update -y && \
     apt-get install -y \
@@ -11,7 +11,7 @@ RUN apt-get update -y && \
 
 ENV TERM xterm-256color
 
-RUN gem install bundler -v 2.3.0
+RUN gem install bundler
 
 WORKDIR /var/www
 

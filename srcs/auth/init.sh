@@ -1,47 +1,54 @@
 #!/bin/bash
 
-clear
-
-if ! command -v ruby &> /dev/null; then
-    echo "Ruby non trovato. Installando Ruby..."
-    sudo apt-get update && sudo apt-get install -y ruby-full
+echo "==============================="
+echo "Controllo installazione di Ruby..."
+if ruby --version &>/dev/null; then
+    echo "✅ Ruby è già installato."
 else
-    echo "Ruby è già installato."
+    echo "❌ Ruby non è installato. Installare Ruby prima di continuare."
+    exit 1
 fi
 
-if ! command -v lsof &> /dev/null; then
-    echo "Lsof non trovato. Installando lsof..."
-    sudo apt-get update && sudo apt-get install -y lsof
+echo "==============================="
+echo "Controllo installazione di Bundler..."
+if bundler --version &>/dev/null; then
+    echo "✅ Bundler è già installato."
 else
-    echo "Lsof è già installato."
+    echo "❌ Bundler non è installato. Tentativo di installazione..."
+    gem install bundler || { echo "❌ Errore durante l'installazione di Bundler."; exit 1; }
+    echo "✅ Bundler installato correttamente."
 fi
 
-echo "Modificando i permessi della cartella /var/lib/gems..."
-sudo chown -R $USER:$USER /var/lib/gems
-
-if ! gem list bundler -i; then
-    echo "Bundler non trovato. Installando Bundler..."
-    gem install bundler --user-install
+echo "==============================="
+echo "Pulizia delle gemme..."
+if gem cleanup &>/dev/null; then
+    echo "✅ Pulizia delle gemme completata."
 else
-    echo "Bundler è già installato."
+    echo "❌ Errore durante la pulizia delle gemme."
 fi
 
-cd authentication
+cd authentication/
+echo "==============================="
+echo "Aggiornamento delle gemme con Bundler..."
+if bundle update &>/dev/null; then
+    echo "✅ Aggiornamento completato."
+else
+    echo "❌ Errore durante l'aggiornamento delle gemme."
+    echo "Verificare la versione di Ruby e le dipendenze delle gemme."
+fi
 
-echo "Aggiornando le gemme con Bundler..."
-bundle update
+echo "==============================="
+echo "Installazione delle gemme..."
+if bundle install &>/dev/null; then
+    echo "✅ Gemme installate correttamente."
+else
+    echo "❌ Errore durante l'installazione delle gemme."
+    echo "Ecco i dettagli dell'errore:"
+    bundle install
+fi
 
-echo "Processes using port 9292 (before kill):"
-lsof -i :9292
+echo "==============================="
+echo "Script completato.avvio server..."
 
-echo "Killing processes using port 9292..."
-lsof -i :9292 | awk 'NR>1 {print $2}' | xargs -r kill -9
-
-echo "Processes using port 9292 (after kill):"
-lsof -i :9292
-
-echo "Installing gems using Bundler..."
-bundle install
-
-echo "Starting server..."
+echo "L'output del comando è: $(ls)"
 bundle exec ruby server.rb
