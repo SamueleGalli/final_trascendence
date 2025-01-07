@@ -28,7 +28,6 @@ export default function Login() {
     `;
 }
 
-// Gestori per la pagina di login
 export const addLoginPageHandlers = () => {
     const loginButton = document.getElementById("loginButton");
     const guestButton = document.getElementById("guestButton");

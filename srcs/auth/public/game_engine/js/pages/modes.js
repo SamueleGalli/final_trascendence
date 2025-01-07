@@ -3,10 +3,26 @@ import { navigate } from "../main.js";
 export function update_image(image) {
     const checkImageInterval = setInterval(() => {
         const avatarImage = document.getElementById('avatarImage');
-        if (avatarImage) {
+        if (avatarImage)
+        {
             avatarImage.src = image;
             clearInterval(checkImageInterval);
         }
+        else
+            console.warn("Element 'avatarImage' not found in the DOM.");
+    }, 100);
+}
+
+export function change_name(name) {
+    const checknameInterval = setInterval(() => {
+        const avatarName = document.getElementById('avatarName');
+        if (avatarName)
+        {
+            avatarName.innerText = name;
+            clearInterval(checknameInterval);
+        }
+        else
+            console.warn("Element 'avatarName' not found in the DOM.");
     }, 100);
 }
 
@@ -32,6 +48,7 @@ export default function Modes() {
     <span class="letter letter-17">D</span>
     <span class="letter letter-18">E</span>
     </h1>
+    <script src="../../login/guest_logic.js"></script>
     <div id="modeButtonsContainer">
     <div class="mode-button-container">
     <button class="button-style" id="classicButton"><span class="text-animation">CLASSIC</span></button>

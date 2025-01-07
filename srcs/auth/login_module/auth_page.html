@@ -34,6 +34,19 @@
       };
       let countdown = 5;
       const timerElement = document.getElementById('timer');
+      /*function send_user_data()
+      {
+        const userData = {
+            name: "<%= user_data['name'] %>",   // Dati dal backend
+            email: "<%= user_data['email'] %>", // Dati dal backend
+            image: "<%= user_data['avatar_url'] %>",
+            login_name: "<%= user_data['login_name'] %>"
+          };
+
+          if (window.opener) {
+            window.opener.postMessage({ authenticated: true, user: userData }, window.location.origin);
+          }
+      }*/
       function sendAuthMessage() {
         if (window.opener) {
           window.opener.postMessage({ authenticated: true }, window.location.origin);
@@ -41,13 +54,14 @@
           console.error('window.opener non trovato');
         }
       }
-      const timerInterval = setInterval(function() {
+      const timerInterval = setInterval(function() {        
         countdown--;
         timerElement.textContent = countdown;
 
         if (countdown === 0) {
           clearInterval(timerInterval);
           sendAuthMessage();
+          //send_user_data();
           window.close();
         }
       }, 1000);
