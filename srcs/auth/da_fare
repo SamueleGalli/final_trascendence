@@ -1,6 +1,5 @@
-1)controllare user_data in login_logic e auth.html
-2)controllare che il database funzioni correttamente(postgress) (database impostato manca controllare che tutto vadi bene)
-3) se torno indetro o avanti nelle pagine non aggiorna nulla immagini nome ect...
+1)sistemare lettura immagine in javascript
+2)se torno indetro o avanti nelle pagine non aggiorna nulla immagini nome ect...
 fine login
 1)gestione studio e inizio profilo utente con dati raccolti
 ---------------------------------------------------------
