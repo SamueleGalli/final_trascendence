@@ -2,6 +2,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'cgi'
+require 'erb'
 require_relative 'other_logic'
 
 module AuthMethods
@@ -53,15 +54,13 @@ module AuthMethods
       image: image,
       login_name: login_name
     }
-  
-    html_content = File.read('../login_module/auth_page.html')
-    html_content.gsub!('</body>', "<script>
-      const userData = #{user_data_js.to_json};
-      console.log('Dati utente:', userData);
-    </script></body>")
-  
+    
+    html_content = File.read('./login_module/auth_page.html')
+    erb = ERB.new(html_content)
+    html_output = erb.result(binding)
+    
     response.content_type = 'text/html'
-    response.write(html_content)
+    response.write(html_output)
   end
   
 end

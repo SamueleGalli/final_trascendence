@@ -50,5 +50,4 @@ fi
 echo "==============================="
 echo "Script completato.avvio server..."
 
-echo "L'output del comando è: $(ls)"
 bundle exec ruby server.rb

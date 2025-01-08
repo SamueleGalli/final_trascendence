@@ -8,7 +8,6 @@ let currentGuestId = null;
 window.addEventListener('storage', (event) => {
     if (event.key === 'guests') {
         guests = JSON.parse(localStorage.getItem('guests')) || [];
-        console.log("Guests updated:", guests);
     }
 });
 

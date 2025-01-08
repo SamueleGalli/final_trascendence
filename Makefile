@@ -3,6 +3,7 @@ all: stop_containers prep_dirs
 	@docker-compose -f ./srcs/docker-compose.yml up
 
 stop_containers:
+	clear
 	@echo "Stopping existing containers..."
 	@sudo chmod +x /usr/bin/docker-compose
 	@docker-compose -f ./srcs/docker-compose.yml stop

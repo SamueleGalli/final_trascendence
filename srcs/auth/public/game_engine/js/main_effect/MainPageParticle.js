@@ -1,3 +1,4 @@
+
 export class MainPageParticle {
     constructor(x, y) {
         this.x = x;
