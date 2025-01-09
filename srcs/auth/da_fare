@@ -1,7 +1,24 @@
 1)quando accedo come guest e torno indietro impedire di tornare avanti dando errore
 2)dare un occhio a login
 (controllo possibili errori da fixare nel login...)
-1)gestione studio e inizio profilo utente con dati raccolti
+1)
+IV.3 User Management
+This module delves into the realm of User Management, addressing crucial aspects
+of user interactions and access control within the Pong platform. It encompasses two
+major components, each focused on essential elements of user management and authentication: user participation across multiple tournaments and the implementation of remote
+authentication.
+• Major module: Standard user management, authentication, users across tournaments.
+◦ Users can subscribe to the website in a secure way.
+◦ Registered users can log in in a secure way.
+◦ Users can select a unique display name to play the tournaments.
+◦ Users can update their information.
+◦ Users can upload an avatar, with a default option if none is provided.
+◦ Users can add others as friends and view their online status.
+◦ User profiles display stats, such as wins and losses.
+◦ Each user has a Match History including 1v1 games, dates, and relevant
+details, accessible to logged-in users.
+Be carefull, the management of duplicate usernames/emails is at your
+discretion. You must provide a solution that makes sense.
 ---------------------------------------------------------
 non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
 (problemi di login risolti controllare errori possibili con gli altri)
