@@ -26,9 +26,6 @@ class App
     when '/auth/login'
       login(request, response, @client)
 
-    when '/auth/logout'
-      logout(request, response)
-
     when '/callback'
       callback(request, response, @client)
 
