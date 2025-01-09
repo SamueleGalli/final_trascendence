@@ -1,4 +1,5 @@
-1)dare un occhio a guest
+1)quando accedo come guest e torno indietro impedire di tornare avanti dando errore
+2)dare un occhio a login
 (controllo possibili errori da fixare nel login...)
 1)gestione studio e inizio profilo utente con dati raccolti
 ---------------------------------------------------------
