@@ -1,6 +1,6 @@
 import { navigate } from "../js/main.js";
 import { change_name, update_image } from "../js/pages/modes.js";
-import { Logged } from "./user.js";
+import { Logged, format_image } from "./user.js";
 
 let success = localStorage.getItem('authenticated') === 'true';
 let isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
@@ -69,7 +69,8 @@ function log_in(popup, success, isCurrentTabLogged, event) {
 
 }
 
-function get_data(event) {
+function get_data(event)
+{
     let user;
 
     if (event.data.authenticated && event.data.user) {
@@ -82,10 +83,7 @@ function get_data(event) {
     }
 
     if (user)
-    {
-        //console.log("Dati utente:", user);
         localStorage.setItem('user_data', JSON.stringify(user));
-    }
     change_name(user.login_name);
     update_image(user.image);
 }

@@ -22,36 +22,19 @@
         color: #333;
       }
 
-      #avatar {
-        margin-top: 20px;
-      }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Accesso consentito</h1>
       <p>La pagina si chiudera tra <span id="timer">5</span> secondi.<br> Oppure puoi chiuderla direttamente</p>
-
-      <!-- Aggiungi un'immagine per verificare se il link è valido -->
-      <div id="avatar">
-        <h2>Immagine dell'utente:</h2>
-        <img id="avatarImage" src="" alt="Avatar" width="100">
-      </div>
-
       <script>
         const userData = {
-          name: "<%= user_data_js[:name] %>",
-          email: "<%= user_data_js[:email] %>",
-          image: "<%= user_data_js[:image] %>",
-          login_name: "<%= user_data_js[:login_name] %>"
+          name: "<%= name %>",
+          email: "<%= email %>",
+          image: "<%= image %>",
+          login_name: "<%= login_name %>"
         };
-
-        // Imposta l'immagine
-        const avatarImage = document.getElementById('avatarImage');
-        if (avatarImage) {
-          avatarImage.src = userData.image;
-        }
-
         window.onbeforeunload = function() {
           window.opener.postMessage(userData, window.location.origin);
           sendAuthMessage();

@@ -46,6 +46,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  cgi
   colorize
   did_you_mean (~> 1.0)
   dotenv

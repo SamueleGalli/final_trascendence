@@ -1,9 +1,10 @@
+
 require 'json'
 require 'pg'
 require 'colorize'
 load ((File.file? '/var/www/common/BetterPG.rb') ? '/var/www/common/BetterPG.rb' : '../../common_tools/tools/BetterPG.rb')
 
-LOGIN = BetterPG::SimplePG.new "users", ["login_name TEXT", "name TEXT", "email TEXT", "image TEXT", "token TEXT"]
+LOGIN = BetterPG::SimplePG.new "users", ["login_name TEXT", "name TEXT", "email TEXT", "image TEXT"]
 
 module Other_logic
   def not_found(response)
@@ -29,12 +30,9 @@ module Other_logic
     end
         name = user_data['usual_full_name']
         email = user_data['email']
-        image = user_data['image']
+        image = user_data['image']['link']
         login_name = user_data['login']
-    if image.nil? || image.empty?
-      image = 'nulla'
-    end
-    LOGIN.addValues ["'" + login_name.to_s + "'", "'" + name.to_s+ "'" , "'" + email.to_s + "'", "'" + token.to_s + "'"], ["login_name", "name", "email", "token"]
-    return { 'login_name' => login_name, 'name' => name, 'email' => email, 'avatar_url' => image }
+    LOGIN.addValues ["'" + login_name.to_s + "'", "'" + name.to_s+ "'" , "'" + email.to_s + "'"], ["login_name", "name", "email"]
+    return { 'login_name' => login_name, 'name' => name, 'email' => email, 'image' => image }
   end
 end

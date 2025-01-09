@@ -1,7 +1,7 @@
 import { navigate } from "../main.js";
 
-export function update_image(image) {
-    console.log("image = ", image);
+export function update_image(image)
+{
     const checkImageInterval = setInterval(() => {
         const avatarImage = document.getElementById('avatarImage');
         if (avatarImage)
