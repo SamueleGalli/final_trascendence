@@ -1,26 +1,64 @@
 import { navigate } from "../js/main.js";
 import { change_name, update_image } from "../js/pages/modes.js";
-import { Logged, format_image } from "./user.js";
+import { Logged } from "./user.js";
 
 let success = localStorage.getItem('authenticated') === 'true';
 let isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
 let auth = localStorage.getItem('auth_done') === 'true';
+let userDataRefreshed = false;
+let popupMonitor;
 export let popupOpened = localStorage.getItem('popup_opened') === 'true';
 
 function syncState() {
+    const previousState = {
+        success: success,
+        isCurrentTabLogged: isCurrentTabLogged,
+        popupOpened: popupOpened,
+        auth: auth
+    };
+
     success = localStorage.getItem('authenticated') === 'true';
     isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
     popupOpened = localStorage.getItem('popup_opened') === 'true';
     auth = localStorage.getItem('auth_done') === 'true';
+
+    if (JSON.stringify(previousState) === JSON.stringify({
+        success, isCurrentTabLogged, popupOpened, auth
+    })) {
+        return;
+    }
 }
+
+
+function refreshUserData() {
+    if (userDataRefreshed)
+        return;
+    userDataRefreshed = true;
+
+    const userData = JSON.parse(localStorage.getItem('user_data'));
+    if (userData)
+    {
+        change_name(userData.login_name);
+        update_image(userData.image);
+    }
+}
+
+window.addEventListener('popstate', () => {
+    userDataRefreshed = false;
+    refreshUserData();
+});
 
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         syncState();
+        refreshUserData();
     }
 });
 
 window.addEventListener('unload', () => {
+    if (!isCurrentTabLogged || auth === false)
+        return;
+
     if (isCurrentTabLogged) {
         localStorage.setItem('authenticated', 'false');
         localStorage.setItem('auth_done', 'true');
@@ -29,29 +67,43 @@ window.addEventListener('unload', () => {
     sessionStorage.removeItem('popup_opened');
 });
 
+
 function already_logged() {
     syncState();
-    if (isCurrentTabLogged) {
-        alert("User already logged in this tab.");
-        return 1;
+
+    if (isCurrentTabLogged)
+    {
+        isCurrentTabLogged = false;
+        sessionStorage.setItem('tab_authenticated', 'false');
+        return;
     }
+
     if (success && !isCurrentTabLogged) {
         alert("User already logged in from another tab. Close the other tab to continue.");
         return 1;
     }
+
     if (popupOpened === true && !auth) {
         alert("Authenticating in progress....\nPlease wait.");
         return 1;
     }
+
     return 0;
 }
+
 
 function popupHandling(popup) {
     localStorage.setItem('popup_opened', 'true');
     popupOpened = true;
-    const popupMonitor = setInterval(() => {
+
+    
+    if (popupMonitor) {
+        clearInterval(popupMonitor);
+    }
+
+    popupMonitor = setInterval(() => {
         if (popup.closed && auth === false) {
-            clearInterval(popupMonitor);
+            clearInterval(popupMonitor); 
             localStorage.setItem('popup_opened', 'false');
             popupOpened = false;
             return;
@@ -60,17 +112,15 @@ function popupHandling(popup) {
 }
 
 function log_in(popup, success, isCurrentTabLogged, event) {
-    // Imposta altre informazioni nella sessione
+
     localStorage.setItem('authenticated', 'true');
     sessionStorage.setItem('tab_authenticated', 'true');
     popup.close();
     navigate("/modes", "Modalità di gioco");
     localStorage.setItem('auth_done', 'true');
-
 }
 
-function get_data(event)
-{
+function get_data(event) {
     let user;
 
     if (event.data.authenticated && event.data.user) {
@@ -82,10 +132,10 @@ function get_data(event)
         );
     }
 
-    if (user)
+    if (user) {
         localStorage.setItem('user_data', JSON.stringify(user));
-    change_name(user.login_name);
-    update_image(user.image);
+        refreshUserData();
+    }
 }
 
 export function performLogin() {

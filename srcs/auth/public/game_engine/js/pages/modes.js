@@ -9,8 +9,6 @@ export function update_image(image)
             avatarImage.src = image;
             clearInterval(checkImageInterval);
         }
-        else
-            console.warn("Element 'avatarImage' not found in the DOM.");
     }, 100);
 }
 
@@ -22,8 +20,6 @@ export function change_name(name) {
             avatarName.innerText = name;
             clearInterval(checknameInterval);
         }
-        else
-            console.warn("Element 'avatarName' not found in the DOM.");
     }, 100);
 }
 
