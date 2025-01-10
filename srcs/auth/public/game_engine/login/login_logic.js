@@ -1,4 +1,5 @@
 import { navigate } from "../js/main.js";
+import { let_me_in } from "../js/pages/login.js";
 import { change_name, update_image } from "../js/pages/modes.js";
 import { Logged } from "./user.js";
 
@@ -44,12 +45,16 @@ function refreshUserData() {
 }
 
 window.addEventListener('popstate', () => {
-    userDataRefreshed = false;
-    refreshUserData();
+    if (let_me_in === true)
+    {
+        userDataRefreshed = false;
+        refreshUserData();
+    }
 });
 
 document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
+    if (document.visibilityState === 'visible')
+    {
         syncState();
         refreshUserData();
     }

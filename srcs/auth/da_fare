@@ -1,6 +1,4 @@
-1)quando accedo come guest e torno indietro impedire di tornare avanti dando errore
-2)dare un occhio a login
-3)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
+1)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
 (controllo possibili errori da fixare nel login...)
 1)
 IV.3 User Management
