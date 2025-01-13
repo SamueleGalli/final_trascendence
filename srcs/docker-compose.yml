@@ -54,7 +54,7 @@ volumes:
     name: lg
     driver_opts:
       o: bind
-      device: ./srcs/logger
+      device: /home/leonardo/Desktop/42_Transcendence/srcs/logger
       type: none
 
   pages_db:
@@ -62,7 +62,7 @@ volumes:
     name: pg
     driver_opts:
       o: bind
-      device: ./pages
+      device: /home/leonardo/Desktop/42_Transcendence/pages
       type: none
 
   common_tools:
@@ -70,7 +70,7 @@ volumes:
     name: ct
     driver_opts:
       o: bind
-      device: ./srcs/common_tools/tools
+      device: /home/leonardo/Desktop/42_Transcendence/srcs/common_tools/tools
       type: none
 
 
@@ -148,10 +148,11 @@ services:
     entrypoint: /var/www/init.sh
     working_dir: /var/www
 
-  auth:
+  auth:                                             # net open service. Creates gateways
     image: ruby:latest
     restart: always
     volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock
       - common_tools:/var/www/common
       - ./auth:/var/www
     depends_on:
@@ -162,6 +163,7 @@ services:
     env_file:
       - .env
     ports:
-      - "9292:9292"
+      - "4567:4567"
+      - "8005:8005"
     entrypoint: /var/www/init.sh
     working_dir: /var/www

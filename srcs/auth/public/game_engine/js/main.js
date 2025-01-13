@@ -3,11 +3,15 @@ import Modes, { addModesPageHandlers } from "./pages/modes.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament.js";
 import Classic from "./pages/classic.js";
 import AiWars from "./pages/ai.js";
+import { Forza4Home, showForza4HomeScreen } from "./pages/forza4_home.js";
+import { Forza4Customize, forza4Config } from "./pages/forza4_customize.js";
+import { Forza4, startforza4Game } from "./game/forza4.js";
 import Knockout, { addKnockoutPageHandlers } from "./pages/knockout.js";
 import Customize, { addCustomizeGame } from "./pages/customize.js";
 import Roundrobin, { addRoundbinPageHandlers } from "./pages/roundrobin.js";
 import RobinRanking, { robinDraw } from "./pages/robindraw.js";
 import Userstats from "./pages/userstats.js";
+import { F4UserStats, F4ShowUserStats } from "./pages/forza4_statistics.js";
 import Bracket, { addBracketPageHandlers, drawBracket } from "./pages/bracket.js";
 import { initializeGameCanvas, destroyGameCanvas, addCanvas, removeCanvas } from "./handlingCanvas.js";
 
@@ -18,6 +22,10 @@ const routes = {
     "/classic": Classic,
     "/aiWars": AiWars,
     "/tournament": Tournament,
+    "/forza4": Forza4Home,
+    "/forza4/customize": Forza4Customize,
+    "/forza4/game": Forza4,
+    "/forza4/userstats": F4UserStats,
     "/tournament/knockout": Knockout,
     "/tournament/roundrobin": Roundrobin,
     "/tournament/userstats": Userstats,
@@ -87,7 +95,18 @@ const loadContent = async () => {
         else if (path === "/tournament/knockout/bracket/customize") {
             addCustomizeGame()
         }*/
-        
+        else if (path === "/forza4") {
+            showForza4HomeScreen();
+        }
+        else if (path === "/forza4/customize") {
+            forza4Config();
+        }
+        else if (path === "/forza4/game") {
+            startforza4Game();
+        }
+        else if (path === "/forza4/userstats") {
+            F4ShowUserStats();
+        }
     }
     else
         app.innerHTML = "<h1>404 - Pagina non trovata</h1>"; // Pagina non trovata
