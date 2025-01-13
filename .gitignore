@@ -1,5 +1,2 @@
-srcs/requirements*/
-..*
-*/..*
-*/*/..*
+*.identifier.zone
 .vscode
