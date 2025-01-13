@@ -7,27 +7,24 @@ logger = Logger.new(STDOUT)
 logger.level = Logger::ERROR
 $stdout.sync = true
 
-# Creazione dell'oggetto WebApp con OAuth client e logger
 app = App.new(OAuthClient.new, logger)
 
-# Configurazione server WEBrick
 server = WEBrick::HTTPServer.new(Port: 9292)
 
-# Montaggio dell'applicazione principale
 server.mount_proc '/' do |req, res|
     status, headers, body = app.call(req.meta_vars)
     res.status = status
     headers.each { |k, v| res[k] = v }
     body.each { |chunk| res.body << chunk }
 
-    # Log degli errori generali
-    if status >= 400  # Tutti gli errori (400 e superiori)
+
+    if status >= 400 
     logger.error("#{status} Error: #{req.path}".red)
     end
 end
 
 def log_error_details(req, status, body)
-    # Log degli errori dettagliati solo per gli errori più gravi
+
     if status >= 400
         ip = req.peeraddr[3]
         method = req.request_method
@@ -41,15 +38,15 @@ def log_error_details(req, status, body)
         
         case status
         when 404
-        logger.error(error_message.red)  # 404 in rosso
+        logger.error(error_message.red) 
         when 500
-        logger.error(error_message.bold.red)  # 500 in rosso e bold
+        logger.error(error_message.bold.red) 
         when 403
-        logger.error(error_message.yellow)  # 403 in giallo
+        logger.error(error_message.yellow) 
         when 400
-        logger.error(error_message.light_red)  # 400 in rosso chiaro
+        logger.error(error_message.light_red) 
         else
-        logger.error(error_message)  # Errori generali
+        logger.error(error_message) 
         end
     end
 end
@@ -64,13 +61,12 @@ server.mount "/game_engine/login", WEBrick::HTTPServlet::FileHandler, File.join(
 
 server.mount "/favicon.ico", WEBrick::HTTPServlet::FileHandler, File.join(public_dir, "favicon.ico")
 
-# Gestione dell'arresto del server
 trap 'INT' do
     logger.info "Shutting down WEBrick server..."
-    # Termina il processo (se si desidera)
+
     pid = Process.pid
     logger.info "Terminating process with PID #{pid}".red
-    Process.kill('TERM', pid)  # Questo invia il segnale TERM al processo corrente
+    Process.kill('TERM', pid) 
     server.shutdown
 end
 

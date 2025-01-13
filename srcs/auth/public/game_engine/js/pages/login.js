@@ -41,8 +41,13 @@ export const addLoginPageHandlers = () => {
 
     if (loginButton && guestButton) {
         loginButton.addEventListener("click", () => {
-            update_state(true);
-            performLogin();
+            if (popupOpened === true)
+                alert("popup already open finish authentication before continuing")
+            else
+            {
+                update_state(true);
+                performLogin();
+            }
         });
         guestButton.addEventListener("click", () => {
             if (popupOpened === true)
