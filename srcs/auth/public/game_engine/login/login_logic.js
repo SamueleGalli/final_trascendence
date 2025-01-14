@@ -8,13 +8,18 @@ let isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
 let auth = localStorage.getItem('auth_done') === 'true';
 let userDataRefreshed = false;
 export let popupOpened = localStorage.getItem('popup_opened') === 'true';
+export let user;
 
 window.addEventListener('beforeunload', () => {
     let openTabsCount = parseInt(localStorage.getItem('open_tabs_count') || '0');
     
     openTabsCount--;
     if (openTabsCount <= 0)
+    {
+        localStorage.setItem('auth_done', 'false');
+        sessionStorage.clear();
         localStorage.clear();
+    }
     else
         localStorage.setItem('open_tabs_count', openTabsCount.toString());
 });
@@ -81,7 +86,6 @@ window.addEventListener('unload', () => {
 });
 
 function already_logged() {
-    console.log("success = ", success);
     if (success && !isCurrentTabLogged)
         {
         alert("User already logged in from another tab. Close the other tab to continue.");
@@ -120,7 +124,6 @@ function log_in(popup) {
 }
 
 function get_data(event) {
-    let user;
 
     if (event.data.authenticated && event.data.user) {
         user = new Logged(
@@ -137,19 +140,24 @@ function get_data(event) {
     }
 }
 
-function persistent() {
-    const userData = JSON.parse(localStorage.getItem('user_data'));
-    const user = new Logged(
-        userData.image,
-        userData.name,
-        userData.login_name,
-        userData.email
-    );
-    change_name(user.login_name);
-    update_image(user.image);
-    localStorage.setItem('authenticated', 'true');
-    sessionStorage.setItem('tab_authenticated', 'true');
-    navigate("/modes", "Modalità di gioco");
+function logging(authData) {
+    const popup = window.open(authData.auth_url, 'Login', 'width=800,height=800');
+    popupHandling(popup);
+
+    const messageListener = (event) => {
+        if (event.origin !== window.location.origin) {
+            console.error('Messaggio ricevuto da una origine non valida');
+            return;
+        }
+
+        if (event.data.authenticated && !success) {
+            get_data(event);
+            log_in(popup);
+            alert("(you are logged successfully if you want to change user you need to close this tab first!)");
+            window.removeEventListener('message', messageListener);
+        }
+    };
+    window.addEventListener('message', messageListener);
 }
 
 export function performLogin() {
@@ -159,27 +167,7 @@ export function performLogin() {
     fetch('/auth/login')
     .then(response => response.json())
     .then(data => {
-        if (auth === true) {
-            persistent();
-            return;
-        }
-        const popup = window.open(data.auth_url, 'Login', 'width=800,height=800');
-        popupHandling(popup);
-
-        const messageListener = (event) => {
-            if (event.origin !== window.location.origin) {
-                console.error('Messaggio ricevuto da una origine non valida');
-                return;
-            }
-
-            if (event.data.authenticated && !success) {
-                get_data(event);
-                log_in(popup);
-                window.removeEventListener('message', messageListener);
-            }
-        };
-
-        window.addEventListener('message', messageListener);
+        logging(data);
     })
     .catch(error => {
         console.error("Errore di rete:", error);

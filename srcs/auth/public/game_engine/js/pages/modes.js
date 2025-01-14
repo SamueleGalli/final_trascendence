@@ -75,13 +75,12 @@ export default function Modes()
     <div class="avatar-container">
     <img alt="Avatar" class="avatar-image" id="avatarImage">
     <div class="menu-container hidden">
-    <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile"></div>
+    <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile" id="profileIcon"></div>
     <div class="menu-item"><img src="game_engine/images/answer.png" alt="Settings"></div>
     </div>
-    </div>  
+    </div> 
     `;
 }
-
 export const addModesPageHandlers = () => {
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');
@@ -112,4 +111,13 @@ export const addModesPageHandlers = () => {
             menuContainer.classList.remove("visible");
         }
     });
+    const profileIcon = document.getElementById("profileIcon");
+    if (profileIcon)
+    {
+        profileIcon.addEventListener("click", () => {
+            navigate("/profile", "Profile");
+        });
+    }
+    else
+        console.error("Profile icon not found!");
 };

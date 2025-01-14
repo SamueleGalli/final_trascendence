@@ -14,6 +14,7 @@ import Userstats from "./pages/userstats.js";
 import { F4UserStats, F4ShowUserStats } from "./pages/forza4_statistics.js";
 import Bracket, { addBracketPageHandlers, drawBracket } from "./pages/bracket.js";
 import { initializeGameCanvas, destroyGameCanvas, addCanvas, removeCanvas } from "./handlingCanvas.js";
+import profile from "./pages/profile.js";
 
 // Mappa delle rotte
 const routes = {
@@ -32,6 +33,7 @@ const routes = {
     "/tournament/knockout/bracket": Bracket,
     "/tournament/knockout/bracket/customize": Customize,
     "/tournament/roundrobin/robindraw": RobinRanking,
+    "/profile": profile,
 };
 
 // Funzione universale per la navigazione

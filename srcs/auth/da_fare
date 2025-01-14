@@ -1,11 +1,6 @@
 1)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
 (controllo possibili errori da fixare nel login...)
 1)
-IV.3 User Management
-This module delves into the realm of User Management, addressing crucial aspects
-of user interactions and access control within the Pong platform. It encompasses two
-major components, each focused on essential elements of user management and authentication: user participation across multiple tournaments and the implementation of remote
-authentication.
 • Major module: Standard user management, authentication, users across tournaments.
 ◦ Users can subscribe to the website in a secure way.
 ◦ Registered users can log in in a secure way.

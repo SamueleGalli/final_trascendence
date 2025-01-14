@@ -4,7 +4,7 @@ import { Guest } from "./user.js";
 import { let_me_in } from "../js/pages/login.js";
 
 
-let guests = JSON.parse(localStorage.getItem('guests')) || [];
+export let guests = JSON.parse(localStorage.getItem('guests')) || [];
 let currentGuestId = null;
 
 window.addEventListener('storage', (event) => {
