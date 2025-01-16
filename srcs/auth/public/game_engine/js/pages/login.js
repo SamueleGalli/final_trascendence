@@ -36,18 +36,17 @@ export function update_state(status)
 }
 
 export const addLoginPageHandlers = () => {
-    console.log("pop = ", popupOpened);
     const loginButton = document.getElementById("loginButton");
     const guestButton = document.getElementById("guestButton");
     if (loginButton && guestButton) {
         loginButton.addEventListener("click", () => {
+            console.log("poppped = ", popupOpened);
             if (popupOpened === true)
                 alert("popup already open finish authentication before continuing")
             else
             {
                 update_state(true);
                 performLogin();
-                popupOpened = false;
             }
         });
         guestButton.addEventListener("click", () => {
@@ -57,7 +56,6 @@ export const addLoginPageHandlers = () => {
             {
                 update_state(false);
                 guest_login();
-                popupOpened = false;
             }
         });
     }

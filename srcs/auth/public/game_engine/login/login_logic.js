@@ -5,11 +5,12 @@ import { Logged } from "./user.js";
 
 console.log("Valore popup_opened all'inizio:", localStorage.getItem('popup_opened'));
 
-let success = localStorage.getItem('authenticated') === 'true';
-let isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
-let auth = localStorage.getItem('auth_done') === 'true';
+let success = false;
+let isCurrentTabLogged = false;
+let auth = false;
 let userDataRefreshed = false;
-export let popupOpened = localStorage.getItem('popup_opened') === 'true';
+export let popupOpened = false;
+//export let popupOpened = localStorage.getItem('popup_opened') === 'true';
 export let user;
 
 window.addEventListener('beforeunload', () => {
@@ -18,6 +19,10 @@ window.addEventListener('beforeunload', () => {
     openTabsCount--;
     if (openTabsCount <= 0)
     {
+        success = false;
+        isCurrentTabLogged = false;
+        auth = false;
+        userDataRefreshed = false;
         sessionStorage.clear();
         localStorage.clear();
     }
@@ -43,7 +48,8 @@ window.addEventListener('popstate', () => {
 });
 
 window.addEventListener('storage', (event) => {
-    if (event.key === 'authenticated') {
+    if (event.key === 'authenticated')
+    {
         syncState();
         if (event.newValue === 'true' && !isCurrentTabLogged)
             alert("User already logged in from another tab. close the authenticated tab to login again");
@@ -86,12 +92,13 @@ window.addEventListener('unload', () => {
     sessionStorage.removeItem('popup_opened');
 });
 
-function already_logged() {
-    if (success && !isCurrentTabLogged)
+function already_logged()
+{
+    /*if (success && !isCurrentTabLogged)
     {
         alert("User already logged in from another tab. Close the other tab to continue.");
         return true;
-    }
+    }*/
     if (popupOpened && !auth)
     {
         alert("Authenticating in progress....\nPlease wait.");
@@ -124,6 +131,8 @@ function log_in(popup) {
     localStorage.setItem('authenticated', 'true');
     sessionStorage.setItem('tab_authenticated', 'true');
     popup.close();
+    localStorage.setItem('popup_opened', 'false');
+    popupOpened = false;
     navigate("/modes", "Modalità di gioco");
     localStorage.setItem('auth_done', 'true');
 }
@@ -155,7 +164,13 @@ function logging(authData) {
             return;
         }
 
-        if (event.data.authenticated && !success) {
+        if ((event.data.authenticated && !success) || (event.data.authenticated && success))
+        {
+            if (isCurrentTabLogged)
+            {
+                alert("User already logged in from another tab. close the authenticated tab to login again");
+                return;
+            }
             get_data(event);
             log_in(popup);
             alert("(you are logged successfully if you want to change user you need to close this tab first!)");
