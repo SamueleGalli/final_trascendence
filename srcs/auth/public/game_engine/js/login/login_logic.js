@@ -1,6 +1,6 @@
-import { navigate } from "../js/main.js";
-import { let_me_in } from "../js/pages/login.js";
-import { change_name, update_image } from "../js/pages/modes.js";
+import { navigate } from "../main.js";
+import { let_me_in } from "../pages/login.js";
+import { change_name, update_image } from "../pages/modes.js";
 import { Logged } from "./user.js";
 
 console.log("Valore popup_opened all'inizio:", localStorage.getItem('popup_opened'));

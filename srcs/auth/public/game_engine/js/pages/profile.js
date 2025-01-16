@@ -1,7 +1,7 @@
-import { user } from "../../login/login_logic.js";
-import { guests } from "../../login/guest_logic.js";
-import {getCurrentGuestName, handle_profile} from "../game/profile_logic.js";
-import { profile , profiles} from "../../login/user.js";
+import { user } from "../login/login_logic.js";
+import { guests } from "../login/guest_logic.js";
+import {getCurrentGuestName, handle_profile} from "../login/profile_logic.js";
+import { profile , profiles} from "../login/user.js";
 
 export default function Profile()
 {
@@ -11,14 +11,16 @@ export default function Profile()
         <span class="letter letter-2">O</span>
         <span class="letter letter-3">U</span>
         <span class="letter letter-4">R</span>
-        <span class="letter letter-5">_</span>
-        <span class="letter letter-6">P</span>
-        <span class="letter letter-7">R</span>
-        <span class="letter letter-8">O</span>
-        <span class="letter letter-9">F</span>
-        <span class="letter letter-10">I</span>
-        <span class="letter letter-11">L</span>
-        <span class="letter letter-12">E</span>
+        <span class="letter letter-5"> </span>
+        <span class="letter letter-6">_</span>
+        <span class="letter letter-7"> </span>
+        <span class="letter letter-8">P</span>
+        <span class="letter letter-9">R</span>
+        <span class="letter letter-10">O</span>
+        <span class="letter letter-11">F</span>
+        <span class="letter letter-12">I</span>
+        <span class="letter letter-13">L</span>
+        <span class="letter letter-14">E</span>
     </h1>
     <div id="yourData">
         <label for="emailInput" class="email-label" style="color: green;">Insert your email:</label>

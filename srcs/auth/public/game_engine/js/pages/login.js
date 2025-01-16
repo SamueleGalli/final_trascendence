@@ -1,5 +1,5 @@
-import { guest_login } from "../../login/guest_logic.js";
-import { performLogin, popupOpened } from "../../login/login_logic.js";
+import { guest_login } from "../login/guest_logic.js";
+import { performLogin, popupOpened } from "../login/login_logic.js";
 
 export default function Login() {
     return `
