@@ -1,14 +1,10 @@
 import { user } from "../../login/login_logic.js";
 import { guests } from "../../login/guest_logic.js";
-import { profile, profiles } from "../../login/user.js";
+import {getCurrentGuestName, handle_profile} from "../game/profile_logic.js";
+import { profile , profiles} from "../../login/user.js";
 
-export let me;
-
-const Profile = () => {
-    document.addEventListener('DOMContentLoaded', function () {
-        your_profile();
-    });
-
+export default function Profile()
+{
     return `
     <h1 class="text">
         <span class="letter letter-1">Y</span>
@@ -25,155 +21,87 @@ const Profile = () => {
         <span class="letter letter-12">E</span>
     </h1>
     <div id="yourData">
-        <label for="emailInput" class="email-label">Inserisci la tua email:</label>
+        <label for="emailInput" class="email-label" style="color: green;">Insert your email:</label>
         <input 
         type="email" 
         id="emailInput" 
         class="email-input" 
-        placeholder="tuonome@esempio.com" 
+        placeholder="yourname@exemple.com" 
         required 
         />
-        <button id="confirmEmailBtn">Conferma Email</button>
-
+        <button class="button-style" id="confirmEmailBtn">Confirm Email</button>
+        <h3 style="color: green;">
+        <h3 style="color: green;">
+            the actual name ${
+                user && user.login_name ? user.login_name :
+                (guests && Array.isArray(guests) && guests.length > 0 ? getCurrentGuestName() : 'Error: Name not found')
+            }
+        </h3>
         <div id="changeDisplayName">
-            <label for="displayNameInput" class="display-name-label">Modifica il tuo nome di visualizzazione:</label>
+            <label for="displayNameInput" class="display-name-label" style="color: green;">Change your display name:</label>
             <input 
             type="text" 
             id="displayNameInput" 
             class="display-name-input" 
-            placeholder="Inserisci il tuo nome"
+            placeholder="Insert your new name"
             />
-            <button id="confirmDisplayNameBtn">Conferma Nome</button>
+            <button class="button-style" id="confirmDisplayNameBtn">Confirm Name</button>
         </div>
 
         <div id="bioSection">
-            <label for="bioInput" class="bio-label">Modifica la tua bio:</label>
+            <label for="bioInput" class="bio-label" style="color: green;">Modify your bio:</label>
             <textarea 
             id="bioInput" 
-            class="bio-input" 
-            placeholder="Scrivi qualcosa su di te..."
+            class="bio-input"
+            placeholder="Insert bio here"
             ></textarea>
-            <button id="confirmBioBtn">Conferma Bio</button>
-        </div>
-
-        <div id="box1" class="box">
-            <!-- Quadrato vuoto 1 -->
-            <p>Quadrato 1</p>
-        </div>
-
-        <div id="box2" class="box">
-            <!-- Quadrato vuoto 2 -->
-            <p>Quadrato 2</p>
+            <button class="button-style" id="confirmBioBtn">Confirm Bio</button>
         </div>
 
         <div id="profileImageSection">
-            <h2>Immagine del profilo</h2>
+            <h2 style="color: green;">Profile Image</h2>
             <img 
                 id="profileImage" 
-                src="${user.image ? user.image : 'game_engine/images/guest.jpg'}" 
+                src="${user && user.image ? user.image : 'game_engine/images/guest.jpg'}" 
                 alt="Profile Image" 
                 class="profile-image"
             />
-            <button id="changeProfileImageBtn">Cambia Immagine</button>
+            <button class="button-style" id="changeProfileImageBtn">Change Image</button>
         </div>
+        <button class="button-style" id="SaveChangeButton" style="color: green;">Save Changes</button>
     </div>
     `;
 };
 
-//da qui in poi non va nulla devo capire perche
+
+export let me;
 
 function insert_user_data() {
-    if (user) {
-        console.log("logged");
+    if (user)
+    {
         me = new profile(null, null, null, null);
         if (user.email) me.email = user.email;
         if (user.image) me.avatar = user.image;
         if (user.login_name) me.display_name = user.login_name;
         profiles.push(me);
-    } else if (guests) {
-        console.log("guest");
+        return (1);
+    }
+    else if (guests)
+    {
         me = new profile(null, null, null, null);
         const currentGuestId = sessionStorage.getItem('currentGuestId');
         const currentGuest = guests.find(guest => guest.id === currentGuestId);
         if (currentGuest) me.display_name = currentGuest.name;
-    } else {
+    }
+    else
         alert("Unknown error occurred\n");
-    }
 }
 
-export default Profile;
-
-function your_profile() {
-    const profileContainer = document.querySelector('#yourData');
-    console.log('Rendering profile...');
-    insert_user_data();
-
-    if (me.email) {
-        profileContainer.innerHTML = `
-        <h1>Sei già registrato!</h1>
-        <p>Il tuo indirizzo email è: <strong>${me.email}</strong></p>
-        <button id="logoutButton">Esci</button>
-        `;
-        document.querySelector('#logoutButton').addEventListener('click', function() {
-            sessionStorage.clear();
-            location.reload();
-        });
-    } else {
-        // Se l'utente non è registrato, chiediamo di inserire l'email
-        profileContainer.innerHTML = `
-        <h1>Benvenuto, ${me.display_name || "Ospite"}!</h1>
-        <label for="emailInput" class="email-label">Inserisci la tua email:</label>
-        <input 
-        type="email" 
-        id="emailInput" 
-        class="email-input" 
-        placeholder="tuonome@esempio.com" 
-        required 
-        />
-        <button id="confirmEmailBtn">Conferma Email</button>
-        `;
-
-        const emailInput = document.querySelector('#emailInput');
-        const confirmEmailBtn = document.querySelector('#confirmEmailBtn');
-
-        if (emailInput && confirmEmailBtn) {
-            confirmEmailBtn.addEventListener('click', function () {
-                const email = emailInput.value;
-                if (validateEmail(email)) {
-                    me.email = email;
-                    sendConfirmationEmail(me.email, false);
-                } else {
-                    alert("Per favore, inserisci un'email valida.");
-                }
-            });
-        }
-    }
-}
-
-function validateEmail(email) {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-}
-
-async function sendConfirmationEmail(email, isLogged) {
-    const message = isLogged
-        ? "Grazie per esserti registrato! Il tuo profilo è stato salvato."
-        : "Grazie per aver visitato il nostro sito! Il tuo profilo è temporaneo.";
-    
-    try {
-        const response = await fetch('/send-confirmation-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, message }),
-        });
-        
-        const result = await response.json();
-        if (result.success) {
-            alert(`Email inviata a ${email}: ${message}`);
-        } else {
-            alert('Errore durante l\'invio dell\'email.');
-        }
-    } catch (error) {
-        console.error('Errore durante l\'invio:', error);
-    }
+export function profileHandler()
+{
+    let logged = 0;
+    if (insert_user_data() === 1)
+        logged = 1;
+    const yourDataSection = document.querySelector('#yourData');
+    handle_profile(me, profile, profiles, yourDataSection, logged);
 }

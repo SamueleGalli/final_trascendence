@@ -3,6 +3,8 @@ import { let_me_in } from "../js/pages/login.js";
 import { change_name, update_image } from "../js/pages/modes.js";
 import { Logged } from "./user.js";
 
+console.log("Valore popup_opened all'inizio:", localStorage.getItem('popup_opened'));
+
 let success = localStorage.getItem('authenticated') === 'true';
 let isCurrentTabLogged = sessionStorage.getItem('tab_authenticated') === 'true';
 let auth = localStorage.getItem('auth_done') === 'true';
@@ -12,11 +14,10 @@ export let user;
 
 window.addEventListener('beforeunload', () => {
     let openTabsCount = parseInt(localStorage.getItem('open_tabs_count') || '0');
-    
+
     openTabsCount--;
     if (openTabsCount <= 0)
     {
-        localStorage.setItem('auth_done', 'false');
         sessionStorage.clear();
         localStorage.clear();
     }
@@ -87,12 +88,12 @@ window.addEventListener('unload', () => {
 
 function already_logged() {
     if (success && !isCurrentTabLogged)
-        {
+    {
         alert("User already logged in from another tab. Close the other tab to continue.");
         return true;
     }
     if (popupOpened && !auth)
-        {
+    {
         alert("Authenticating in progress....\nPlease wait.");
         return true;
     }
@@ -101,8 +102,10 @@ function already_logged() {
 
 function popupHandling(popup) {
     let popupMonitor;
-    localStorage.setItem('popup_opened', 'true');
-    popupOpened = true;
+    if (localStorage.getItem('popup_opened') !== 'true') {
+        localStorage.setItem('popup_opened', 'true');
+        popupOpened = true;
+    }
     if (popupMonitor)
         clearInterval(popupMonitor);
     popupMonitor = setInterval(() => {
@@ -114,6 +117,8 @@ function popupHandling(popup) {
         }
     }, 500);
 }
+
+
 
 function log_in(popup) {
     localStorage.setItem('authenticated', 'true');

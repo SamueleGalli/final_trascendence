@@ -749,7 +749,7 @@ body {
 
 
 
-
+/*profilo*/
 .email-label {
     font-size: 16px;
     font-weight: bold;
@@ -758,6 +758,7 @@ body {
 }
 
 .email-input {
+    font-family: 'Liberty', sans-serif;
     width: 100%;
     max-width: 300px;
     padding: 8px;
@@ -771,4 +772,21 @@ body {
     height: 50px;
     object-fit: cover;
     border-radius: 50%;
+}
+
+#emailInput {
+    font-family: 'Liberty', sans-serif;
+}
+
+#displayNameInput {
+    font-family: 'Liberty', sans-serif;
+}
+
+#bioInput {
+    font-family: 'Liberty', sans-serif;
+}
+
+#SaveChangeButton {
+    left: 50%;
+    bottom: 0;
 }

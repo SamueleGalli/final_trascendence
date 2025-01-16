@@ -1,4 +1,5 @@
-1)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
+1)popup rimane true sempre non capisco perche non ti fa accedere(cioe non ha voglia di essere false a quanto pare)
+2)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
 (controllo possibili errori da fixare nel login...)
 1)
 • Major module: Standard user management, authentication, users across tournaments.

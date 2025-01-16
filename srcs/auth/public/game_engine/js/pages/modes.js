@@ -1,5 +1,5 @@
 import { navigate } from "../main.js";
-
+import { profileHandler } from "./profile.js";
 export function update_image(image)
 {
     const checkImageInterval = setInterval(() => {
@@ -116,6 +116,7 @@ export const addModesPageHandlers = () => {
     {
         profileIcon.addEventListener("click", () => {
             navigate("/profile", "Profile");
+            profileHandler();
         });
     }
     else
