@@ -1,4 +1,5 @@
-1)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
+1)gli elementi del profilo non vengono trovati/caricati e cio da errore
+2)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
 (controllo possibili errori da fixare nel login...)
 1)
 • Major module: Standard user management, authentication, users across tournaments.
