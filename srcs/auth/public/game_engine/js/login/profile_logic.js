@@ -1,4 +1,4 @@
-export function getCurrentGuestName() {
+export function getCurrentGuestName(guests) {
     const currentGuestId = sessionStorage.getItem('currentGuestId');
     if (currentGuestId && Array.isArray(guests)) {
         const currentGuest = guests.find(guest => guest.id === currentGuestId);
@@ -21,11 +21,15 @@ export function handle_profile(me, profile, profiles, yourDataSection, logged)
         alert("unknown error occured");
 }
 
-function emailHandler(me, profile, profiles, yourDataSection, logged)
-{
+function emailHandler(me, profile, profiles, yourDataSection, logged) {
     console.log("email checker");
-    const confirmEmailBtn = document.getElementById('confirmEmailBtn');
-    const emailInput = document.getElementById('emailInput');
+    const emailInput = yourDataSection.querySelector('#emailInput');
+    const confirmEmailBtn = yourDataSection.querySelector('#confirmEmailBtn');
+    if (!emailInput || !confirmEmailBtn) {
+        console.error("One or more elements not found!");
+        return;
+    }
+
     if (logged === 1)
     {
         emailInput.value = me.email;
@@ -36,13 +40,14 @@ function emailHandler(me, profile, profiles, yourDataSection, logged)
     {
         confirmEmailBtn.addEventListener('click', () => {
             const email = emailInput.value;
-            if (validateEmail(email)) {
+            if (validateEmail(email))
+            {
                 alert("Email confirmed!");
                 me.email = email;
                 emailInput.value = '';
-            } else {
-                alert("Invalid email format.");
             }
+            else
+                alert("Invalid email format.");
         });
     }
 }

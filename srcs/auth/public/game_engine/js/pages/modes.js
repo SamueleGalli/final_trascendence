@@ -1,5 +1,6 @@
 import { navigate } from "../main.js";
 import { profileHandler } from "./profile.js";
+
 export function update_image(image)
 {
     const checkImageInterval = setInterval(() => {
@@ -33,11 +34,9 @@ export default function Modes()
             isForward = false;
         if (!isForward)
             history.pushState(null, "", location.href);
-    });
-    
+    });  
     if (window.history && window.history.pushState)
         window.history.pushState(null, null, location.href);
-
     return `
     <h1 class="text">
     <span class="letter letter-1">S</span>
@@ -81,6 +80,7 @@ export default function Modes()
     </div> 
     `;
 }
+
 export const addModesPageHandlers = () => {
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');

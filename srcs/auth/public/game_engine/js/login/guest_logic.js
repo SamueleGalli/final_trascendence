@@ -44,7 +44,6 @@ function addGuest(name) {
 
 function updateUIForGuest(guest) {
     navigate("/modes", "Modalità di gioco");
-    alert("(you are logged successfully if you want to change user you need to close this tab first!)");
     if (let_me_in === false)
     {
         update_image(guest.image);

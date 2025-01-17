@@ -105,5 +105,6 @@ export function profileHandler()
     if (insert_user_data() === 1)
         logged = 1;
     const yourDataSection = document.querySelector('#yourData');
+    console.log('yourDataSection:', yourDataSection);
     handle_profile(me, profile, profiles, yourDataSection, logged);
 }
