@@ -1,4 +1,4 @@
-1)gli elementi del profilo non vengono trovati/caricati e cio da errore
+1)gli elementi del profilo non vengono trovati/caricati e cio da errore(nome guest non viene trovato)
 2)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
 (controllo possibili errori da fixare nel login...)
 1)
