@@ -116,7 +116,9 @@ export const addModesPageHandlers = () => {
     {
         profileIcon.addEventListener("click", () => {
             navigate("/profile", "Profile");
-            profileHandler();
+            setTimeout(() => {
+                profileHandler();
+            }, 100);
         });
     }
     else

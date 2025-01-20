@@ -158,6 +158,7 @@ function log_in(popup) {
     localStorage.setItem('popup_opened', 'false');
     popupOpened = false;
     navigate("/modes", "Modalità di gioco");
+    refreshUserData();
     localStorage.setItem('auth_done', 'true');
 }
 

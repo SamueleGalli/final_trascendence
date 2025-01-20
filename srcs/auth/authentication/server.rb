@@ -2,6 +2,19 @@ require 'webrick'
 require 'colorize'
 require_relative 'Oauth'
 require_relative 'session'
+require 'mail'
+require 'securerandom'
+
+#Mail.defaults do
+#    delivery_method :smtp, {
+#        address: 'smtp.gmail.com',
+#        port: 587,
+#        user_name: 'your-email@gmail.com',
+#        password: 'your-email-password',
+#        authentication: 'plain',
+#        enable_starttls_auto: true
+#    }
+#end
 
 logger = Logger.new(STDOUT)
 logger.level = Logger::ERROR

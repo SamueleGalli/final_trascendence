@@ -3,9 +3,8 @@ import { update_image, change_name } from "../pages/modes.js";
 import { Guest } from "./user.js";
 import { let_me_in } from "../pages/login.js";
 
-
 export let guests = JSON.parse(localStorage.getItem('guests')) || [];
-let currentGuestId = null;
+export let currentGuestId = null;
 
 window.addEventListener('storage', (event) => {
     if (event.key === 'guests') {

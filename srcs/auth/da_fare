@@ -1,7 +1,7 @@
-1)gli elementi del profilo non vengono trovati/caricati e cio da errore(nome guest non viene trovato)
-2)se cambi nome,email,immagine,login_name devi aggiornare i dati passati al login di javascript
 (controllo possibili errori da fixare nel login...)
-1)
+1)manca email di verifica guest (gestione avatar) salvare le modifiche cliccando save changes
+2)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
+3)se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server
 • Major module: Standard user management, authentication, users across tournaments.
 ◦ Users can subscribe to the website in a secure way.
 ◦ Users can select a unique display name to play the tournaments.
