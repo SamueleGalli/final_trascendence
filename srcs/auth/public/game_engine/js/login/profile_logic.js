@@ -75,73 +75,51 @@ export function displaynameHandler(me, yourDataSection)
     });
 }
 
-export function emailHandler(me, yourDataSection, logged) {
+export function emailHandler(me, yourDataSection, logged)
+{
     const emailInput = yourDataSection.querySelector('#emailInput');
     const confirmEmailBtn = yourDataSection.querySelector('#confirmEmailBtn');
-    const responseMessage = yourDataSection.querySelector('#responseMessage');
-    if (!emailInput || !confirmEmailBtn || !responseMessage) {
+    const emailContainer = yourDataSection.querySelector('.email-container');
+
+    if (!emailInput || !confirmEmailBtn || !emailContainer || !responseMessage) {
         console.error("One or more elements not found!");
         return;
     }
+
     if (logged === 1)
-        {
+    {
         emailInput.value = me.email;
         emailInput.disabled = true;
         emailInput.style.color = 'green';
         confirmEmailBtn.style.display = 'none';
-    } 
-    else
-    {
-        confirmEmailBtn.addEventListener('click', () => {
-            const email = emailInput.value;
-            if (!email)
-            {
-                alert("No email inserted.");
-                return;
-            }
+    } else
+        emailContainer.style.display = 'none';
+}
 
-            if (validateEmail(email))
-            {
-                alert("Email confirmed!");
-                me.email = email;
-                emailInput.value = email;
-                emailInput.disabled = true;
-                confirmEmailBtn.style.display = 'none';
-                emailInput.style.color = 'green';
-                emailInput.style.fontWeight = 'bold';
-                //send_verification_email(email, responseMessage);
-            }
-            else
-            {
-                alert("Invalid email format.");
-                emailInput.value = '';
-            }
-        });
+
+export function imageAvatarHandler(me, yourDataSection, logged) {
+    const changeProfileImageBtn = yourDataSection.querySelector('#changeProfileImageBtn');
+    const imageUploadInput = yourDataSection.querySelector('#imageUploadInput');
+    const profileImage = yourDataSection.querySelector('#profileImage');
+
+    if (!changeProfileImageBtn || !imageUploadInput || !profileImage) {
+        console.error("One or more elements not found!");
+        return;
     }
-}
-
-function validateEmail(email) {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return regex.test(email);
-}
-
-/*function send_verification_email(email, responseMessage) {
-    fetch(`/send-verification-email?email=${encodeURIComponent(email)}`, {
-        method: 'GET',
-    })
-    .then(response => response.text())
-    .then(data => {
-        responseMessage.textContent = data;
-        if (data.includes("success"))
-            responseMessage.style.color = 'green';
-        else
-            responseMessage.style.color = 'red';
-        document.getElementById('emailInput').disabled = true;
-        document.getElementById('confirmEmailBtn').disabled = true;
-    })
-    .catch(error => {
-        console.error("Error sending verification email:", error);
-        responseMessage.textContent = "There was an error sending the email. Please try again later.";
-        responseMessage.style.color = 'red';
+    changeProfileImageBtn.addEventListener('click', () => {
+        imageUploadInput.click();
     });
-}*/
+    imageUploadInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+
+        if (file)
+        {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                me.image = e.target.result;
+                profileImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}

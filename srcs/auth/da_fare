@@ -4,8 +4,6 @@
 3)se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server
 4)una volta che un guest inserisce l'email puo accedere in lgged_guest se la sua email esiste e recuperare i suoi dati
 • Major module: Standard user management, authentication, users across tournaments.
-◦ Users can subscribe to the website in a secure way.
-◦ Users can select a unique display name to play the tournaments.
 ◦ Users can update their information.
 ◦ Users can upload an avatar, with a default option if none is provided.
 ◦ Users can add others as friends and view their online status.

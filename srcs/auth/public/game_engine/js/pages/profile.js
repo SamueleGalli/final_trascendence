@@ -1,7 +1,11 @@
 import { let_me_in } from "./login.js";
 import { user } from "../login/login_logic.js";
 import { guests, currentGuestId } from "../login/guest_logic.js";
-import {getCurrentGuestName, emailHandler, displaynameHandler, bioHandler} from "../login/profile_logic.js";
+import {
+getCurrentGuestName, emailHandler, 
+displaynameHandler, bioHandler,
+ imageAvatarHandler 
+} from "../login/profile_logic.js";
 import { profile , profiles} from "../login/user.js";
 
 export default function Profile()
@@ -32,12 +36,8 @@ export default function Profile()
             class="email-input" 
             placeholder="yourname@exemple.com" 
             required
-            aria-describedby="responseMessage"
         />
-        <button class="button-style" id="confirmEmailBtn">Confirm Email</button>
-        <p id="responseMessage" style="color: red; font-size: 0.9em;"></p>  <!-- Puoi personalizzare il colore in base al risultato -->
     </div>
-    <h3 style="color: green;">
     <h3 style="color: green;">
     the actual name ${
         user && user.login_name ? user.login_name :
@@ -71,16 +71,22 @@ export default function Profile()
         <p id="bioDisplay" style="white-space: pre-wrap;"></p>
     </div>
     <div id="profileImageSection">
-    <h2 style="color: green;">Profile Image</h2>
-    <img 
-    id="profileImage" 
-    src="${user && user.image ? user.image : 'game_engine/images/guest.jpg'}" 
-    alt="Profile Image" 
-    class="profile-image"
-    />
-    <button class="button-style" id="changeProfileImageBtn">Change Image</button>
+        <h2 style="color: green;">Profile Image</h2>
+        <img 
+            id="profileImage" 
+            src="${user && user.image ? user.image : 'game_engine/images/guest.jpg'}" 
+            alt="Profile Image" 
+            class="profile-image"
+        />
+        <input 
+            type="file" 
+            id="imageUploadInput" 
+            accept="image/*" 
+            style="display: none;" 
+        />
+        <button class="button-style" id="changeProfileImageBtn">Change Image</button>
     </div>
-    <button class="button-style" id="SaveChangeButton" style="color: green;">Save Changes</button>
+    <button class="button-style" id="show staticstics" style="color: green;">Save Changes</button>
     </div>
     `;
 };
@@ -116,8 +122,13 @@ export function profileHandler()
     if (insert_user_data())
         logged = 1;
     const yourDataSection = document.querySelector('#yourData');
+    if (logged === 0)
+    {
+        const show = yourDataSection.querySelector("#show staticstics");
+        show.style.display = 'none';
+    }
     emailHandler(me, yourDataSection, logged);
     displaynameHandler(me, yourDataSection);
     bioHandler(me, yourDataSection);
-    /*imageAvatarHandler(me, profile, yourDataSection, logged);*/
+    /*imageAvatarHandler(me, yourDataSection, logged);*/
 }

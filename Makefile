@@ -5,8 +5,8 @@ all: stop_containers prep_dirs
 stop_containers:
 	clear
 	@echo "Stopping existing containers..."
-	@sudo chmod +x /usr/bin/docker-compose
-	@docker-compose -f ./srcs/docker-compose.yml stop
+	@sudo chmod +x /usr/local/bin/docker-compose
+	@sudo docker-compose -f ./srcs/docker-compose.yml stop
 	@docker ps -qa | xargs -r docker stop
 	@docker ps -qa | xargs -r docker rm
 
