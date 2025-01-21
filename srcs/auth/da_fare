@@ -1,5 +1,5 @@
 (controllo possibili errori da fixare nel login...)
-1)manca email di verifica guest (gestione avatar) salvare le modifiche cliccando save changes
+1)guest non puo mettere email e vedere statistiche rimosso tasto save changes e fine controllo avatar
 2)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
 3)se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server
 4)una volta che un guest inserisce l'email puo accedere in lgged_guest se la sua email esiste e recuperare i suoi dati
