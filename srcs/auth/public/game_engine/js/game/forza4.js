@@ -16,27 +16,26 @@ let p2;
 
 
 export function Forza4() {
-    const html = `
-    <div id="forza4Game">
+    return `
     <h1>Forza 4</h1>
-    <div id="f4players">
-        <div id="p1" class="f4player-info">
-            <span class="name" id="p1Name"></span>&nbsp<span class="color token1" id="p1Color"></span>
+    <div id="forza4Game">
+        <div id="f4players">
+            <div id="p1" class="f4player-info">
+                <span id="p1Name"></span>&nbsp<span class="color token1" id="p1Color"></span>
+            </div>
+            <div id="p2" class="f4player-info">
+                <span id="p2Name"></span>&nbsp<span class="color token2" id="p2Color"></span>
+            </div>
         </div>
-        <div id="p2" class="f4player-info">
-            <span class="name" id="p2Name"></span>&nbsp<span class="color token2" id="p2Color"></span>
+        <div id="f4grid-container">
+            <div id="f4board"></div> <!-- Aggiunto per rappresentare la board -->
         </div>
-    </div>
-    <div id="f4grid-container">
-        <div id="f4board"></div> <!-- Aggiunto per rappresentare la board -->
-    </div>
-    <div id="f4message"></div>
-    <button id="f4ReplayMatchButton" style="display: none; margin: 0 auto;">Replay Match</button>
-    <button id="f4BackToMenuButton" style="display: none; margin: 0 auto;">Back to Menu</button>
+        <div id="f4message"></div>
+        <button id="f4ReplayMatchButton" style="display: none; margin: 0 auto;">Replay Match</button>
+        <button id="f4BackToMenuButton" style="display: none; margin: 0 auto;">Back to Menu</button>
     </div>
     `;
-    return html;
-} 
+}
 
 function createGrid() {
     console.log("Creo griglia Forza 4");
@@ -77,7 +76,6 @@ function createGrid() {
             cell.dataset.row = row;
             cell.dataset.col = col;
 
-           
             cell.style.border = '1px solid #fff'; 
             cell.style.backgroundColor = 'transparent';
 
@@ -112,6 +110,7 @@ function highlightColumn(col, highlight) {
 }
 
 function printPlayerTurnMessage() {
+    message.className = 'text word';
     if (currentPlayer === 'token1') {
         message.textContent = `Turno di ${p1}`;
     }
@@ -119,8 +118,6 @@ function printPlayerTurnMessage() {
         message.textContent = `Turno di ${p2}`;
     }
 }
-
-
 
 function savef4StatsData() {
     const f4data = JSON.parse(localStorage.getItem('f4_game_data')) || { players: {} };
@@ -263,7 +260,7 @@ export function startforza4Game() {
     
     f4ReplayButton = document.getElementById('f4ReplayMatchButton');
     f4BackToMenuButton = document.getElementById('f4BackToMenuButton');
-  
+
     p1Color.style.backgroundColor = token1Color;
     p2Color.style.backgroundColor = token2Color;
     rows = 6;
@@ -274,7 +271,6 @@ export function startforza4Game() {
     board = Array.from({ length: rows }, () => Array(cols).fill(null));
     gameEnded = false;
 
-   
     f4Players = JSON.parse(sessionStorage.getItem('forza4players'));
     p1 = f4Players[0];
     p2 = f4Players[1];

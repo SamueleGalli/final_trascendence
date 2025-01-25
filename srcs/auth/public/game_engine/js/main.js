@@ -3,18 +3,25 @@ import Modes, { addModesPageHandlers } from "./pages/modes.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament.js";
 import Classic from "./pages/classic.js";
 import AiWars from "./pages/ai.js";
+import TournamentGame from "./pages/tournamentgame.js";
 import { Forza4Home, showForza4HomeScreen } from "./pages/forza4_home.js";
 import { Forza4Customize, forza4Config } from "./pages/forza4_customize.js";
 import { Forza4, startforza4Game } from "./game/forza4.js";
 import Knockout, { addKnockoutPageHandlers } from "./pages/knockout.js";
 import Customize, { addCustomizeGame } from "./pages/customize.js";
-import Roundrobin, { addRoundbinPageHandlers } from "./pages/roundrobin.js";
-import RobinRanking, { robinDraw } from "./pages/robindraw.js";
+import Roundrobin, { addRoundRobinPageHandlers } from "./pages/roundrobin.js";
+import RobinRanking, { addRobinRankingPageHandlers, robinDraw, assignPointsToPlayer } from "./pages/robindraw.js";
 import Userstats from "./pages/userstats.js";
 import { F4UserStats, F4ShowUserStats } from "./pages/forza4_statistics.js";
-import Bracket, { addBracketPageHandlers, drawBracket } from "./pages/bracket.js";
+import Bracket, { addBracketPageHandlers, drawBracket, backToBracket } from "./pages/bracket.js";
 import { initializeGameCanvas, destroyGameCanvas, addCanvas, removeCanvas } from "./handlingCanvas.js";
 import Profile from "./pages/profile.js";
+import Settings, { addSettingsPageHandlers } from "./pages/settings.js";
+import Stats from "./pages/stats.js";
+
+let buttonTitle;
+let winner;
+
 // Mappa delle rotte
 const routes = {
     "/": Login,
@@ -23,36 +30,60 @@ const routes = {
     "/aiWars": AiWars,
     "/tournament": Tournament,
     "/forza4": Forza4Home,
-    "/forza4/customize": Forza4Customize,
     "/forza4/game": Forza4,
+    "/settings": Settings,
+    "/settings/customizepong": Customize,
+    "/settings/customizeforza4": Forza4Customize,
     "/forza4/userstats": F4UserStats,
     "/tournament/knockout": Knockout,
     "/tournament/roundrobin": Roundrobin,
+    "/tournament/roundrobin/robinranking": RobinRanking,
+    "/tournament/roundrobin/robinranking/game": TournamentGame,
     "/tournament/userstats": Userstats,
     "/tournament/knockout/bracket": Bracket,
-    "/tournament/knockout/bracket/customize": Customize,
-    "/tournament/roundrobin/robindraw": RobinRanking,
+    "/tournament/knockout/bracket/game": TournamentGame,
     "/profile": Profile,
+    "//stats": Stats
 };
 
 // Funzione universale per la navigazione
 export const navigate = (path, title = "") => {
     history.pushState({ path }, title, path); // Aggiorna l'URL e la cronologia
+    buttonTitle = title;
     loadContent(); // Carica il nuovo contenuto
 };
+
+function createPlayersArray(numPlayers) {
+    let players = [];
+    for (let i = 1; i <= numPlayers; i++) {
+        players.push(`Player ${i}`);
+    }
+    return players;
+}
 
 // Caricamento dinamico del contenuto
 const loadContent = async () => {
     const path = window.location.pathname; // Ottieni il percorso attuale
     const app = document.getElementById("app");
     const component = routes[path];
-    let players = ["Player 1", "Player 2", "Player 3", "Player 4"];
-    let playerNames = ["Player 1", "Player 2", "Player 3", "Player 4"];
+    let players;
+    let playerNames;
+    let numPlayers = 4;
+
+
+    if (buttonTitle === "4" || buttonTitle === "5" || buttonTitle === "6" || buttonTitle === "7" || buttonTitle === "8" || buttonTitle === "16")
+        numPlayers = +buttonTitle;
+
+    players = createPlayersArray(numPlayers);
+
+    console.log("Players? " +players);
+    playerNames = players;  
+    console.log("path => " + path);
     if (component) {
         app.innerHTML = await component(); // Carica dinamicamente il componente
-
         // Se è necessario aggiungere un canvas in altre pagine, lo facciamo qui
-        if (path === "/classic" || path === "/aiWars") {
+        if (path === "/classic" || path === "/aiWars" || path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game") {
+            //console.log("game start!!");
             removeCanvas();
             destroyGameCanvas();
             initializeGameCanvas(); // Rimuovi il canvas su queste pagine
@@ -64,49 +95,63 @@ const loadContent = async () => {
             addCanvas();
         }
 
-        if (path === "/") {
-            addLoginPageHandlers(); // Aggiungi i gestori della pagina di login
-        } 
-        else if (path === "/modes")
-        {
-            addModesPageHandlers(); // Aggiungi i gestori della pagina delle modalità
-        }
-        else if (path === "/tournament")
-        {
-            addTournamentPageHandlers();
-        }
-        else if (path === "/tournament/knockout") {
-            addKnockoutPageHandlers();
-        }
-        else if (path === "/tournament/knockout/bracket") {
-            addBracketPageHandlers();
-            drawBracket(players);
-        }
-        else if (path === "/tournament/roundrobin") {
-            addRoundbinPageHandlers();
-        }
-        else if (path === "/tournament/roundrobin/robindraw") {
-            robinDraw(playerNames);
-        }
-        /*else if (path === "/tournament/knockout/bracket") {
-            players = JSON.parse(sessionStorage.getItem('players'));
-            console.log('Players:', players);
-            addDrawBracket(players);
-        }
-        else if (path === "/tournament/knockout/bracket/customize") {
-            addCustomizeGame()
-        }*/
-        else if (path === "/forza4") {
-            showForza4HomeScreen();
-        }
-        else if (path === "/forza4/customize") {
-            forza4Config();
-        }
-        else if (path === "/forza4/game") {
-            startforza4Game();
-        }
-        else if (path === "/forza4/userstats") {
-            F4ShowUserStats();
+        switch (path) {
+            case "/":
+                addLoginPageHandlers();
+                break;
+            case "/modes":
+                addModesPageHandlers();
+                break;
+            case "/tournament":
+                addTournamentPageHandlers();
+                break;
+            case "/tournament/knockout":
+                addKnockoutPageHandlers();
+                break;
+            case "/tournament/knockout/bracket":
+                addBracketPageHandlers();
+                //players = JSON.parse(sessionStorage.getItem('players'));
+                console.log("title => " + buttonTitle);
+                if (buttonTitle === "Return from Match") {
+                    console.log("return to bracket");
+                    winner = sessionStorage.getItem('winner');
+                    backToBracket(winner);
+                }
+                else
+                    drawBracket(players);          
+                break;
+            case "/tournament/roundrobin":
+                addRoundRobinPageHandlers();
+                break;
+            case "/tournament/roundrobin/robinranking":
+                addRobinRankingPageHandlers();
+                if (buttonTitle === "Return from Match") {
+                    console.log("return to bracket");
+                    winner = sessionStorage.getItem('winner');
+                    assignPointsToPlayer(winner);
+                }
+                robinDraw(playerNames);
+                break;
+            case "/settings":
+                addSettingsPageHandlers();
+                break;
+            case "/settings/customizepong":
+                addCustomizeGame();
+                break;
+            case "/forza4":
+                showForza4HomeScreen();
+                break;
+            case "/settings/customizeforza4":
+                forza4Config();
+                break;
+            case "/forza4/userstats":
+                F4ShowUserStats();
+                break;
+            case "/forza4/game":
+                startforza4Game();
+                break;
+            default:
+                break;
         }
     }
     else

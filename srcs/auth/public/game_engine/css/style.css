@@ -73,6 +73,14 @@ body {
     animation-delay: 0.5s;
 }
 
+.word {
+    word-spacing: 5px;
+    letter-spacing: 1px;
+    font-size: 30px;
+    margin-top: 10px;
+    text-align: center;
+}
+
 .text-userstats {
     margin-bottom: 600px;
 }
@@ -689,8 +697,6 @@ body {
     z-index: 8;
 }
 
-
-
 /* Forza 4 */
 #f4players {
     position: absolute;
@@ -698,22 +704,24 @@ body {
     left: 20px;
     display: block;
     margin-top: 30px;
-    font-size: 20px;
+    font-size: 30px;
     gap: 10px;
 }
 
 .f4player-info {
-    color: white;
+    font-family: 'Liberty', sans-serif;
+    color: #09a09b;
+    margin-left: 30px;
     font-size: 1.2em;
     display: flex;
     align-items: center;
 }
 
 .color {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
     border-radius: 50%;
-    margin-right: 5px;
 }
 
 #f4grid-container {
@@ -739,15 +747,6 @@ body {
     justify-content: center;
     cursor: pointer;
 }
-
-#f4message {
-    color: white;
-    font-size: 30px;
-    margin-top: 10px;
-    text-align: center;
-}
-
-
 
 /*profilo*/
 .email-label {

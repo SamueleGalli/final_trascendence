@@ -40,14 +40,14 @@ export default function Customize() {
                 <div class="background-item">
                     <canvas id="backgroundCanvas1" class="background-canvas"></canvas>
                     <label class="background-label">
-                        <input type="radio" id="backgroundCheckbox1" name="background" class="background-checkbox" />
+                        <input type="radio" id="backgroundCheckbox1" name="background" class="background-checkbox" checked />
                         <span class="background-text">Space</span>
                     </label>
                 </div>
                 <div class="background-item">
                     <canvas id="backgroundCanvas2" class="background-canvas"></canvas>
                     <label class="background-label">
-                        <input type="radio" id="backgroundCheckbox2" name="background" class="background-checkbox" checked />
+                        <input type="radio" id="backgroundCheckbox2" name="background" class="background-checkbox" />
                         <span class="background-text">Classic</span>
                     </label>
                 </div>
@@ -78,9 +78,12 @@ export function addCustomizeGame() {
     let wallsColorPicker = document.getElementById('wallsColorPicker');
     let powerupCheckbox = document.getElementById('powerup-checkbox');
     let powerupSelected;
-    let buttonBackGround1 = document.getElementById('buttonBackground1');
-    let buttonBackGround2 = document.getElementById('buttonBackground2');
-    let buttonBackGround3 = document.getElementById('buttonBackground3');
+    let backgroundCheckbox1 = document.getElementById('backgroundCheckbox1');
+    let backgroundCheckbox2 = document.getElementById('backgroundCheckbox2');
+    let backgroundCheckbox3 = document.getElementById('backgroundCheckbox3');
+    //let buttonBackGround1 = document.getElementById('buttonBackground1');
+    //let buttonBackGround2 = document.getElementById('buttonBackground2');
+    //let buttonBackGround3 = document.getElementById('buttonBackground3');
     let backgroundSelected = document.getElementById('background-selected');
     
     ballColorPicker.value = ballColor;
@@ -97,7 +100,7 @@ export function addCustomizeGame() {
         }
     });
 
-    buttonBackGround1.addEventListener('click', () => {
+    /*buttonBackGround1.addEventListener('click', () => {
         backgroundSelected.innerHTML = 'Background Selected: Space';
         setBackground("space");
 
@@ -111,6 +114,22 @@ export function addCustomizeGame() {
     buttonBackGround3.addEventListener('click', () => {
         backgroundSelected.innerHTML = 'Background Selected: Ping Pong';
         setBackground("pingpong");
+    })*/
+
+    backgroundCheckbox1.addEventListener('change', () => {
+        if (backgroundCheckbox1.checked) {
+            setBackground("space");
+        }
+    })
+    backgroundCheckbox2.addEventListener('change', () => {
+        if (backgroundCheckbox2.checked) {
+            setBackground("classic");
+        }
+    })
+    backgroundCheckbox3.addEventListener('change', () => {
+        if (backgroundCheckbox3.checked) {
+            setBackground("pingpong");
+        }
     })
 
     applyCustomization.addEventListener('click', (event) => {
@@ -123,6 +142,6 @@ export function addCustomizeGame() {
         if (powerupSelected) {
             setPowerupPlayer(powerupSelected.value, 1);
         }
-        navigate("/tournament/knockout/bracket", "Bracket");
+        navigate("/modes", "Return to Game Mode");
     })  
 }

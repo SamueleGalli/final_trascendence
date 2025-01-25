@@ -1,17 +1,44 @@
 import { navigate } from "../main.js";
 
 export function F4UserStats() {
-    const html = `
-        <div>
-            <h1 style="color: #fff;">Forza 4 User Statistics</h1>
-            <input type="text" id="f4PlayerName" placeholder="Insert Player Name" autocomplete="off"/>
-            <button id="viewf4StatsButton">Show Statistics</button>
-            <br><br>
-            <div id="f4StatsContainer" style="color: #fff;"></div>
-            <button id="clearDataButton" style="margin-top: 20px; background-color: red; color: white;">Erase all data</button>
+    return `
+        <h1 class="text">
+            <span class="letter letter-1">F</span>
+            <span class="letter letter-2">o</span>
+            <span class="letter letter-3">r</span>
+            <span class="letter letter-4">z</span>
+            <span class="letter letter-5">a</span>
+            <span class="letter letter-6"> </span>
+            <span class="letter letter-7"> </span>
+            <span class="letter letter-8">4</span>
+            <span class="letter letter-9"> </span>
+            <span class="letter letter-10"> </span>
+            <span class="letter letter-11">U</span>
+            <span class="letter letter-12">s</span>
+            <span class="letter letter-13">e</span>
+            <span class="letter letter-14">r</span>
+            <span class="letter letter-15"> </span>
+            <span class="letter letter-16"> </span>
+            <span class="letter letter-17">S</span>
+            <span class="letter letter-18">t</span>
+            <span class="letter letter-19">a</span>
+            <span class="letter letter-20">t</span>
+            <span class="letter letter-21">i</span>
+            <span class="letter letter-22">s</span>
+            <span class="letter letter-23">t</span>
+            <span class="letter letter-24">i</span>
+            <span class="letter letter-25">c</span>
+            <span class="letter letter-26">s</span>
+        </h1>
+        <div class="form__group field">
+            <input type="input" class="form__field" id="f4PlayerName" placeholder="Name" name="name" autocomplete="off" required/>
+            <span class="form__label text">Name</span>
+            <div class="stat-button-container">
+                <button id="viewf4StatsButton" class="button-style">Show Statistics</button>
+                <button id="clearDataButton" class="button-style button-erase">Erase all data</button>
+            </div>
         </div>
     `;
-    return html;
 }
 
 export function F4ShowUserStats() {

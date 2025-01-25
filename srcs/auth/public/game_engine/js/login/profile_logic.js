@@ -36,6 +36,7 @@ export function bioHandler(me, yourDataSection) {
         bioDisplaySection.style.display = 'block';
         bioInput.style.color = 'green';
         bioInput.style.fontWeight = 'bold';
+        alert("bio correctly inserted");
     });
 }
 
@@ -60,7 +61,7 @@ export function displaynameHandler(me, yourDataSection)
         if (newname !== GuestName)
         {
             alert("new name confirmed!");
-            me.name = newname;
+            me.display_name = newname;
             changeName.value = newname;
             changeName.disabled = true;
             confirmName.style.display = 'none';
@@ -78,26 +79,27 @@ export function displaynameHandler(me, yourDataSection)
 export function emailHandler(me, yourDataSection, logged)
 {
     const emailInput = yourDataSection.querySelector('#emailInput');
-    const confirmEmailBtn = yourDataSection.querySelector('#confirmEmailBtn');
     const emailContainer = yourDataSection.querySelector('.email-container');
-
-    if (!emailInput || !confirmEmailBtn || !emailContainer || !responseMessage) {
+    if (!emailInput || !emailContainer)
+    {
         console.error("One or more elements not found!");
         return;
     }
-
     if (logged === 1)
     {
         emailInput.value = me.email;
         emailInput.disabled = true;
         emailInput.style.color = 'green';
-        confirmEmailBtn.style.display = 'none';
-    } else
+    }
+    else
+    {
         emailContainer.style.display = 'none';
+        emailInput.style.display = 'none';
+    }    
 }
 
 
-export function imageAvatarHandler(me, yourDataSection, logged) {
+export function imageAvatarHandler(me, yourDataSection) {
     const changeProfileImageBtn = yourDataSection.querySelector('#changeProfileImageBtn');
     const imageUploadInput = yourDataSection.querySelector('#imageUploadInput');
     const profileImage = yourDataSection.querySelector('#profileImage');
@@ -118,6 +120,8 @@ export function imageAvatarHandler(me, yourDataSection, logged) {
             reader.onload = (e) => {
                 me.image = e.target.result;
                 profileImage.src = e.target.result;
+                alert("image correctly inserted");
+                changeProfileImageBtn.style.display = "none";
             };
             reader.readAsDataURL(file);
         }

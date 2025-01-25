@@ -1,100 +1,67 @@
-import { Ball } from './ball.js';
+import { Ball } from './ball.js'
 import { Paddle } from './paddle.js';
 import { UI } from './ui.js';
 import { Star } from './star.js';
 import { Particle } from './particle.js';
 import { Powerup } from './powerup.js';
-import { navigate } from '../../main.js';
+import { navigate } from '../main.js';
 import { matchData } from './game_global.js';
 import { ballColor, paddleColor, ballTrailColor, wallsColor, powerUpActive, background } from './game_global.js';
 
-export let canvas;
-export let ctx;
-export let game;
+export const canvas = document.getElementById('gameCanvas');
+export const ctx = canvas.getContext('2d');
+export let gameContainer;
 export let players;
+export let game;
 export let backToBracketButton;
 export let backToRobinButton;
 export let matchStatisticsButton;
 export let matchStatsPopup;
 export let mode;
 
-
-export function PongGameScreen() {
-    const html = `
-     
-        <div id="gameContainer">
-        <canvas id="gameCanvas"> </canvas>
-        </div>
-        <div id="matchStatsPopup" style="display: none; flex-direction: column; align-items: center; justify-content: center;">
-            <h2>Match Statistics</h2>
-            <table style="width: 80%; border-collapse: collapse; font-size: 1rem; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <tbody>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px; background-color: #e6f7ff; font-weight: bold; text-align: center;">PLAYERS</td>
-                        <td id="playersColumn" style="border: 1px solid #ddd; padding: 10px; text-align: center;"></td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px; background-color: #e6f7ff; font-weight: bold; text-align: center;">MATCH TIME</td>
-                        <td id="matchTimeColumn" style="border: 1px solid #ddd; padding: 10px; text-align: center;"></td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px; background-color: #e6f7ff; font-weight: bold; text-align: center;">SCORE</td>
-                        <td id="scoreColumn" style="border: 1px solid #ddd; padding: 10px; text-align: center;"></td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px; background-color: #e6f7ff; font-weight: bold; text-align: center;">LONGEST RALLY</td>
-                        <td id="longestRallyColumn" style="border: 1px solid #ddd; padding: 10px; text-align: center;"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <br>
-       
-        <button id="backToBracketButton">Back to Bracket</button>  
-        <button id="backToRobinButton">Back to Ranking</button>
-        <button id="matchStatisticsButton">End Match</button>
-       
-    
-    `;
-    return html;
-}
-
 export function startPongGame(matchPlayers, tournamentMode) {
     mode = tournamentMode;
     players = matchPlayers;
-    canvas = document.getElementById('gameCanvas');
-    ctx = canvas.getContext('2d');
-    if (background == "pingpong")
-        canvas.style.background = "#1d8819";
+
+    //if (background == "pingpong")
+    //   canvas.style.background = "#1d8819";
     backToBracketButton = document.getElementById('backToBracketButton');
     backToRobinButton = document.getElementById('backToRobinButton');
     matchStatisticsButton = document.getElementById('matchStatisticsButton');
     matchStatsPopup = document.getElementById('matchStatsPopup');
-    matchStatsPopup.style.display = "none";
+    //matchStatsPopup.style.display = "none";
     backToBracketButton.hidden = true;
     backToRobinButton.hidden = true;
     matchStatisticsButton.hidden = true;
-    console.log("power up = " + powerUpActive);
+    console.log("power up = " + powerUpActive)
     
-    game = new Game(canvas);
-    game.start();
-   
-
+    //game = new TournamentGame(canvas);
+    //game.start();
 }
 
 // Main class
-export class Game {
+export class TournamentGame {
     constructor() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        this.wallThickness = canvas.width * 0.008;
+        this.canvas = document.getElementById('gameCanvas');
+        if (!this.canvas) {
+            console.error('Canvas not found.');
+            return;
+        }
+        this.ctx = this.canvas.getContext('2d'); 
+        if (!this.ctx) {
+            console.error('Canvas context not found.');
+            return;
+        }
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.wallThickness = this.canvas.width * 0.008;
         this.wallsColor = wallsColor;
-        this.ball = new Ball(canvas.width / 2, canvas.height / 2, ballColor, ballTrailColor);
-        this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's', paddleColor);
-        this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown', paddleColor);
+        this.ball = new Ball(this.canvas, this.ctx,this.canvas.width / 2, this.canvas.height / 2, ballColor, ballTrailColor);
+        this.paddle1 = new Paddle(this.canvas, this.wallThickness + 20, 'w', 's', paddleColor);
+        this.paddle2 = new Paddle(this.canvas ,this.canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown', paddleColor);
         this.p1Name = players[0]; 
         this.p2Name = players[1];
-        this.ui = new UI(this.p1Name, this.p2Name);
+        this.ui = new UI(this.p1Name, this.p2Name, this.canvas, this.ctx);
         this.stars = [];
         this.createStarsBackground(100);
         this.scoreP1 = 0;
@@ -107,6 +74,7 @@ export class Game {
         this.powerUpTimerStarted = false;
         this.powerup = [];
         this.addEventListeners();
+        this.renderBackground();
         this.winner = '';
     }
 
@@ -127,21 +95,21 @@ export class Game {
         });
 
         backToBracketButton.addEventListener('click', (event) => {
-            const path = "#bracket";
+            gameCanvas.style.display = "none";  
             backToBracketButton.hidden = true;
-            window.history.pushState({}, path, window.location.origin + path);
+            //window.history.pushState({}, path, window.location.origin + path);
             sessionStorage.setItem("winner", this.winner);
             this.resetMatchStatsData();
-            navigate(path, event.target.id);
+            navigate("/tournament/knockout/bracket", "Return from Match");
         })
 
         backToRobinButton.addEventListener('click', (event) => {
-            const path = "#robindraw";
+            gameCanvas.style.display = "none";  
             backToRobinButton.hidden = true;
-            window.history.pushState({}, path, window.location.origin + path);
+            //window.history.pushState({}, path, window.location.origin + path);
             sessionStorage.setItem("winner", this.winner);
             this.resetMatchStatsData();
-            navigate(path, event.target.id);
+            navigate("/tournament/roundrobin/robinranking", "Return from Match");
         })
 
         matchStatisticsButton.addEventListener('click', (event) => {
@@ -226,7 +194,6 @@ export class Game {
         localStorage.setItem('game_data', JSON.stringify(data));
         console.log("Dati aggiornati:", data);
         // Esempio d'uso
-       
     }
 
     calculateXpPlayers(data, winner, loser) {
@@ -299,7 +266,7 @@ export class Game {
 
     update() {
         if (!this.gamePaused && !this.gameEnd) {
-            this.ball.update(this.paddle1, this.paddle2, this.powerup[0]);
+            this.ball.update(this, this.paddle1, this.paddle2, this.powerup[0], this.wallThickness);
             this.paddle1.update();
             this.paddle2.update();
             this.updateParticles();
@@ -335,20 +302,20 @@ export class Game {
                 this.powerUpTimerStarted = false;
             }    
             this.scoreP2++;
-            this.screenShake(300, 15);
+            //this.screenShake(300, 15);
             setTimeout(() => {
                 if (!this.gameEnd)
                     this.ball.reset(2); // Reposition ball to center
                 this.ball.out = false;
             }, 2000);
-        } else if (this.ball.x >= canvas.width && !this.ball.out) {
+        } else if (this.ball.x >= this.canvas.width && !this.ball.out) {
             this.ball.out = true;
             if (this.powerup[0]) {
                 this.powerup.splice(0, 1);
                 this.powerUpTimerStarted = false;
             }
             this.scoreP1++;
-            this.screenShake(500, 25);
+            //this.screenShake(500, 25);
             setTimeout(() => {
                 if (!this.gameEnd)
                     this.ball.reset(1); // Reposition ball to center
@@ -358,7 +325,6 @@ export class Game {
     }
 
     screenShake(duration, intensity) {
-        const gameContainer = document.getElementById('gameContainer');
         const startTime = performance.now();
     
         function shakeFrame(time) {
@@ -391,10 +357,15 @@ export class Game {
                 this.winner = this.p2Name;
             }
             this.gameEnd = true;
-           
             
+            /*if (mode === "roundrobin")
+                backToRobinButton.hidden = false;
+            else
+                backToBracketButton.hidden = false;*/
+           
             matchStatisticsButton.hidden = false;
-            this.ui.render(this.scoreP1, this.scoreP2, this.gameEnd, this.gamePaused, this.backToGameTimer);
+            this.ui.render(this, this.scoreP1, this.scoreP2);
+            //this.ui.render(this.scoreP1, this.scoreP2, this.gameEnd, this.gamePaused, this.backToGameTimer);
         }
     }
 
@@ -404,7 +375,7 @@ export class Game {
             setTimeout(() => {
                 if (!this.gameEnd)
                 {
-                    let powerup = new Powerup();
+                    let powerup = new Powerup(this.canvas, this.ctx);
                     this.powerup.push(powerup)
                 }
                 
@@ -422,14 +393,14 @@ export class Game {
 
     getRandomValue(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
+    }
 
     render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.renderBackground();
         this.ball.render();
-        this.paddle1.render();
-        this.paddle2.render();
+        this.paddle1.render(this.ctx);
+        this.paddle2.render(this.ctx);
         if (this.powerup[0])
             this.powerup[0].render();
         
@@ -439,13 +410,14 @@ export class Game {
                 this.stars[i].render();
             }
         }
-        this.ui.render(this.scoreP1, this.scoreP2, this.gameEnd, this.gamePaused, this.backToGameTimer);
+        //this.ui.render(this.scoreP1, this.scoreP2, this.gameEnd, this.gamePaused, this.backToGameTimer);
+        this.ui.render(this, this.scoreP1, this.scoreP2);
         this.renderParticles();
     }
 
     addParticles(x, y, count) {
         for (let i = 0; i < count; i++) {
-            const particle = new Particle(x, y);
+            const particle = new Particle(x, y, this.ctx);
             this.particles.push(particle);
         }
     }
@@ -467,7 +439,7 @@ export class Game {
 
     createStarsBackground(count) {
         for (let i = 0; i < count; i++) {
-            const star = new Star();
+            const star = new Star(this.canvas, this.ctx);
             this.stars.push(star);
         }
     }
@@ -475,49 +447,56 @@ export class Game {
     renderBackground() {
         // Walls
         if (background == "space")
-            ctx.fillStyle = this.wallsColor;
+            this.ctx.fillStyle = this.wallsColor;
         else 
-            ctx.fillStyle = "white";
-        ctx.shadowColor = this.wallsColor;
-        ctx.shadowBlur = 20;
-        ctx.fillRect(this.wallThickness, 0, canvas.width - this.wallThickness, this.wallThickness);
-        ctx.fillRect(this.wallThickness, canvas.height - this.wallThickness, canvas.width - this.wallThickness, this.wallThickness);
-        ctx.fillRect(0, 0, this.wallThickness, canvas.height);
-        ctx.fillRect(canvas.width - this.wallThickness, 0, this.wallThickness, canvas.height);
+            this.ctx.fillStyle = "white";
 
         if (background == "pingpong") {
             // Background
-           ctx.fillStyle = "white";
-           ctx.fillRect(this.wallThickness, canvas.height / 2, canvas.width - this.wallThickness, this.wallThickness);
-           ctx.fillRect(canvas.width / 2, this.wallThickness, this.wallThickness, canvas.height - this.wallThickness);
-       }
+            this.ctx.fillStyle = "#1d8819";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.fillStyle = "white";
+            this.ctx.fillRect(this.wallThickness, this.canvas.height / 2, this.canvas.width - this.wallThickness, this.wallThickness);
+            this.ctx.fillRect(this.canvas.width / 2, this.wallThickness, this.wallThickness, this.canvas.height - this.wallThickness);
+        }
 
         if (background == "classic") {
             // Draw vertical dashed line
-            for (let y = this.wallThickness; y < canvas.height - this.wallThickness; y += 50) {
-                ctx.fillRect(canvas.width / 2, y, this.wallThickness, 30);
+            for (let y = this.wallThickness; y < this.canvas.height - this.wallThickness; y += 50) {
+                this.ctx.fillRect(this.canvas.width / 2, y, this.wallThickness, 30);
             }
         }
-       
+        this.ctx.shadowColor = this.wallsColor;
+        this.ctx.shadowBlur = 20;
+        this.ctx.fillRect(this.wallThickness, 0, this.canvas.width - this.wallThickness, this.wallThickness);
+        this.ctx.fillRect(this.wallThickness, this.canvas.height - this.wallThickness, this.canvas.width - this.wallThickness, this.wallThickness);
+        this.ctx.fillRect(0, 0, this.wallThickness, this.canvas.height);
+        this.ctx.fillRect(this.canvas.width - this.wallThickness, 0, this.wallThickness, this.canvas.height);
     }
 
     resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        this.wallThickness = canvas.width * 0.008;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.wallThickness = this.canvas.width * 0.008;
         this.renderBackground();
         //this.paddle1 = new Paddle(this.wallThickness + 20, 'w', 's');
-        //this.paddle2 = new Paddle(canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown');
+        //this.paddle2 = new Paddle(this.canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown');
         this.ball.resize();
         this.paddle1.resize(this.wallThickness + 20);
-        this.paddle2.resize(canvas.width - this.wallThickness - 20);
-        this.ui.resize(this.ui.scoreP1, this.ui.scoreP2);
+        this.paddle2.resize(this.canvas.width - this.wallThickness - 20);
+        this.ui.resize(this, this.ui.scoreP1, this.ui.scoreP2);
         this.ball.reset(1);
-        this.paddle1.y = canvas.height / 2 - this.paddle1.height / 2;
-        this.paddle2.y = canvas.height / 2 - this.paddle2.height / 2;
+        this.paddle1.y = this.canvas.height / 2 - this.paddle1.height / 2;
+        this.paddle2.y = this.canvas.height / 2 - this.paddle2.height / 2;
         this.stars = [];
         this.createStarsBackground(100);
-        this.ui.render(this.scoreP1, this.scoreP2, this.gameEnd, this.gamePaused, this.backToGameTimer);
-        
+        this.ui.render(this, this.scoreP1, this.scoreP2);
+        //this.ui.render(this.scoreP1, this.scoreP2, this.gameEnd, this.gamePaused, this.backToGameTimer);  
+    }
+
+    stop() {
+        // Fermiamo il gioco
+        this.running = false;
     }
 }
+

@@ -1,12 +1,12 @@
 export class Paddle {
-    constructor(x, upKey, downKey, canvas, ctx) {
-        this.canvas = canvas;
-        this.ctx = ctx;
+    constructor(canvas, x, upKey, downKey, color) {
         this.width = canvas.width * 0.01;
         this.height = canvas.height * 0.2;
+        this.canvas = canvas;
         this.x = x - this.width / 2;
         this.y = canvas.height / 2 - this.height / 2;
         this.radius = this.width / 2;
+        this.color = color;
         this.baseSpeed = canvas.height * 0.008; // Base speed based on screen height
         this.speed = this.baseSpeed; // Initialize speed based on canvas height
         this.upKey = upKey;
@@ -26,25 +26,35 @@ export class Paddle {
         if (this.moveDown && this.y + this.height < this.canvas.height - 15) this.y += this.speed;
     }
 
-    resize(oldCanvasWidth, oldCanvasHeight, newCanvasWidth, newCanvasHeight) {
-        // Update paddle size and speed based on new canvas dimensions
-        this.height = newCanvasHeight * 0.2;
-        this.speed = (newCanvasHeight / oldCanvasHeight) * this.baseSpeed;
-        this.y = newCanvasHeight / 2 - this.height / 2;
-
+    resize(x) {
+        this.width = this.canvas.width * 0.01;
+        this.height = this.canvas.height * 0.2;
+        this.x = x - this.width / 2;
+        this.y = this.canvas.height / 2 - this.height / 2;
+        this.radius = this.width / 2;
+        this.baseSpeed = this.canvas.height * 0.008; // Base speed based on screen height
+        this.speed = this.baseSpeed; // Initialize speed based on canvas height
         if (this.isPaddle2) {
             this.x = newCanvasWidth - this.width - 10;
         }
     }
 
-    move(direction) {
-        if (direction === 'up')
-            this.y = Math.max(15, this.y - this.speed);  // Prevent from going out of bounds at the top
-        else if (direction === 'down')
-            this.y = Math.min(this.canvas.height - this.height - 15, this.y + this.speed);  // Prevent from going out of bounds at the bottom
+    reset() {
+        this.height = this.canvas.height * 0.2;
     }
 
-    // Predict the ball's Y position based on its current trajectory
+    // Metodo per muovere la racchetta
+    move(direction) {
+        if (direction === 'up')
+            this.y = Math.max(0, this.y - this.speed); //sposto su senza superare 0
+        else if (direction === 'down')
+            this.y = Math.min(window.innerHeight - this.height, this.y + this.speed); //sposto giu senza superare la finestra
+    }
+
+    shrink() {
+        this.height = this.height / 2;  
+    }
+
     predictBallY(ball) {
         if (ball.speedx > 0) {
             let timeToReachAI = (this.canvas.width - ball.x) / ball.speedx;
@@ -91,11 +101,11 @@ export class Paddle {
                 else if (distance > 5) this.move('down');
             }
         }
-    }      
+    }
 
-    render() {
-        this.ctx.fillStyle = 'white';
-        this.drawRoundedRect(this.ctx);
+    render(ctx) {
+        ctx.fillStyle = this.color;
+        this.drawRoundedRect(ctx);
     }
 
     drawRoundedRect(ctx) {

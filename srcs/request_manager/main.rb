@@ -4,16 +4,17 @@
 require 'json'
 
 
-load ((File.file? '/var/www/common/Ports.rb') ? '/var/www/common/Ports.rb' : '../common_tools/tools/Ports.rb')
+load ((File.file? '/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../common_tools/tools/Ports.rb')
 
-load ((File.file? '/var/www/common/RequestUnpacker.rb') ? '/var/www/common/RequestUnpacker.rb' : '../common_tools/tools/RequestUnpacker.rb')
+load ((File.file? '/var/common/RequestUnpacker.rb') ? '/var/common/RequestUnpacker.rb' : '../common_tools/tools/RequestUnpacker.rb')
 
 
-load ((File.file? '/var/www/common/BetterPG.rb') ? '/var/www/common/BetterPG.rb' : '../common_tools/tools/BetterPG.rb')
+load ((File.file? '/var/common/BetterPG.rb') ? '/var/common/BetterPG.rb' : '../common_tools/tools/BetterPG.rb')
 
 
 $stdout.sync = true
 SERVICE_NAME = "request_manager"
+PORT = PortFinder::FindPort.new(SERVICE_NAME).getPort
 
 ALLOW_CLIENT_COMMANDS = true
 
@@ -21,18 +22,20 @@ PGS = BetterPG::SimplePG.new "pages", ["uri TEXT", "content TEXT", "id INT"]
 USR = BetterPG::SimplePG.new "users", ["id INT", "username TEXT", "password TEXT", "token TEXT"]
 
 def manage_req(client, server)
-	IO::select([client])
-	return if client.closed?
-	msg = client.read_nonblock Ports::MAX_MSG_LEN
-  begin
-  	bobj = JSON.parse msg
-  rescue => r
-    puts r
-    raise r
-  end
+  IO::select [client], [], [], 10
+  return if client.closed?
+  r = nil
+  msg = client.read_nonblock Ports::MAX_MSG_LEN rescue r
+  puts "######", msg, "######"
+  bobj = RequestUnpacker::Unpacker.new.unpack msg
+  print "rescued ", r, '\n' if r && DEBUG_MODE
+  raise r if r
 
-	client.puts "HTTP/1.1 200 OK\r\n\r\nYou ashked fors " + bobj["page"].to_s + "!"
-	client.puts bobj
+  puts "object not jsoned :(" if !bobj
+
+# 	client.puts "HTTP/1.1 200 OK\r\n\r\nYou ashked fors " + bobj["page"].to_s + "!"
+# 	client.puts bobj
+#   puts 
 
 	if bobj["method"].to_s == "new_user"
 		if bobj["username"] && bobj["password"]
@@ -45,19 +48,21 @@ def manage_req(client, server)
 		end
 	end
 	if bobj["method"] == "show_users"
+    puts "Selecting users"
 		client.puts *(USR.select)
 	end
 
   if bobj["method"] == "exec"
-    puts USR.exec bobj["client_command"] rescue r
+	puts "executing " + bobj["client_command"].to_s
+    res = USR.exec bobj["client_command"].to_s
+	client.puts res.to_json
+	puts res
+	puts res[0]
+	
   end
 end
 
 puts "WARNING: Client commands are active and accessible by sending a \"client_command\" field (content will be space joined)"
 
-# print "lolresponse active at port ", PortFinder::FindPort.new(SERVICE_NAME).getPort, "\n"
-# (SimpleServer::SimplerTCP.new PortFinder::FindPort.new(SERVICE_NAME).getPort, :manage_req).start_loop
-
-print "lolresponse active at port ", 9001, "\n"
-(SimpleServer::SimplerTCP.new 9001, :manage_req).start_loop
-
+print "lolresponse active at port ", PORT, "\n"
+(SimpleServer::SimplerTCP.new PORT, :manage_req).start_loop

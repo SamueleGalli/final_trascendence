@@ -1,12 +1,11 @@
-import { canvas, ctx } from "./start.js";
-
-
 export class Powerup {
-    constructor() {
-        this.width = canvas.width * 0.06;
-        this.height = canvas.width * 0.06;
-        this.x = canvas.width / 2 - this.width / 2;
-        this.y = Math.random() * (canvas.height - this.height);
+    constructor(canvas, ctx) {
+        this.canvas = canvas;
+        this.ctx = ctx;
+        this.width = this.canvas.width * 0.06;
+        this.height = this.canvas.width * 0.06;
+        this.x = this.canvas.width / 2 - this.width / 2;
+        this.y = Math.random() * (this.canvas.height - this.height);
         this.type = this.getType();
     }
 
@@ -25,21 +24,21 @@ export class Powerup {
     }
 
     resize() {
-        this.width = canvas.width * 0.06;
-        this.height = canvas.width * 0.06;
-        this.x = canvas.width / 2 - this.width / 2;
-        this.y = Math.random() * (canvas.height - this.height);
+        this.width = this.canvas.width * 0.06;
+        this.height = this.canvas.width * 0.06;
+        this.x = this.canvas.width / 2 - this.width / 2;
+        this.y = Math.random() * (this.canvas.height - this.height);
     }
 
 
     render() {
             if (this.type === "shrinker")
-                ctx.fillStyle = "#00ff00";
+                this.ctx.fillStyle = "#00ff00";
             else if (this.type === "teleport")
-                ctx.fillStyle = "#0000ff";
+                this.ctx.fillStyle = "#0000ff";
             else
-                ctx.fillStyle = "#ff0000";
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+                this.ctx.fillStyle = "#ff0000";
+            this.ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
 }

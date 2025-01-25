@@ -2,6 +2,7 @@ import { navigate } from "../main.js";
 import { update_image, change_name } from "../pages/modes.js";
 import { Guest } from "./user.js";
 import { let_me_in } from "../pages/login.js";
+import { me } from "../pages/profile.js";
 
 export let guests = JSON.parse(localStorage.getItem('guests')) || [];
 export let currentGuestId = null;
@@ -74,10 +75,16 @@ function generateUniqueId() {
 window.addEventListener("popstate", () => {
     if (let_me_in === false)
     {
+        if (me && (me.image || me.display_name))
+        {
+            upload_new_data(me);
+            return ;
+        }
         const guestId = sessionStorage.getItem('currentGuestId');
         if (guestId) {
             const guest = guests.find(guest => guest.id === guestId);
-            if (guest) {
+            if (guest)
+            {
                 update_image(guest.image); 
                 change_name(guest.name);   
             }
@@ -89,7 +96,8 @@ function updateGuestDataFromSession() {
     const guestId = sessionStorage.getItem('currentGuestId');
     if (guestId) {
         const guest = guests.find(guest => guest.id === guestId);
-        if (guest) {
+        if (guest)
+        {
             update_image(guest.image); 
             change_name(guest.name);   
         }
@@ -97,3 +105,11 @@ function updateGuestDataFromSession() {
 }
 
 updateGuestDataFromSession();
+
+function upload_new_data(me)
+{
+    if (me.image)
+        update_image(me.image);
+    if (me.display_name)
+        change_name(me.display_name);
+}

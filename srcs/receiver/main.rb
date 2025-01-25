@@ -1,16 +1,18 @@
 require 'socket'
 require 'timeout'
 
-load ((File.file? '/var/www/common/Ports.rb') ? '/var/www/common/Ports.rb' : '../common_tools/tools/Ports.rb')
+load ((File.file? '/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../common_tools/tools/Ports.rb')
 
-load ((File.file? '/var/www/common/RequestUnpacker.rb') ? '/var/www/common/RequestUnpacker.rb' : '../common_tools/tools/RequestUnpacker.rb')
+load ((File.file? '/var/common/RequestUnpacker.rb') ? '/var/common/RequestUnpacker.rb' : '../common_tools/tools/RequestUnpacker.rb')
 
 $stdout.sync = true
 SERVICE_NAME = "receiver"
+PORT = PortFinder::FindPort.new(SERVICE_NAME).getPort
 
 class SimpleGateway
 	def initialize(method, client, msg)
 		@client = client
+		r = nil
 		begin
 			puts "looking for method " + method + " at service " + Ports::HASH[method][0] + "at port " + Ports::HASH[method][1].to_s if DEBUG_MODE
 			@socket = TCPSocket.new Ports::HASH[method][0], Ports::HASH[method][1]
@@ -61,14 +63,13 @@ def sorter(client, server)
 			raise "Method Not Allowed"
 		end
 		# FastLogger::LogThis.new "Received " + method.to_s + " request from " + client.addr(true)[2].to_s
-		print (t = RequestUnpacker::Unpacker.new.unpack msg).to_json
-		SimpleGateway.new method, client, t.to_json
+		SimpleGateway.new method, client, msg #t.to_json
 		if CLOSE_EVERY_SERVICE_END
 			return
 		end
 	end
 end
 
-puts "Starting server!"
-s = SimpleServer::SimplerTCP.new 8008, :sorter
+puts "Starting server at port " + PORT.to_s + "!"
+s = SimpleServer::SimplerTCP.new PORT, :sorter
 s.start_loop

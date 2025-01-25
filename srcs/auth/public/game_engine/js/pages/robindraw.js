@@ -11,24 +11,23 @@ let robinBackToMenuButton
 
 export default function RobinRanking() {
     return `  
-      <h1 class="text">
-        <span class="letter letter-1">R</span>
-        <span class="letter letter-2">a</span>
-        <span class="letter letter-3">n</span>
-        <span class="letter letter-4">k</span>
-        <span class="letter letter-5">i</span>
-        <span class="letter letter-6">n</span>
-        <span class="letter letter-7">g</span>
-      </h1>
-      <div id="robinRanking">
-        <canvas id="rankingRobinCanvas" width="800" height="600"></canvas>
-      </div>
-      <div>
-        <button class="button-style" id="playRobinMatchButton">Play Match</button>
-        <button id="robinBackToMenuButton" style="display:none; margin: 0 auto;">Back to Menu</button>
-      </div>
+        <h1 class="text">
+            <span class="letter letter-1">R</span>
+            <span class="letter letter-2">a</span>
+            <span class="letter letter-3">n</span>
+            <span class="letter letter-4">k</span>
+            <span class="letter letter-5">i</span>
+            <span class="letter letter-6">n</span>
+            <span class="letter letter-7">g</span>
+        </h1>
+        <div id="robinRanking">
+            <canvas id="rankingRobinCanvas" width="800" height="600"></canvas>
+        </div>
+        <div>
+            <button class="button-style" id="playRobinMatchButton">Play Match</button>
+            <button class="button-style" id="robinBackToMenuButton" style="display:none; margin: 0 auto;">Back to Menu</button>
+        </div>
     `;
-    return html;
 }
 
 // Fisher-Yates shuffle
@@ -77,7 +76,8 @@ function findNextMatch(rankingRobinCtx) {
             rankingRobinCtx.font = '30px Liberty';
             rankingRobinCtx.textAlign = 'left';
             rankingRobinCtx.fillStyle = 'white';
-            rankingRobinCtx.fillText(playerList[0].name + " Win the Tournament! Congratulations!", 50, 500);
+            rankingRobinCtx.fillText(playerList[0].name + " Win the Tournament!", 80, 500);
+            rankingRobinCtx.fillText("Congratulations!", 150, 540);
             playRobinMatchButton.style.display = "none";
             robinBackToMenuButton.style.display = "block";
             tiebreaker = false;
@@ -115,7 +115,7 @@ function findNextMatch(rankingRobinCtx) {
         if (!tiebreaker)
             rankingRobinCtx.fillText("Next match: " + nextMatch.player1 + "  vs  " + nextMatch.player2, 50, 500);
         else 
-            rankingRobinCtx.fillText("Next Match (tiebreaker): " + nextMatch.player1 + "  vs  " + nextMatch.player2, 50, 500);
+            rankingRobinCtx.fillText("Next Match (t): " + nextMatch.player1 + "  vs  " + nextMatch.player2, 50, 500);
         
         // Update last match played
         lastMatch = nextMatch;
@@ -142,6 +142,7 @@ function populateMatchesList(playerList) {
 
 
 export function robinDraw(players) {
+    
     const rankingRobinCanvas = document.getElementById("rankingRobinCanvas");
     const rankingRobinCtx = rankingRobinCanvas.getContext("2d");
     playRobinMatchButton = document.getElementById("playRobinMatchButton");
@@ -149,6 +150,7 @@ export function robinDraw(players) {
 
     playRobinMatchButton.style.display = "block";
     rankingRobinCanvas.style.display = "block";
+
 
     if (!playerList)
         playerList = initializePlayers(players);
@@ -178,7 +180,7 @@ export function robinDraw(players) {
     // Check next match to play
     findNextMatch(rankingRobinCtx);
 
-    playRobinMatchButton.addEventListener("click", (event) => {
+    /*playRobinMatchButton.addEventListener("click", (event) => {
         const players = [];
         players.push(nextMatch.player1);
         players.push(nextMatch.player2);
@@ -193,5 +195,26 @@ export function robinDraw(players) {
         robinBackToMenuButton.style.display = "none";
         window.history.pushState({}, path, window.location.origin + path);
         navigate(path, event.target.id);
-    });
+    });*/
 }
+
+export const addRobinRankingPageHandlers = () => {
+    const playRobinMatchButton = document.getElementById('playRobinMatchButton');
+    const robinBackToMenuButton = document.getElementById('robinBackToMenuButton');
+
+
+    playRobinMatchButton?.addEventListener('click', () => {
+        const players = [];
+        players.push(nextMatch.player1);
+        players.push(nextMatch.player2);
+        sessionStorage.setItem('matchPlayers', JSON.stringify(players));
+        nextMatch = null;
+        navigate("/tournament/roundrobin/robinranking/game", "RoundRobin Pong Game");
+    });
+
+    robinBackToMenuButton?.addEventListener('click', () => {
+        playerList = [];
+        robinBackToMenuButton.style.display = "none";
+        navigate("/modes", "Return to Game Mode");
+    });
+};

@@ -53,7 +53,7 @@ export function forza4Config() {
         setToken1Color(token1ColorPicker.value);
         setToken2Color(token2ColorPicker.value);
         //window.history.pushState({}, path, window.location.origin + path);
-        navigate("/forza4", "Modalità Forza 4");
+        navigate("/modes", "Back to Game Modes");
     });
 
     f4ButtonBackground1.addEventListener('click', () => {

@@ -4,9 +4,10 @@ import { guests, currentGuestId } from "../login/guest_logic.js";
 import {
 getCurrentGuestName, emailHandler, 
 displaynameHandler, bioHandler,
- imageAvatarHandler 
+imageAvatarHandler 
 } from "../login/profile_logic.js";
 import { profile , profiles} from "../login/user.js";
+import { change_name, update_image } from "./modes.js";
 
 export default function Profile()
 {
@@ -85,8 +86,7 @@ export default function Profile()
             style="display: none;" 
         />
         <button class="button-style" id="changeProfileImageBtn">Change Image</button>
-    </div>
-    <button class="button-style" id="show staticstics" style="color: green;">Save Changes</button>
+        <button class="button-style" id="Save">Save Changes</button>
     </div>
     `;
 };
@@ -112,7 +112,10 @@ function insert_user_data()
         me = new profile(null, null, null, null);
         const currentGuest = guests.find(guest => guest.id === currentGuestId);
         if (currentGuest)
+        {
             me.display_name = currentGuest.name;
+            me.image = currentGuest.name;
+        }
     }
 }
 
@@ -122,13 +125,41 @@ export function profileHandler()
     if (insert_user_data())
         logged = 1;
     const yourDataSection = document.querySelector('#yourData');
-    if (logged === 0)
-    {
-        const show = yourDataSection.querySelector("#show staticstics");
-        show.style.display = 'none';
-    }
     emailHandler(me, yourDataSection, logged);
     displaynameHandler(me, yourDataSection);
     bioHandler(me, yourDataSection);
-    /*imageAvatarHandler(me, yourDataSection, logged);*/
+    imageAvatarHandler(me, yourDataSection, logged);
+    let saved = 0;
+    const saves = yourDataSection.querySelector('#Save');
+    saves.addEventListener('click', () => {
+        saved = 1;
+        alert("saved succesfully to see the changes please go to stats icon");
+        history.back();
+    });
+    if (window.location.pathname === '/profile')
+    {
+        window.addEventListener('popstate', () => {
+            if (saved === 0)
+            {
+                if (logged)
+                {
+                    me.display_name = user.login_name;
+                    me.email = user.email;
+                    if (!user.bio)
+                        me.bio = null;
+                    me.avatar = user.image;
+                }
+                else
+                {
+                    const currentGuest = guests.find(guest => guest.id === currentGuestId);
+                    me.display_name = currentGuest.name;
+                    me.email = null;
+                    if (!currentGuest.bio)
+                        me.bio = null;
+                    me.avatar = currentGuest.image;
+                }
+                alert("Error changes not saved");
+            }
+        });
+    }
 }

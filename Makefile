@@ -1,42 +1,63 @@
-all: stop_containers prep_dirs
+CONTAINERS	= tokenizer receiver postgres request_manager auth user_manager
+
+# ========================================= #
+SHELL:=/bin/bash
+
+all: prep_dirs #stop_containers
 	make -C ./srcs/common_tools/ all
-	@docker-compose -f ./srcs/docker-compose.yml up
+	@if [ "$(DETATCH)" = "true" ]; then \
+		docker-compose -f ./docker-compose.yml up -d; \
+	else \
+		docker-compose -f ./docker-compose.yml up; \
+	fi
+
+$(CONTAINERS): prep_dirs
+	@if [ "$(docker ps -a | grep $@ | wc -l)" = "1" ]; then \
+		docker stop $@ \
+		docker rm $@; \
+		echo "cleaned"; \
+	fi
+	@if [ "$(DETATCH)" = "true" ]; then \
+		docker-compose -f ./docker-compose.yml up -d $@; \
+	else \
+		docker-compose -f ./docker-compose.yml up $@; \
+	fi
+	# @docker-compose -f ./docker-compose.yml up $@
 
 stop_containers:
 	clear
 	@echo "Stopping existing containers..."
-	@sudo chmod +x /usr/local/bin/docker-compose
-	@sudo docker-compose -f ./srcs/docker-compose.yml stop
+	@sudo chmod +x /usr/bin/docker-compose
+	@docker-compose -f ./docker-compose.yml stop
 	@docker ps -qa | xargs -r docker stop
 	@docker ps -qa | xargs -r docker rm
 
 down:
-	@docker-compose -f ./srcs/docker-compose.yml down
+	@docker-compose -f ./docker-compose.yml down
 
-re: prep_dirs
+re: clean prep_dirs
+
 	make -C srcs/common_tools/ re
-	@docker stop $$(docker ps -qa)
-	@docker rm $$(docker ps -qa)
-	@docker-compose -f ./srcs/docker-compose.yml up --build
+	@docker ps -qa | xargs -r docker stop
+	@docker ps -qa | xargs -r docker rm
+	@docker-compose -f ./docker-compose.yml up --build
 
 prep_dirs:
-	@mkdir -p ./srcs/logger
-	@mkdir -p ./pages
 	@mkdir -p ./srcs/common_tools/tools
 	@mkdir -p ./srcs/receiver
 	@mkdir -p ./srcs/request_manager
 	@mkdir -p ./srcs/auth
-	@chmod +x ./srcs/logger/init.sh 
+	@mkdir -p ./srcs/user_manager
 	@chmod +x ./srcs/auth/init.sh
 	@chmod +x ./srcs/request_manager/init.sh
 
 clean:
 	make -C srcs/common_tools/ clean
-	@docker-compose -f srcs/docker-compose.yml stop
+	@docker-compose -f docker-compose.yml stop
 	@docker ps -qa | xargs -r docker stop
 	@docker ps -qa | xargs -r docker rm
-	@docker images -qa | xargs -r docker rmi -f
-	@docker volume ls -q | xargs -r docker volume rm
+	#@docker images -qa | xargs -r docker rmi -f
+	# @docker volume ls -q | xargs -r docker volume rm
 	# @docker network ls -q | awk '!$(echo bridge|host|none) {print}' | xargs -r docker network rm
 	# Destroy all directories
 	rm -rf /data/wordpress

@@ -211,16 +211,6 @@ function logging(authData) {
     window.addEventListener('message', messageListener);
 }
 
-export function initializeState()
-{
-    let_me_in = false;
-    popupOpened = false;
-    success = false;
-    isCurrentTabLogged = false;
-    auth = false;
-    userDataRefreshed = false;
-}
-
 export function performLogin() {
     syncState();
     if (!checkLoginRestrictions())

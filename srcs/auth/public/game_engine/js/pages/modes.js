@@ -1,12 +1,13 @@
 import { navigate } from "../main.js";
 import { profileHandler } from "./profile.js";
-
+import { ShowStats } from "./stats.js";
 export function update_image(image)
 {
     const checkImageInterval = setInterval(() => {
         const avatarImage = document.getElementById('avatarImage');
         if (avatarImage)
         {
+            console.log('Updating image to:', image);
             avatarImage.src = image;
             clearInterval(checkImageInterval);
         }
@@ -75,7 +76,7 @@ export default function Modes()
     <img alt="Avatar" class="avatar-image" id="avatarImage">
     <div class="menu-container hidden">
     <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile" id="profileIcon"></div>
-    <div class="menu-item"><img src="game_engine/images/answer.png" alt="Settings"></div>
+    <div class="menu-item"><img src="game_engine/images/stats.png" alt="Settings" id="statIcon"></div>
     </div>
     </div> 
     `;
@@ -85,8 +86,10 @@ export const addModesPageHandlers = () => {
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');
     const tournamentButton = document.getElementById('tournamentButton');
+    const forza4Button = document.getElementById('forza4Button');
     const avatarImage = document.getElementById('avatarImage');
     const menuContainer = document.querySelector('.menu-container');
+    const Settings = document.getElementById('settings-link');
     
     classicButton?.addEventListener('click', () => {
         navigate("/classic", "Modalità Classic");
@@ -100,9 +103,17 @@ export const addModesPageHandlers = () => {
         navigate("/tournament", "Modalità Torneo");
     });
 
+    forza4Button?.addEventListener('click', () => {
+        navigate("/forza4", "Modalità Forza 4");
+    })
     avatarImage.addEventListener("click", (event) => {
         menuContainer.classList.toggle("visible");
     });
+
+    Settings?.addEventListener('click', () => {
+        navigate("/settings", "Settings");
+    });
+    
     // Chiusura del menu quando si clicca fuori dall'avatar o dal menu
     document.addEventListener("click", (event) => {
         // Verifica se il clic non è stato effettuato dentro l'avatar o il menu
@@ -122,5 +133,17 @@ export const addModesPageHandlers = () => {
         });
     }
     else
-        console.error("Profile icon not found!");
+        console.error("stat icon not found!");
+    const statIcon = document.getElementById("statIcon");
+    if (statIcon)
+    {
+        statIcon.addEventListener("click", () => {
+            navigate("/stats", "Stats");
+            setTimeout(() => {
+                ShowStats();
+            }, 100);
+        });
+    }
+    else
+        console.error("stat icon not found!");
 };

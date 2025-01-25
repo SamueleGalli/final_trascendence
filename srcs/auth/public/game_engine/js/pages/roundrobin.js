@@ -95,12 +95,12 @@ export function setupRoundRobinPlayers() {
     });
 }
 
-export const addRoundbinPageHandlers = () => {
+export const addRoundRobinPageHandlers = () => {
     const radioButtons = document.querySelectorAll("input[name='players']");
 
     radioButtons.forEach(radioButton => {
         radioButton.addEventListener('change', (event) => {
-            navigate("/tournament/roundrobin/robindraw", "robindraw");
+            navigate("/tournament/roundrobin/robinranking", radioButton.value);
         });
     });
 }

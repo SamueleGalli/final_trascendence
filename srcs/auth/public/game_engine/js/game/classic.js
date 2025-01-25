@@ -10,7 +10,7 @@ import { ballColor, paddleColor, ballTrailColor, wallsColor, powerUpActive, back
 export const canvas = document.getElementById('gameCanvas');
 export const ctx = canvas.getContext('2d');
 
-export class AI {
+export class Game {
     constructor() {
         // Otteniamo il canvas e il contesto
         this.canvas = document.getElementById('gameCanvas');
@@ -34,21 +34,19 @@ export class AI {
         this.wallsColor = wallsColor;
         this.ball = new Ball(this.canvas, this.ctx,this.canvas.width / 2, this.canvas.height / 2, ballColor, ballTrailColor);
         this.paddle1 = new Paddle(this.canvas, this.wallThickness + 20, 'w', 's', paddleColor);
-        this.paddle2 = new Paddle(this.canvas, this.canvas.width - this.wallThickness - 20, null, null, paddleColor);
+        this.paddle2 = new Paddle(this.canvas ,this.canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown', paddleColor);
         this.p1Name = "Player1";
-        this.p2Name = "AI";
+        this.p2Name = "Player2";
         this.ui = new UI(this.p1Name, this.p2Name, this.canvas, this.ctx);
         this.stars = [];
         this.createStarsBackground(100);
         this.scoreP1 = 0;
         this.scoreP2 = 0;
-        this.lastMoveTime = 0;
         this.running = false;
         this.particles = [];
         this.gamePaused = false;
         this.gameEnd = false;
         this.backToGameTimer = false;
-        this.paddle2Paused = false;
         this.renderBackground();
         this.addEventListeners();
         this.powerUpTimerStarted = false;
@@ -56,14 +54,17 @@ export class AI {
     }
 
     addEventListeners() {
+        // Aggiungiamo i listener per gli eventi della tastiera
         document.addEventListener('keydown', (event) => {
             this.paddle1.handleInput(event.key, true);
+            this.paddle2.handleInput(event.key, true);
             if (event.key === 'p' || event.key === 'P') {
                 this.togglePause();
             }
         });
         document.addEventListener('keyup', (event) => {
             this.paddle1.handleInput(event.key, false);
+            this.paddle2.handleInput(event.key, false);
         });
         /*matchStatisticsButton.addEventListener('click', (event) => {
             gameCanvas.style.display = "none";
@@ -88,6 +89,7 @@ export class AI {
     }
 
     start() {
+        // Avviamo il loop del gioco
         this.running = true;
         this.loop();
         matchData.timer = setInterval(this.updateTimer.bind(this), 1000);
@@ -103,6 +105,7 @@ export class AI {
     }
 
     update() {
+        // Aggiorniamo lo stato del gioco
         if (!this.gamePaused && !this.gameEnd) {
             this.ball.update(this, this.paddle1, this.paddle2, this.powerup[0], this.wallThickness);
             this.paddle1.update();
@@ -154,40 +157,39 @@ export class AI {
 
     checkBallPosition() {
         if (this.ball.out && this.ball.hits > matchData.longestRally) {
-            matchData.longestRally = this.ball.hits; 
+                matchData.longestRally = this.ball.hits; 
         }
         if (this.ball.x <= 0 && !this.ball.out) {
             this.ball.out = true;
             if (this.powerup[0]) {
                 this.powerup.splice(0, 1);
                 this.powerUpTimerStarted = false;
-            } 
+            }    
             this.scoreP2++;
-            this.paddle2Paused = true; // Ferma l'IA quando la palla esce a sinistra
+            //this.screenShake(300, 15);
             setTimeout(() => {
                 if (!this.gameEnd)
                     this.ball.reset(2); // Reposition ball to center
                 this.ball.out = false;
-                this.paddle2Paused = false; // Riprendi l'IA quando la palla ritorna
             }, 2000);
-        } else if (this.ball.x >= canvas.width && !this.ball.out) {
+        } else if (this.ball.x >= this.canvas.width && !this.ball.out) {
             this.ball.out = true;
             if (this.powerup[0]) {
                 this.powerup.splice(0, 1);
                 this.powerUpTimerStarted = false;
             }
             this.scoreP1++;
-            this.paddle2Paused = true; // Ferma l'IA quando la palla esce a destra
+            //this.screenShake(500, 25);
             setTimeout(() => {
                 if (!this.gameEnd)
                     this.ball.reset(1); // Reposition ball to center
                 this.ball.out = false;
-                this.paddle2Paused = false; // Riprendi l'IA quando la palla ritorna
             }, 2000);
         }
     }
 
     checkScore() {
+        // Controlliamo il punteggio
         if (this.scoreP1 >= 5 || this.scoreP2 >= 5) {
             this.gameEnd = true;
             this.ui.render(this, this.scoreP1, this.scoreP2);
@@ -209,13 +211,12 @@ export class AI {
     }
 
     togglePause() {
+        // Mettiamo in pausa o riprendiamo il gioco
         if (this.gamePaused) {
-            // Se il gioco è in pausa e non c'è un countdown attivo
             if (!this.backToGameTimer) {
-                this.ui.startCountdown(this);
+                this.ui.startCountdown(this); // Avviamo il conto alla rovescia
             }
         } else {
-            // Se il gioco non è in pausa, metti in pausa
             this.gamePaused = true;
         }
     }
@@ -330,4 +331,4 @@ export class AI {
     }
 }
 
-export let ai = new AI();
+export let game = new Game();

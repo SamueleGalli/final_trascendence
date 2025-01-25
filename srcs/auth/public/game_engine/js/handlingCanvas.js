@@ -1,12 +1,15 @@
 import { MainPageEffect } from "./main_effect/MainPageEffect.js";
-import { Game } from './game/start.js';
+import { Game } from './game/classic.js';
 import { AI } from './game/AI.js';
+import { startPongGame, TournamentGame } from "./game/tournament.js";
 
 let mainPageEffect;
 let gameInstance;
 
 // Funzione per aggiungere il canvas di gioco
 export function initializeGameCanvas() {
+    console.log("inizializzo game canvas");
+    let players = ["Player 1", "Player 2", "Player 3", "Player 4"];
     const path = window.location.pathname;
     const gameCanvas = document.createElement('canvas');
     gameCanvas.id = "gameCanvas";
@@ -25,6 +28,15 @@ export function initializeGameCanvas() {
     else if (path === "/classic")
     {
         gameInstance = new Game(ctx);
+    }
+    else if (path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game")
+    {
+        players = JSON.parse(sessionStorage.getItem('matchPlayers'));
+        if (path === "/tournament/knockout/bracket/game")
+            startPongGame(players, "knockout");
+        else
+            startPongGame(players, "roundrobin");
+        gameInstance = new TournamentGame(ctx);
     }
 
     // Avvia l'istanza di gioco selezionata
@@ -69,7 +81,6 @@ export function addCanvas() {
 // Funzione per rimuovere il canvas
 export function removeCanvas() {
     const canvas = document.getElementById("main_pageCanvas");
-
     if (canvas) {
         const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -29,7 +29,8 @@ export default function Bracket() {
     </div>
     <div class="bracket-button-container">
             <button class="button-style" id="knockoutMatchButton">Play Match</button>
-            <button class="button-style" id="gameCustomizeButton">Customize</button>
+            <button class="button-style" id="backToMenuButton">Back to Menu</button>
+            
     </div>
     `;
 }
@@ -111,7 +112,7 @@ export function drawBracket(players) {
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
-
+    //console.log("giocatori: " + players); 
     // Impostazioni di scaling in base alla larghezza e altezza dello schermo
     const boxWidth = screenWidth * 0.12;  // Larghezza casella
     const boxHeight = screenHeight * 0.07;  // Altezza casella
@@ -145,7 +146,7 @@ export function drawBracket(players) {
         initializeBracket(rounds);
         bracketPlayers[0] = shuffleArray(players);  // Mescola i giocatori
     }
-
+    //console.log("bracket players => " + bracketPlayers)
     matchBoxPos[0] = [];
     // Disegna le partite del primo round
     for (let i = 0; i < matchesPerRound; i++) {
@@ -203,7 +204,7 @@ export function drawBracket(players) {
     }
 
     // Aggiungi un evento per il bottone "Play Match"
-    knockoutMatchButton.addEventListener('click', (event) => {
+    /*knockoutMatchButton.addEventListener('click', (event) => {
         const matchPlayers = [];
         matchPlayers.push(bracketPlayers[currentRound][currentMatch * 2]);
         matchPlayers.push(bracketPlayers[currentRound][currentMatch * 2 + 1]);
@@ -218,23 +219,70 @@ export function drawBracket(players) {
         window.history.pushState({}, path, window.location.origin + path);
         resetBracketState(); // Resetta lo stato del torneo
         navigate(path, event.target.id);
-    });
+    });*/
 }
 
 // Funzione per resettare lo stato del torneo
 function resetBracketState() {
-    console.log("reset bracket state");
+    //console.log("reset bracket state");
     currentMatch = 0;
     currentRound = 0;
     firstDraw = true;
     matchBoxPos = [];
 }
 
+export function backToBracket(winner) {
+   
+    console.log("winz: ", winner);
+    if (winner === null){
+        drawBracket(bracketPlayers[0]);
+        return;
+    }
+        
+    if (currentRound < rounds - 1) {
+        bracketPlayers[currentRound + 1][currentMatch] = winner;
+        currentMatch++;
+        if (currentMatch > matchesThisRound - 1) {
+            currentMatch = 0;
+            currentRound++;
+            matchesThisRound /= 2;
+        }
+        drawBracket(bracketPlayers[0]);
+    }
+    else {
+        //console.log("winner: " + winner);
+        drawBracket(bracketPlayers[0]);
+
+        knockoutMatchButton.hidden = true;
+        knockoutMatchButton.style.display = 'none';
+        backToMenuButton.hidden = false;
+        backToMenuButton.style.display = 'block';
+        //gameCustomizeButton.hidden = true;
+        //gameCustomizeButton.style.display = 'none';
+
+        bracketCtx.font = '30px Liberty';
+        bracketCtx.fillStyle = 'white'; 
+        bracketCtx.textAlign = 'center';
+        bracketCtx.textBaseline = 'top';
+        bracketCtx.fillText(winner + ' Win the Tournament!', bracketCanvas.width / 2, bracketCanvas.height - 110);
+    }
+}
+
 // Aggiunge gli eventi per il pulsante di personalizzazione
 export const addBracketPageHandlers = () => {
-    const gameCustomizeButton = document.getElementById('gameCustomizeButton');
+    
 
-    gameCustomizeButton?.addEventListener('click', () => {
-        navigate("/tournament/knockout/bracket/customize", "Customize");
+    knockoutMatchButton?.addEventListener('click', () => {
+        const matchPlayers = [];
+        matchPlayers.push(bracketPlayers[currentRound][currentMatch * 2]);
+        matchPlayers.push(bracketPlayers[currentRound][currentMatch * 2 + 1]);
+        sessionStorage.setItem('matchPlayers', JSON.stringify(matchPlayers)); // Salva i giocatori della partita
+        navigate("/tournament/knockout/bracket/game", "Bracket Pong Game");
+    });
+
+    backToMenuButton?.addEventListener('click', () => {
+        bracketPlayers = [];
+        resetBracketState(); // Resetta lo stato del torneo
+        navigate("/modes", "Return to Game Mode");
     });
 };

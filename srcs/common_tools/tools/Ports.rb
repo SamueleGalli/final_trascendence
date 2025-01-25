@@ -8,10 +8,15 @@ module Ports
     # "HEAD" => ["localhost", 9090],
     # "log" => ["localhost", 8001],
 
-    "GET" => ["request_manager", 9001],
+    "GET" => ["auth", 9292],
     "POST" => ["request_manager", 9000],
-    "HEAD" => ["request_manager", 9090],
-    "log" => ["logger", 8000]
+    "HEAD" => ["request_manager", 9000],
+    "show_users" => ["request_manager", 9000],
+    "TOKEN" => ["tokenizer", 7890],
+    "" => ["receiver", 8008],
+    "add_user" => ["user_manager", 7080],
+    "get_user" => ["user_manager", 7080],
+    "update_user" => ["user_manager", 7080]
   }
   MAX_MSG_LEN = 100000
 end
@@ -30,7 +35,7 @@ end
 
 module PortFinder
   class FindPort
-    @@port = 0
+    @@port = -1
     def initialize(name)
       Ports::HASH.each do |key, val|
         if val[0] == name
@@ -38,6 +43,7 @@ module PortFinder
           return
         end
       end
+      puts "Port not found. Returning crash"
     end
     def getPort
       return @@port
@@ -45,13 +51,26 @@ module PortFinder
   end
 end
 
+def announceAddress()
+  addr_infos = Socket.ip_address_list
+  s = ""
+  addr_infos.each do |addr_info|
+    next if !addr_info.ip_address.to_s.include? "172."
+    s << ' '
+    s << addr_info.ip_address
+  end
+  puts "My addresses:" + s
+end
+
 module SimpleServer
+
 	class SimplerTCP
     include FastLogger
 		@@server
     @@function
     @@tokens
 		def initialize(port, funct = nil, logs = false)
+      announceAddress
 			@@server = TCPServer.new port
 			@@function = funct
       @@logs = logs
@@ -62,11 +81,8 @@ module SimpleServer
           begin
             method(@@function).call(client, self)
           # rescue => r
-					# 	puts "Catched: " + r.to_s + "(" + r.class.to_s + ")" if DEBUG_MODE
+					# 	puts "Catched: " + r.to_s + "(" + r.class.to_s + ")\n" + r.backtrace.join("\n") if DEBUG_MODE
           #   client.close if !client.closed?
-          #   if @@logs
-          #     FastLogger::LogThis.new "Receiver catched: " + r.to_s
-          #   end
           end
           client.close if !client.closed?
           puts "Connection concluded" if DEBUG_MODE

@@ -1,11 +1,9 @@
-(controllo possibili errori da fixare nel login...)
-1)guest non puo mettere email e vedere statistiche rimosso tasto save changes e fine controllo avatar
+(per ora databese non ha i dati salvati dell'utente ne l'utente ha salvato i dati nel database)
+1)modes non aggiorna image dell'utente tra profilo e modes.
+in piu ora a caso non mi fa accedere login
 2)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
 3)se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server
-4)una volta che un guest inserisce l'email puo accedere in lgged_guest se la sua email esiste e recuperare i suoi dati
 • Major module: Standard user management, authentication, users across tournaments.
-◦ Users can update their information.
-◦ Users can upload an avatar, with a default option if none is provided.
 ◦ Users can add others as friends and view their online status.
 ◦ User profiles display stats, such as wins and losses.
 ◦ Each user has a Match History including 1v1 games, dates, and relevant

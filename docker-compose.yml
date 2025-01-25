@@ -49,21 +49,6 @@ networks:
 
 
 volumes:
-  logger_db:
-    driver: local
-    name: lg
-    driver_opts:
-      o: bind
-      device: ./srcs/logger
-      type: none
-
-  pages_db:
-    driver: local
-    name: pg
-    driver_opts:
-      o: bind
-      device: ./pages
-      type: none
 
   common_tools:
     driver: local
@@ -82,43 +67,21 @@ services:
     env_file:
       - .env
     volumes:
-      - logger_db:/var/www/logger
-      - pages_db:/var/lib/postgresql/pages
       - /var/run/docker.sock:/var/run/docker.sock
-      - common_tools:/var/www/common
+      - ./srcs/common_tools/tools:/var/commond
     networks:
       - app-network
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-
-  logger:                                             # logger service
-    image: ruby:latest
-    restart: always
-    volumes:
-      - logger_db:/var/www/log
-      - /var/run/docker.sock:/var/run/docker.sock
-      - common_tools:/var/www/common
-      - ./logger:/var/www
-    depends_on:
-      - postgres
-    networks:
-      - app-network
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
-    entrypoint: /var/www/init.sh
-    working_dir: /var/www
 
   receiver:                                             # net open service. Creates gateways
     image: ruby:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - common_tools:/var/www/common
-      - ./receiver:/var/www
+      - ./srcs/common_tools/tools:/var/common
+      - ./srcs/receiver:/var/www
     depends_on:
-      - logger
       - postgres
     networks:
       - app-network
@@ -126,7 +89,7 @@ services:
       - .env
     ports:
       - "8008:8008"
-    entrypoint: ruby /var/www/main.rb
+    entrypoint: /var/www/init.sh
     working_dir: /var/www
 
   request_manager:
@@ -134,11 +97,11 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - common_tools:/var/www/common
-      - ./request_manager:/var/www
+      - ./srcs/common_tools/tools:/var/common
+      - ./srcs/request_manager:/var/www
     depends_on:
       - receiver
-      - logger
+      - postgres
     networks:
       - app-network
     env_file:
@@ -152,10 +115,9 @@ services:
     image: ruby:latest
     restart: always
     volumes:
-      - common_tools:/var/www/common
-      - ./auth:/var/www
+      - ./srcs/common_tools/tools:/var/common
+      - ./srcs/auth:/var/www
     depends_on:
-      - logger
       - postgres
     networks:
       - app-network
@@ -163,5 +125,41 @@ services:
       - .env
     ports:
       - "9292:9292"
+    entrypoint: /var/www/init.sh
+    working_dir: /var/www
+
+  tokenizer:
+    image: ruby:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./srcs/common_tools/tools:/var/common
+      - ./srcs/tokenizer:/var/www
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "7890:7890"
+    entrypoint: /var/www/init.sh
+    working_dir: /var/www
+
+  user_manager:
+    image: ruby:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./srcs/common_tools/tools:/var/common
+      - ./srcs/user_manager:/var/www
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "7080:7080"
     entrypoint: /var/www/init.sh
     working_dir: /var/www

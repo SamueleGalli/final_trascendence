@@ -2,31 +2,43 @@ import { navigate } from "../main.js";
 
 
 export function Forza4Home() {
-    const html = `
-    <div id="forza4Home">
-        <h1 style="color: #fff;">Forza 4 Game</h1>
-        <br>
-        <h2 style="color: #fff;">Insert Player Names</h2>
-        <input type="text" id="player1Name" placeholder="Player 1" autocomplete="off"/>
-        <input type="text" id="player2Name" placeholder="Player 2" autocomplete="off"/>
-        <br><br>
-        <button id="forza4PlayButton">Play Forza 4</button>
-        <button id="forza4CustomizeButton">Customize</button>
-        <button id="forza4StatsButton">Forza 4 Statistics</button>
-    </div>
+    return `
+        <h1 class="text">
+            <span class="letter letter-1">F</span>
+            <span class="letter letter-2">O</span>
+            <span class="letter letter-3">R</span>
+            <span class="letter letter-4">Z</span>
+            <span class="letter letter-5">A</span>
+            <span class="letter letter-6"> </span>
+            <span class="letter letter-7"> </span>
+            <span class="letter letter-8">4</span>
+            <span class="letter letter-9"> </span>
+            <span class="letter letter-10"> </span>
+            <span class="letter letter-11">G</span>
+            <span class="letter letter-12">A</span>
+            <span class="letter letter-12">M</span>
+            <span class="letter letter-13">E</span>
+        </h1>
+        <div id="forza4Home">
+            <div id="forza4ButtonsContainer">
+                <div>
+                    <button id="forza4PlayButton" class="button-style">Play Forza 4</button>
+                </div>
+                <div>
+                    <button id="forza4StatsButton" class="button-style">Forza 4 Statistics</button>
+                </div>
+            </div>
+        </div>
     `;
-    return html;
 }
-
 
 export function showForza4HomeScreen() {
     const forza4PlayButton = document.getElementById('forza4PlayButton');
-    const forza4CustomizeButton = document.getElementById('forza4CustomizeButton');
     const forza4StatsButton = document.getElementById('forza4StatsButton');
     
     forza4PlayButton.addEventListener('click', () => {
-        const players = [];
-        let allNamesFilled = true;
+        const players = ["Pippo", "Poppi"];
+        /*let allNamesFilled = true;
         
         for (let i = 1; i <= 2; i++) {
 
@@ -51,12 +63,13 @@ export function showForza4HomeScreen() {
             sessionStorage.setItem('forza4players', JSON.stringify(players));
             //window.history.pushState({}, path, window.location.origin + path);
             navigate("/forza4/game", "Forza 4 Game");
-        }
+        }*/
+        localStorage.removeItem('forza4players');
+        sessionStorage.setItem('forza4players', JSON.stringify(players));
+        //window.history.pushState({}, path, window.location.origin + path);
+        navigate("/forza4/game", "Forza 4 Game");
     });
     
-    forza4CustomizeButton.addEventListener('click', () => {
-        navigate("/forza4/customize", "Forza 4 Customizations");
-    });
 
     forza4StatsButton.addEventListener('click', () => {
 	navigate("/forza4/userstats", "Forza 4 User Statistics");

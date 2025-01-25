@@ -1,4 +1,3 @@
-{
-    "method": "exec",
-    "client_command": "ajkshdaskjdhaskjdhjk"
-}
+{"method":"add_user","data":{"login_name":"lollo","name":"lorg gar","email":"hehe@lol.com"}}
+
+{"method":"get_user", "list_users":"true"}
