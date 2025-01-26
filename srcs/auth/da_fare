@@ -1,4 +1,5 @@
 (per ora databese non ha i dati salvati dell'utente ne l'utente ha salvato i dati nel database)
+(tournament->modalita ti impedisce di tornare indietro dopo)
 1)modes non aggiorna image dell'utente tra profilo e modes.
 in piu ora a caso non mi fa accedere login
 2)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
