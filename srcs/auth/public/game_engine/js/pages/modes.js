@@ -7,7 +7,6 @@ export function update_image(image)
         const avatarImage = document.getElementById('avatarImage');
         if (avatarImage)
         {
-            console.log('Updating image to:', image);
             avatarImage.src = image;
             clearInterval(checkImageInterval);
         }
@@ -27,17 +26,6 @@ export function change_name(name) {
 
 export default function Modes()
 {
-    let isForward = false;
-    window.addEventListener("popstate", (event) => {
-        if (event.state === null)
-            isForward = true;
-        else
-            isForward = false;
-        if (!isForward)
-            history.pushState(null, "", location.href);
-    });  
-    if (window.history && window.history.pushState)
-        window.history.pushState(null, null, location.href);
     return `
     <h1 class="text">
     <span class="letter letter-1">S</span>
@@ -81,6 +69,14 @@ export default function Modes()
     </div> 
     `;
 }
+
+history.pushState(null, null, location.href);
+window.onpopstate = function () {
+    const currentPath = location.pathname;
+    if (currentPath === "/modes") {
+        history.pushState(null, null, location.href);
+    }
+};
 
 export const addModesPageHandlers = () => {
     const classicButton = document.getElementById('classicButton');

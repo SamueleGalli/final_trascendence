@@ -1,17 +1,21 @@
 import { navigate } from "../main.js";
 import { let_me_in } from "../pages/login.js";
-import { change_name, update_image } from "../pages/modes.js";
-import { Logged } from "./user.js";
-
-
+import { update_image, change_name } from "../pages/modes.js";
+import { Logged} from "./user.js";
+import { me } from "../pages/profile.js"
 let success = false;
 let isCurrentTabLogged = false;
-let auth = false;
+let auth = false;   
 let userDataRefreshed = false;
 export let popupOpened = false;
 export let user;
 
 window.addEventListener('load', () => {
+    success = false;
+    isCurrentTabLogged = false;
+    auth = false;
+    userDataRefreshed = false;
+    popupOpened = false;
     if (!localStorage.getItem('authenticated_tab_id'))
     {
         sessionStorage.clear();
@@ -34,8 +38,9 @@ function generateTabId() {
 
 function isAnotherTabLoggedIn() {
     const authenticatedTabId = localStorage.getItem('authenticated_tab_id');
-    return authenticatedTabId && authenticatedTabId !== TAB_ID;
+    return authenticatedTabId && authenticatedTabId !== TAB_ID && localStorage.getItem('authenticated') === 'true';
 }
+
 
 
 function setTabAuthenticationState(isAuthenticated) {
@@ -57,26 +62,46 @@ function checkLoginRestrictions() {
     return true;
 }
 
-window.addEventListener('beforeunload', () => {
-    if (localStorage.getItem('authenticated_tab_id') === TAB_ID) {
-        localStorage.removeItem('authenticated_tab_id');
+window.addEventListener('storage', (event) => {
+    if (event.key === 'authenticated_tab_id') {
+        syncState();
+        if (isAnotherTabLoggedIn()) {
+            alert('You are already logged in from another tab.');
+        }
     }
-    sessionStorage.removeItem('tab_authenticated');
-    let openTabsCount = parseInt(localStorage.getItem('open_tabs_count') || '0');
-    openTabsCount--;
+    if (event.key === 'open_tabs_count') {
+        const openTabsCount = parseInt(event.newValue || '0');
+        if (openTabsCount === 0) {
+            resetGlobalState();
+        }
+    }
+});
 
-    if (openTabsCount <= 0) {
-        success = false;
-        isCurrentTabLogged = false;
-        auth = false;
-        userDataRefreshed = false;
-        sessionStorage.clear();
-        localStorage.clear();
+function resetGlobalState()
+{
+    success = false;
+    isCurrentTabLogged = false;
+    auth = false;
+    userDataRefreshed = false;
+    sessionStorage.clear();
+    localStorage.clear();
+}
+
+window.addEventListener('beforeunload', () => {
+    if (localStorage.getItem('authenticated_tab_id') === TAB_ID)
+    {
+        localStorage.removeItem('authenticated_tab_id');
+        setTabAuthenticationState(false);
     }
+    let openTabsCount = parseInt(localStorage.getItem('open_tabs_count') || '0');
+    openTabsCount = Math.max(0, openTabsCount - 1);
+
+    if (openTabsCount === 0)
+        resetGlobalState();
     else
         localStorage.setItem('open_tabs_count', openTabsCount.toString());
-    setTabAuthenticationState(false);
 });
+
 
 if (localStorage.getItem('open_tabs_count') === null)
     localStorage.setItem('open_tabs_count', '1');
@@ -93,17 +118,41 @@ function syncState() {
     auth = localStorage.getItem('auth_done') === 'true';
 }
 
+function update_logged(me)
+{
+    if (let_me_in === 0)
+        return;
+    if (me)
+    {
+        if (!user)
+            user = {};
+        const userData = {
+            login_name: me.display_name || user.login_name,
+            image: me.image || user.image
+        };
+        localStorage.setItem('user_data', JSON.stringify(userData));
+        user.login_name = userData.login_name;
+        user.image = userData.image;
+        change_name(user.login_name);
+        update_image(user.image);
+    }
+    else
+    {
+        const userData = JSON.parse(localStorage.getItem('user_data'));
+        if (userData)
+        {
+            change_name(userData.login_name);
+            update_image(userData.image);
+        }
+    }
+}
+
 function refreshUserData() {
     if (userDataRefreshed)
         return;
     userDataRefreshed = true;
-
-    const userData = JSON.parse(localStorage.getItem('user_data'));
-    if (userData)
-    {
-        change_name(userData.login_name);
-        update_image(userData.image);
-    }
+    console.log(localStorage.getItem("user_data"));
+    update_logged(me)
 }
 
 document.addEventListener('visibilitychange', () => {
@@ -157,10 +206,13 @@ function log_in(popup) {
     popup.close();
     localStorage.setItem('popup_opened', 'false');
     popupOpened = false;
+    success = true;
+    auth = true;
     navigate("/modes", "Modalità di gioco");
     refreshUserData();
     localStorage.setItem('auth_done', 'true');
 }
+
 
 function get_data(event) {
     if (event.data.authenticated && event.data.user)

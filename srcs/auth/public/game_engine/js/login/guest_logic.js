@@ -1,6 +1,6 @@
 import { navigate } from "../main.js";
-import { update_image, change_name } from "../pages/modes.js";
 import { Guest } from "./user.js";
+import { update_image, change_name } from "../pages/modes.js";
 import { let_me_in } from "../pages/login.js";
 import { me } from "../pages/profile.js";
 
@@ -21,8 +21,13 @@ export function guest_login() {
         return;
     }
     name = name.trim();
-    if (name.length < 5) {
+    if (name.length < 4) {
         alert('Name too short.');
+        return;
+    }
+    if (name.length >= 15)
+    {
+        alert('Name too long.');
         return;
     }
     if (guests.some(guest => guest.name === name)) {
@@ -45,10 +50,7 @@ function addGuest(name) {
 function updateUIForGuest(guest) {
     navigate("/modes", "Modalità di gioco");
     if (let_me_in === false)
-    {
-        update_image(guest.image);
-        change_name(guest.name);
-    }
+        update_guest(me, guest);
 }
 
 window.addEventListener("beforeunload", () => {
@@ -75,41 +77,49 @@ function generateUniqueId() {
 window.addEventListener("popstate", () => {
     if (let_me_in === false)
     {
-        if (me && (me.image || me.display_name))
-        {
-            upload_new_data(me);
-            return ;
-        }
         const guestId = sessionStorage.getItem('currentGuestId');
         if (guestId) {
             const guest = guests.find(guest => guest.id === guestId);
             if (guest)
-            {
-                update_image(guest.image); 
-                change_name(guest.name);   
-            }
+                update_guest(me, guest);
         }
     }
 });
 
 function updateGuestDataFromSession() {
     const guestId = sessionStorage.getItem('currentGuestId');
-    if (guestId) {
+    if (guestId)
+    {
         const guest = guests.find(guest => guest.id === guestId);
         if (guest)
-        {
-            update_image(guest.image); 
-            change_name(guest.name);   
-        }
+            update_guest(me, guest);
     }
 }
 
 updateGuestDataFromSession();
 
-function upload_new_data(me)
+
+function update_guest(me, guest)
 {
-    if (me.image)
-        update_image(me.image);
-    if (me.display_name)
-        change_name(me.display_name);
+    if (let_me_in === 1)
+        return;
+    if (me)
+    {
+        const currentGuest = {
+            name: me.display_name || guest.name,
+            image: me.image || guest.image
+        };
+        console.log(currentGuest);
+        sessionStorage.setItem('currentGuestId', JSON.stringify(currentGuest));
+        guest.name = currentGuest.name;
+        guest.image = currentGuest.image;
+        console.log("guest.image = ", guest.image);
+        change_name(currentGuest.name);
+        update_image(currentGuest.image);
+    }
+    else
+    {
+        change_name(guest.name);
+        update_image(guest.image);
+    }
 }

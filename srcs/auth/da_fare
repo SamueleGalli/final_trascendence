@@ -1,9 +1,7 @@
 (per ora databese non ha i dati salvati dell'utente ne l'utente ha salvato i dati nel database)
-(tournament->modalita ti impedisce di tornare indietro dopo)
-1)modes non aggiorna image dell'utente tra profilo e modes.
-in piu ora a caso non mi fa accedere login
+(se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server)
+1)modes non aggiorna image dell'utente tra profilo e modes per ora solo guest da errori.
 2)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
-3)se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server
 • Major module: Standard user management, authentication, users across tournaments.
 ◦ Users can add others as friends and view their online status.
 ◦ User profiles display stats, such as wins and losses.

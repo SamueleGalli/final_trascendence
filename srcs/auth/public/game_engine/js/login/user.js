@@ -21,10 +21,10 @@ export class Guest {
 export const profiles = [];
 
 export class profile {
-    constructor(email, dispaly_name, bio, avatar)
+    constructor(email, display_name, bio, avatar)
     {
         this.email = email;
-        this.dispaly_name = dispaly_name;
+        this.display_name = display_name;
         this.bio = bio;
         this.avatar = avatar;
     }

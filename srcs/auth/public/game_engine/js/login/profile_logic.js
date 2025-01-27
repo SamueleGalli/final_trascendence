@@ -1,5 +1,4 @@
 import { guests } from "../login/guest_logic.js";
-
 export function getCurrentGuestName(guest_name)
 {
     const currentGuestId = sessionStorage.getItem('currentGuestId');
@@ -29,8 +28,13 @@ export function bioHandler(me, yourDataSection) {
             alert("Please enter a bio.");
             return;
         }
-        me.bio = newBio;
-        bioDisplay.textContent = newBio;
+        if (newBio.length >= 400)
+        {
+            alert("bio too big");
+            return;
+        }
+        me.bio = JSON.stringify(newBio);
+        bioDisplay.textContent = JSON.stringify(newBio);
         bioInput.disabled = true;
         confirmBioBtn.style.display = 'none';
         bioDisplaySection.style.display = 'block';
@@ -58,11 +62,23 @@ export function displaynameHandler(me, yourDataSection)
             return;
         }
         const GuestName = getCurrentGuestName(guests);
+        if (newname.length < 4)
+        {
+            alert("Name too short.");
+            changeName.value = '';
+            return;
+        }
+        if (newname.length >= 15)
+        {
+            alert("name too long");
+            changeName.value = '';
+            return;
+        }
         if (newname !== GuestName)
         {
             alert("new name confirmed!");
-            me.display_name = newname;
-            changeName.value = newname;
+            me.display_name = JSON.stringify(newname);
+            changeName.value = me.display_name;
             changeName.disabled = true;
             confirmName.style.display = 'none';
             changeName.style.color = 'green';
