@@ -1,4 +1,14 @@
 import { guests } from "../login/guest_logic.js";
+
+export function getCurrentGuestImage(guest_image) {
+    const currentGuestId = sessionStorage.getItem('currentGuestId');
+    if (currentGuestId && Array.isArray(guest_image)) {
+        const currentGuest = guest_image.find(guest => guest.id === currentGuestId);
+        return currentGuest ? currentGuest.image : 'No image found';
+    }
+    return 'Error: No guest found'
+}
+
 export function getCurrentGuestName(guest_name)
 {
     const currentGuestId = sessionStorage.getItem('currentGuestId');
@@ -34,11 +44,11 @@ export function bioHandler(me, yourDataSection) {
             return;
         }
         me.bio = JSON.stringify(newBio);
-        bioDisplay.textContent = JSON.stringify(newBio);
+        bioDisplay.textContent = me.bio.slice(1, -1);
         bioInput.disabled = true;
         confirmBioBtn.style.display = 'none';
         bioDisplaySection.style.display = 'block';
-        bioInput.style.color = 'green';
+        bioInput.style.color = " #09a09b";
         bioInput.style.fontWeight = 'bold';
         alert("bio correctly inserted");
     });
@@ -78,11 +88,12 @@ export function displaynameHandler(me, yourDataSection)
         {
             alert("new name confirmed!");
             me.display_name = JSON.stringify(newname);
-            changeName.value = me.display_name;
+            changeName.value = me.display_name.slice(1, -1);
             changeName.disabled = true;
             confirmName.style.display = 'none';
-            changeName.style.color = 'green';
+            changeName.style.color = " #09a09b";
             changeName.style.fontWeight = 'bold';
+            changeName.style.fontSize = "2em"; 
         }
         else
         {
@@ -105,10 +116,12 @@ export function emailHandler(me, yourDataSection, logged)
     {
         emailInput.value = me.email;
         emailInput.disabled = true;
-        emailInput.style.color = 'green';
+        emailInput.style.fontSize = "0.5em"; 
+        emailInput.style.color =" #09a09b"
     }
     else
     {
+        me.email = null;
         emailContainer.style.display = 'none';
         emailInput.style.display = 'none';
     }    

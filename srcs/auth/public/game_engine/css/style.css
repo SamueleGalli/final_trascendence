@@ -767,25 +767,8 @@ body {
 }
 
 .profile-image {
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 50%;
-}
-
-#emailInput {
-    font-family: 'Liberty', sans-serif;
-}
-
-#displayNameInput {
-    font-family: 'Liberty', sans-serif;
-}
-
-#bioInput {
-    font-family: 'Liberty', sans-serif;
-}
-
-#SaveChangeButton {
-    left: 50%;
-    bottom: 0;
 }

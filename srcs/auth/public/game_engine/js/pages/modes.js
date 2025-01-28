@@ -129,7 +129,7 @@ export const addModesPageHandlers = () => {
         });
     }
     else
-        console.error("stat icon not found!");
+        console.error("profile icon not found!");
     const statIcon = document.getElementById("statIcon");
     if (statIcon)
     {

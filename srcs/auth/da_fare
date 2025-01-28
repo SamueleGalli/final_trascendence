@@ -1,7 +1,8 @@
 (per ora databese non ha i dati salvati dell'utente ne l'utente ha salvato i dati nel database)
 (se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server)
-1)modes non aggiorna image dell'utente tra profilo e modes per ora solo guest da errori.
-2)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
+(pulire e rendere piu chiaro profile)
+(profile non da messaggio quando aggiorna i valori anche se ce lo ho io)
+1)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
 • Major module: Standard user management, authentication, users across tournaments.
 ◦ Users can add others as friends and view their online status.
 ◦ User profiles display stats, such as wins and losses.

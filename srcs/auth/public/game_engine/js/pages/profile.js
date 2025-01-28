@@ -2,9 +2,9 @@ import { let_me_in } from "./login.js";
 import { user } from "../login/login_logic.js";
 import { guests, currentGuestId } from "../login/guest_logic.js";
 import {
-getCurrentGuestName, emailHandler, 
+getCurrentGuestName, emailHandler,
 displaynameHandler, bioHandler,
-imageAvatarHandler 
+imageAvatarHandler, getCurrentGuestImage
 } from "../login/profile_logic.js";
 import { profile , profiles} from "../login/user.js";
 
@@ -28,36 +28,33 @@ export default function Profile()
     <span class="letter letter-14">E</span>
     </h1>
     <div id="yourData">
-    <div class="email-container">
-        <label for="emailInput" class="email-label" style="color: green;">Insert your email:</label>
-        <input 
+    <div class="email-container" id="emailtext">
+        <label for="emailInput" class="email-label">Your email:</label>
+        <input
             type="email" 
             id="emailInput" 
             class="email-input" 
-            placeholder="yourname@exemple.com" 
-            required
+            color=" #09a09b"
         />
     </div>
-    <h3 style="color: green;">
-    the actual name ${
-        user && user.login_name ? user.login_name :
-        (guests && Array.isArray(guests) && guests.length > 0 ? getCurrentGuestName(guests) : 'Error: Name not found')
-    }
+    <h3 id="myName">
     </h3>
     <div id="changeDisplayName">
-        <label for="displayNameInput" class="display-name-label" style="color: green;">Change your display name:</label>
+        <label for="displayNameInput" class="display-name-label">Change your display name:</label>
         <input 
+            style="font-size: 1.5em;"
             type="text" 
             id="displayNameInput" 
             class="display-name-input" 
             placeholder="Insert your new name"
         />
         <button class="button-style" id="confirmDisplayNameBtn">Confirm Name</button>
-        <span id="displayNameLabel" style="display: none; color: green; font-weight: bold;"></span>
+        <span id="displayNameLabel" style="display: none;  font-weight: bold;"></span>
     </div>
     <div id="bioSection">
-        <label for="longbioInput" class="bio-label" style="color: green;">Modify your bio:</label>
-        <textarea 
+        <label for="longbioInput" class="bio-label">Modify your bio:</label>
+        <textarea
+            style="font-size: 0.3em;"
             id="bioInput" 
             class="bio-input"
             placeholder="Insert bio here"
@@ -67,14 +64,15 @@ export default function Profile()
         <button class="button-style" id="confirmBioBtn">Confirm Bio</button>
     </div>
     <div id="bioDisplaySection" style="display: none;">
-        <h3 style="color: green;">Your Bio:</h3>
+        <h3>Your Bio:</h3>
         <p id="bioDisplay" style="white-space: pre-wrap;"></p>
     </div>
     <div id="profileImageSection">
-        <h2 style="color: green;">Profile Image</h2>
+        <h2>Profile Image</h2>
         <img 
             id="profileImage" 
-            src="${user && user.image ? user.image : 'game_engine/images/guest.jpg'}" 
+            src="${user && user.image ? user.image : 
+            getCurrentGuestImage(guests)}" 
             alt="Profile Image" 
             class="profile-image"
         />
@@ -82,7 +80,7 @@ export default function Profile()
             type="file" 
             id="imageUploadInput" 
             accept="image/*" 
-            style="display: none;" 
+            style="display: none;"
         />
         <button class="button-style" id="changeProfileImageBtn">Change Image</button>
     </div>
@@ -112,7 +110,7 @@ function insert_user_data()
         if (currentGuest)
         {
             me.display_name = currentGuest.name;
-            me.image = currentGuest.name;
+            me.image = currentGuest.image;
         }
     }
 }
@@ -123,6 +121,7 @@ export function profileHandler()
     if (insert_user_data())
         logged = 1;
     const yourDataSection = document.querySelector('#yourData');
+    fixnames(yourDataSection);
     emailHandler(me, yourDataSection, logged);
     displaynameHandler(me, yourDataSection);
     bioHandler(me, yourDataSection);
@@ -132,4 +131,32 @@ export function profileHandler()
             alert("saved changed correctly updated");
         }
     });
+}
+
+function fixnames(yourDataSection)
+{
+    let myName = yourDataSection.querySelector("#myName");
+    myName.style.fontSize = "1.6em";
+    myName.style.fontFamily = "'Liberty', sans-serif";
+    let Name = `the actual name ${
+        user && user.login_name ? user.login_name :
+        (guests.length > 0 && getCurrentGuestName(guests))
+        }`;
+    myName.innerText = Name;
+    let display_name = yourDataSection.querySelector("#changeDisplayName");
+    display_name.style.color =" #09a09b"
+    display_name.style.fontSize = "2em";
+    display_name.style.fontFamily = "'Liberty', sans-serif";
+    let myBio = yourDataSection.querySelector("#bioSection");
+    myBio.style.fontSize = "5em";
+    myBio.style.fontFamily = "'Liberty', sans-serif";
+    myBio.style.color =" #09a09b"
+    let myImage = yourDataSection.querySelector("#profileImageSection");
+    myImage.style.fontSize = "1.6em";
+    myImage.style.fontFamily = "'Liberty', sans-serif";
+    myImage.style.color =" #09a09b"
+    let emailtext = yourDataSection.querySelector("#emailtext");
+    emailtext.style.fontSize = "2em";
+    emailtext.style.fontFamily = "'Liberty', sans-serif";
+    emailtext.style.color =" #09a09b"
 }

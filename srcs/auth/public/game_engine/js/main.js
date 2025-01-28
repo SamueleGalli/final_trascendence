@@ -43,7 +43,7 @@ const routes = {
     "/tournament/knockout/bracket": Bracket,
     "/tournament/knockout/bracket/game": TournamentGame,
     "/profile": Profile,
-    "//stats": Stats
+    "/stats": Stats
 };
 
 // Funzione universale per la navigazione

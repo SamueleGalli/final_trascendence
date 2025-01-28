@@ -109,16 +109,15 @@ function update_guest(me, guest)
             name: me.display_name || guest.name,
             image: me.image || guest.image
         };
-        console.log(currentGuest);
-        sessionStorage.setItem('currentGuestId', JSON.stringify(currentGuest));
+        sessionStorage.setItem('guests', JSON.stringify(currentGuest));
         guest.name = currentGuest.name;
         guest.image = currentGuest.image;
-        console.log("guest.image = ", guest.image);
         change_name(currentGuest.name);
         update_image(currentGuest.image);
     }
     else
     {
+        guest.email = null;
         change_name(guest.name);
         update_image(guest.image);
     }

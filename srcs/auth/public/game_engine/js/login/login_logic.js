@@ -151,7 +151,6 @@ function refreshUserData() {
     if (userDataRefreshed)
         return;
     userDataRefreshed = true;
-    console.log(localStorage.getItem("user_data"));
     update_logged(me)
 }
 
