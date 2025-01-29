@@ -43,6 +43,7 @@ export function bioHandler(me, yourDataSection) {
             alert("bio too big");
             return;
         }
+        alert("bio correctly inserted");
         me.bio = JSON.stringify(newBio);
         bioDisplay.textContent = me.bio.slice(1, -1);
         bioInput.disabled = true;
@@ -50,7 +51,6 @@ export function bioHandler(me, yourDataSection) {
         bioDisplaySection.style.display = 'block';
         bioInput.style.color = " #09a09b";
         bioInput.style.fontWeight = 'bold';
-        alert("bio correctly inserted");
     });
 }
 
@@ -84,16 +84,16 @@ export function displaynameHandler(me, yourDataSection)
             changeName.value = '';
             return;
         }
-        if (newname !== GuestName)
+        if (newname !== GuestName && newname != me.display_name)
         {
             alert("new name confirmed!");
-            me.display_name = JSON.stringify(newname);
-            changeName.value = me.display_name.slice(1, -1);
+            me.display_name = newname;
+            changeName.value = me.display_name;
             changeName.disabled = true;
             confirmName.style.display = 'none';
-            changeName.style.color = " #09a09b";
             changeName.style.fontWeight = 'bold';
-            changeName.style.fontSize = "2em"; 
+            changeName.style.fontSize = "2em";
+            changeName.style.color = " #09a09b";
         }
         else
         {
@@ -147,10 +147,17 @@ export function imageAvatarHandler(me, yourDataSection) {
         {
             const reader = new FileReader();
             reader.onload = (e) => {
-                me.image = e.target.result;
-                profileImage.src = e.target.result;
-                alert("image correctly inserted");
-                changeProfileImageBtn.style.display = "none";
+                if (me.image === e.target.result)
+                {
+                    alert("Error same image inserted")
+                }
+                else
+                {
+                    alert("image correctly inserted");
+                    me.image = e.target.result;
+                    profileImage.src = e.target.result;
+                    changeProfileImageBtn.style.display = "none";
+                }
             };
             reader.readAsDataURL(file);
         }

@@ -97,7 +97,7 @@ function insert_user_data()
         if (user.email)
             me.email = user.email;
         if (user.image)
-            me.avatar = user.image;
+            me.image = user.image;
         if (user.login_name)
             me.display_name = user.login_name;
         profiles.push(me);
@@ -120,17 +120,29 @@ export function profileHandler()
     let logged = 0;
     if (insert_user_data())
         logged = 1;
+    let mename = me.display_name;
+    let meimage = me.image;
+    let mebio = me.bio;
     const yourDataSection = document.querySelector('#yourData');
     fixnames(yourDataSection);
     emailHandler(me, yourDataSection, logged);
     displaynameHandler(me, yourDataSection);
     bioHandler(me, yourDataSection);
     imageAvatarHandler(me, yourDataSection, logged);
+    window.removeEventListener('popstate', check_update_data);
     window.addEventListener('popstate', () => {
-        if (window.location.pathname === '/profile') {
-            alert("saved changed correctly updated");
-        }
+        check_update_data(mename, meimage, mebio);
     });
+    
+}
+
+function check_update_data(mename, meimage, mebio)
+{
+    let yes = 0;
+    if (mename !== me.display_name || meimage !== me.image || mebio !== me.bio)
+        yes = 1;
+    if (yes === 1)
+        alert("Changes saved successfully.");
 }
 
 function fixnames(yourDataSection)
@@ -138,11 +150,12 @@ function fixnames(yourDataSection)
     let myName = yourDataSection.querySelector("#myName");
     myName.style.fontSize = "1.6em";
     myName.style.fontFamily = "'Liberty', sans-serif";
+    myName.style.color = " #09a09b"; 
     let Name = `the actual name ${
         user && user.login_name ? user.login_name :
         (guests.length > 0 && getCurrentGuestName(guests))
         }`;
-    myName.innerText = Name;
+    myName.innerText = Name;  
     let display_name = yourDataSection.querySelector("#changeDisplayName");
     display_name.style.color =" #09a09b"
     display_name.style.fontSize = "2em";

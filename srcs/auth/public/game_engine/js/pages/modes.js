@@ -65,6 +65,8 @@ export default function Modes()
     <div class="menu-container hidden">
     <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile" id="profileIcon"></div>
     <div class="menu-item"><img src="game_engine/images/stats.png" alt="Settings" id="statIcon"></div>
+    <div class="menu-item"><img src="game_engine/images/friends.jpg " alt="Settings" id="friends"></div>
+    <div class="menu-item"><img src="game_engine/images/history_match.png" alt="Settings" id="history"></div>
     </div>
     </div> 
     `;
@@ -142,4 +144,28 @@ export const addModesPageHandlers = () => {
     }
     else
         console.error("stat icon not found!");
+    const friends = document.getElementById("friends");
+    if (friends)
+    {
+        /*friends.addEventListener("click", () => {
+            navigate("/friends", "Friends");
+            setTimeout(() => {
+                Friends();
+            }, 100);
+        });*/
+    }
+    else 
+        console.error("friends icon not found!");
+    const history = document.getElementById("history");
+    if (history)
+    {
+        /*history.addEventListener("click", () => {
+            navigate("/history", "History");
+            setTimeout(() => {
+                History();
+            }, 100);
+        });*/
+    }
+    else 
+        console.error("history icon not found!");
 };

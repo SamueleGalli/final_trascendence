@@ -21,12 +21,12 @@ export class Guest {
 export const profiles = [];
 
 export class profile {
-    constructor(email, display_name, bio, avatar)
+    constructor(email, display_name, bio, image)
     {
         this.email = email;
         this.display_name = display_name;
         this.bio = bio;
-        this.avatar = avatar;
+        this.image = image;
     }
 }
 
