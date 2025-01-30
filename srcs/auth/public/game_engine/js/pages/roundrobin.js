@@ -66,14 +66,14 @@ export function setupRoundRobinPlayers() {
         return;
     }
 
-    console.log("Round Robin setup initialized");
+    //console.log("Round Robin setup initialized");
 
     playerSelection.addEventListener('change', (event) => {
-        console.log("Change event triggered");
+        //console.log("Change event triggered");
         const selectedRadio = document.querySelector('input[name="players"]:checked');
         if (selectedRadio) {
             const selectedPlayers = selectedRadio.value;
-            console.log("Selected players: ", selectedPlayers);
+            //console.log("Selected players: ", selectedPlayers);
 
             nameInputRobin.style.display = 'block';
 
@@ -85,7 +85,7 @@ export function setupRoundRobinPlayers() {
                 input.id = 'player' + i;
                 input.placeholder = 'Player ' + i;
                 input.autocomplete = 'off';
-                console.log("Creating input field for Player ", i);
+                //console.log("Creating input field for Player ", i);
                 playerNamesRobin.appendChild(input);
             }
         } else {

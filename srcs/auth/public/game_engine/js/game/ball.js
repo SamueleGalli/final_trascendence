@@ -69,7 +69,7 @@ export class Ball {
             this.hits++;
             relativeY = (this.y - (paddle2.y + paddle2.height / 2)) / (paddle2.height / 2)
             bounceAngle = relativeY * this.maxAngle;
-            console.log("bounceAngle: " + bounceAngle);
+            //console.log("bounceAngle: " + bounceAngle);
             this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX)
             game.addParticles(this.x, this.y, 20);
             if (Math.abs(this.speedX) < this.maxSpeed) {
@@ -121,7 +121,7 @@ export class Ball {
 
     resize() {
 
-        console.log("ball resize");
+        //console.log("ball resize");
         // Reposition ball based on new canvas size
         this.x = this.canvas.width / 2;
         this.y = this.canvas.height / 2;
@@ -171,7 +171,7 @@ export class Ball {
         this.y = this.canvas.height / 2; 
         this.hits = 0;
         bounceAngle = Math.random() * 1.6 - 0.8;
-        console.log("scorer: " + scorer);
+        //console.log("scorer: " + scorer);
         
         this.speedX = (Math.abs(this.canvas.width * 0.005) * (scorer === 1 ? 1 : -1));
         //this.speedY = (Math.random() * - 1);

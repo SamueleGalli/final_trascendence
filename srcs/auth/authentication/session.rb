@@ -1,7 +1,6 @@
 require 'rack'
 require 'json'
 require 'oauth2'
-require 'securerandom'
 require_relative 'Oauth'
 require_relative 'logic'
 require_relative 'other_logic'

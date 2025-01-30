@@ -38,7 +38,7 @@ export function Forza4() {
 }
 
 function createGrid() {
-    console.log("Creo griglia Forza 4");
+    //console.log("Creo griglia Forza 4");
 
     const boardElement = document.getElementById('f4board');
     boardElement.innerHTML = '';
@@ -142,11 +142,11 @@ function savef4StatsData() {
         f4data.players[p2].wins += 1;
         f4data.players[p1].losses += 1;
     }
-    console.log(f4data);
+    //console.log(f4data);
     calculateXpF4Players(f4data, winner, loser);
     calculateLevelF4Players(f4data, winner, loser);
     localStorage.setItem('f4_game_data', JSON.stringify(f4data));
-    console.log("Dati aggiornati:", f4data);
+    //console.log("Dati aggiornati:", f4data);
 }
 
 
@@ -278,8 +278,8 @@ export function startforza4Game() {
     p1Name.textContent = p1 + ":";
     p2Name.textContent = p2 + ":";
 
-    console.log("token 1 color: ", token1Color);
-    console.log("token 2 color: ", token2Color);
+    //console.log("token 1 color: ", token1Color);
+    //console.log("token 2 color: ", token2Color);
 
     createGrid();
     printPlayerTurnMessage();

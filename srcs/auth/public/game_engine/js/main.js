@@ -76,9 +76,9 @@ const loadContent = async () => {
 
     players = createPlayersArray(numPlayers);
 
-    console.log("Players? " +players);
+    //console.log("Players? " +players);
     playerNames = players;  
-    console.log("path => " + path);
+    //console.log("path => " + path);
     if (component) {
         app.innerHTML = await component(); // Carica dinamicamente il componente
         // Se è necessario aggiungere un canvas in altre pagine, lo facciamo qui
@@ -111,9 +111,9 @@ const loadContent = async () => {
             case "/tournament/knockout/bracket":
                 addBracketPageHandlers();
                 //players = JSON.parse(sessionStorage.getItem('players'));
-                console.log("title => " + buttonTitle);
+                //console.log("title => " + buttonTitle);
                 if (buttonTitle === "Return from Match") {
-                    console.log("return to bracket");
+                    //console.log("return to bracket");
                     winner = sessionStorage.getItem('winner');
                     backToBracket(winner);
                 }
@@ -126,7 +126,7 @@ const loadContent = async () => {
             case "/tournament/roundrobin/robinranking":
                 addRobinRankingPageHandlers();
                 if (buttonTitle === "Return from Match") {
-                    console.log("return to bracket");
+                    //console.log("return to bracket");
                     winner = sessionStorage.getItem('winner');
                     assignPointsToPlayer(winner);
                 }

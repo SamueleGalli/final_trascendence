@@ -33,7 +33,7 @@ export function startPongGame(matchPlayers, tournamentMode) {
     backToBracketButton.hidden = true;
     backToRobinButton.hidden = true;
     matchStatisticsButton.hidden = true;
-    console.log("power up = " + powerUpActive)
+    //console.log("power up = " + powerUpActive)
     
     //game = new TournamentGame(canvas);
     //game.start();
@@ -44,12 +44,12 @@ export class TournamentGame {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
         if (!this.canvas) {
-            console.error('Canvas not found.');
+            //console.error('Canvas not found.');
             return;
         }
         this.ctx = this.canvas.getContext('2d'); 
         if (!this.ctx) {
-            console.error('Canvas context not found.');
+            //console.error('Canvas context not found.');
             return;
         }
         this.canvas.width = window.innerWidth;
@@ -192,7 +192,7 @@ export class TournamentGame {
         this.calculateLevelPlayers(data, winner, loser);
         // Salva i dati aggiornati
         localStorage.setItem('game_data', JSON.stringify(data));
-        console.log("Dati aggiornati:", data);
+        //console.log("Dati aggiornati:", data);
         // Esempio d'uso
     }
 
@@ -288,7 +288,7 @@ export class TournamentGame {
             matchData.seconds++;
         else
             clearInterval(matchData.timer);
-        console.log(matchData.seconds);        
+        //console.log(matchData.seconds);        
     }
 
     checkBallPosition() {

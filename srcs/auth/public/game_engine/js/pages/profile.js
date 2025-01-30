@@ -87,13 +87,11 @@ export default function Profile()
     `;
 };
 
-export let me;
-
+export let me = new profile(null, null, null, null);
 function insert_user_data()
 {
     if (let_me_in === true)
     {
-        me = new profile(null, null, null, null);
         if (user.email)
             me.email = user.email;
         if (user.image)
@@ -105,7 +103,6 @@ function insert_user_data()
     }
     else
     {
-        me = new profile(null, null, null, null);
         const currentGuest = guests.find(guest => guest.id === currentGuestId);
         if (currentGuest)
         {
@@ -129,11 +126,14 @@ export function profileHandler()
     displaynameHandler(me, yourDataSection);
     bioHandler(me, yourDataSection);
     imageAvatarHandler(me, yourDataSection, logged);
-    window.removeEventListener('popstate', check_update_data);
-    window.addEventListener('popstate', () => {
-        check_update_data(mename, meimage, mebio);
-    });
-    
+    const popStateHandler = () => {
+        if (yourDataSection)
+        {
+            check_update_data(mename, meimage, mebio);
+            window.removeEventListener('popstate', popStateHandler);
+        }
+    };
+    window.addEventListener('popstate', popStateHandler);
 }
 
 function check_update_data(mename, meimage, mebio)

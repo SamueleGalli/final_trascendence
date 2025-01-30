@@ -129,7 +129,7 @@ export class Game {
             matchData.seconds++;
         else
             clearInterval(matchData.timer);
-        console.log(matchData.seconds);        
+        //console.log(matchData.seconds);        
     }
 
     saveMatchStatsData() {
