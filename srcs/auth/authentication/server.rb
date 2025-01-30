@@ -3,9 +3,9 @@ require 'colorize'
 require_relative 'Oauth'
 require_relative 'session'
 
-load ((File.file? '/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../common_tools/tools/Ports.rb')
+load ((File.file? '/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../../common_tools/tools/Ports.rb')
 
-load ((File.file? '/var/common/BetterPG.rb') ? '/var/common/BetterPG.rb' : '../common_tools/tools/BetterPG.rb')
+#load ((File.file? '/var/common/BetterPG.rb') ? '/var/common/BetterPG.rb' : '../common_tools/tools/BetterPG.rb')
 
 $stdout.sync = true
 
@@ -64,8 +64,25 @@ server.mount "/game_engine/css", WEBrick::HTTPServlet::FileHandler, File.join(ga
 server.mount "/game_engine/js", WEBrick::HTTPServlet::FileHandler, File.join(game_engine_dir, "js")
 server.mount "/game_engine/images", WEBrick::HTTPServlet::FileHandler, File.join(game_engine_dir, "images")
 server.mount "/game_engine/login", WEBrick::HTTPServlet::FileHandler, File.join(game_engine_dir, "login")
-
 server.mount "/favicon.ico", WEBrick::HTTPServlet::FileHandler, File.join(public_dir, "favicon.ico")
+server.mount "/game_engine/pages", WEBrick::HTTPServlet::FileHandler, File.join(public_dir, "pages")
+
+
+#server.mount_proc '/' do |req, res|
+#  path = File.join(public_dir, req.path)
+#  if File.exist?(path) && req.path =~ /\.\w+$/
+#    res.body = File.read(path)
+#  else
+#    index_file = File.join(public_dir, "index.html")
+#    if File.exist?(index_file)
+#      res.body = File.read(index_file)
+#      res['Content-Type'] = 'text/html'
+#    else
+#      res.status = 404
+#      res.body = "404 Not Found"
+#    end
+#  end
+#end
 
 trap 'INT' do
   logger.info "Shutting down WEBrick server..."

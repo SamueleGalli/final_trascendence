@@ -45,7 +45,7 @@ export default function Profile()
             style="font-size: 1.5em;"
             type="text" 
             id="displayNameInput" 
-            class="display-name-input" 
+            class="form__field"
             placeholder="Insert your new name"
         />
         <button class="button-style" id="confirmDisplayNameBtn">Confirm Name</button>
@@ -56,7 +56,7 @@ export default function Profile()
         <textarea
             style="font-size: 0.3em;"
             id="bioInput" 
-            class="bio-input"
+            class="form__field"
             placeholder="Insert bio here"
             rows="5" 
             cols="40"

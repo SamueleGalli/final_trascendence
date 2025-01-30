@@ -2,7 +2,7 @@ import { me } from "../pages/profile.js";
 import { user } from "../login/login_logic.js";
 import { guests, currentGuestId} from "../login/guest_logic.js";
 import { profile } from "../login/user.js";
-import { show_full_bio } from "../helper_js/bio_cleaner.js";
+import { show_full_bio } from "../another/bio_cleaner.js";
 
 export default function Stats()
 {

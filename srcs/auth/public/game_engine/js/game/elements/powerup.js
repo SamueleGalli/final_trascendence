@@ -43,3 +43,18 @@ export class Powerup {
 
 }
 
+export function handlePowerups(game) {
+    // Generate a new power-up every 5 seconds
+    if (!game.powerUpTimerStarted) {
+        game.powerUpTimerStarted = true;
+        setTimeout(() => {
+            if (!game.gameEnd)
+            {
+                let power_up = new Powerup(game.canvas, game.ctx);
+                game.powerup.push(power_up)
+            }
+            
+        }, 5000);
+    }
+}
+

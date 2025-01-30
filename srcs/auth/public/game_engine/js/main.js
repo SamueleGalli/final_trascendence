@@ -1,23 +1,24 @@
 import Login, { addLoginPageHandlers } from "./pages/login.js";
 import Modes, { addModesPageHandlers } from "./pages/modes.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament.js";
-import Classic from "./pages/classic.js";
-import AiWars from "./pages/ai.js";
-import TournamentGame from "./pages/tournamentgame.js";
+import PongGame from "./pages/ponggame.js";
 import { Forza4Home, showForza4HomeScreen } from "./pages/forza4_home.js";
 import { Forza4Customize, forza4Config } from "./pages/forza4_customize.js";
-import { Forza4, startforza4Game } from "./game/forza4.js";
+import { Forza4, startforza4Game } from "./game/forza4/forza4.js";
 import Knockout, { addKnockoutPageHandlers } from "./pages/knockout.js";
 import Customize, { addCustomizeGame } from "./pages/customize.js";
 import Roundrobin, { addRoundRobinPageHandlers } from "./pages/roundrobin.js";
 import RobinRanking, { addRobinRankingPageHandlers, robinDraw, assignPointsToPlayer } from "./pages/robindraw.js";
 import Userstats from "./pages/userstats.js";
+import { Charts, addChartsPageHandlers,showCharts } from "./pages/charts.js";
+import MatchDetails, {showMatchDetails } from "./pages/matchdetails.js";
 import { F4UserStats, F4ShowUserStats } from "./pages/forza4_statistics.js";
 import Bracket, { addBracketPageHandlers, drawBracket, backToBracket } from "./pages/bracket.js";
 import { initializeGameCanvas, destroyGameCanvas, addCanvas, removeCanvas } from "./handlingCanvas.js";
 import Profile from "./pages/profile.js";
 import Settings, { addSettingsPageHandlers } from "./pages/settings.js";
 import Stats from "./pages/stats.js";
+import { userName } from "./pages/user_data.js";
 
 let buttonTitle;
 let winner;
@@ -26,8 +27,8 @@ let winner;
 const routes = {
     "/": Login,
     "/modes": Modes,
-    "/classic": Classic,
-    "/aiWars": AiWars,
+    "/classic": PongGame,
+    "/aiWars": PongGame,
     "/tournament": Tournament,
     "/forza4": Forza4Home,
     "/forza4/game": Forza4,
@@ -38,10 +39,11 @@ const routes = {
     "/tournament/knockout": Knockout,
     "/tournament/roundrobin": Roundrobin,
     "/tournament/roundrobin/robinranking": RobinRanking,
-    "/tournament/roundrobin/robinranking/game": TournamentGame,
-    "/tournament/userstats": Userstats,
+    "/tournament/roundrobin/robinranking/game": PongGame,
+    "/tournament/userstats": Charts,
+    "/tournament/userstats/matchdetails": MatchDetails,
     "/tournament/knockout/bracket": Bracket,
-    "/tournament/knockout/bracket/game": TournamentGame,
+    "/tournament/knockout/bracket/game": PongGame,
     "/profile": Profile,
     "/stats": Stats
 };
@@ -56,7 +58,10 @@ export const navigate = (path, title = "") => {
 function createPlayersArray(numPlayers) {
     let players = [];
     for (let i = 1; i <= numPlayers; i++) {
-        players.push(`Player ${i}`);
+        if (i === 1)
+            players.push(userName);
+        else
+            players.push(`Player ${i}`);
     }
     return players;
 }
@@ -76,9 +81,9 @@ const loadContent = async () => {
 
     players = createPlayersArray(numPlayers);
 
-    //console.log("Players? " +players);
+    console.log("Players? " +players);
     playerNames = players;  
-    //console.log("path => " + path);
+    console.log("path => " + path);
     if (component) {
         app.innerHTML = await component(); // Carica dinamicamente il componente
         // Se è necessario aggiungere un canvas in altre pagine, lo facciamo qui
@@ -111,9 +116,9 @@ const loadContent = async () => {
             case "/tournament/knockout/bracket":
                 addBracketPageHandlers();
                 //players = JSON.parse(sessionStorage.getItem('players'));
-                //console.log("title => " + buttonTitle);
+                console.log("title => " + buttonTitle);
                 if (buttonTitle === "Return from Match") {
-                    //console.log("return to bracket");
+                    console.log("return to bracket");
                     winner = sessionStorage.getItem('winner');
                     backToBracket(winner);
                 }
@@ -126,7 +131,7 @@ const loadContent = async () => {
             case "/tournament/roundrobin/robinranking":
                 addRobinRankingPageHandlers();
                 if (buttonTitle === "Return from Match") {
-                    //console.log("return to bracket");
+                    console.log("return to bracket");
                     winner = sessionStorage.getItem('winner');
                     assignPointsToPlayer(winner);
                 }
@@ -137,6 +142,13 @@ const loadContent = async () => {
                 break;
             case "/settings/customizepong":
                 addCustomizeGame();
+                break;
+            case "/tournament/userstats":
+                addChartsPageHandlers();
+                showCharts();
+                break;
+            case "/tournament/userstats/matchdetails":
+                showMatchDetails();
                 break;
             case "/forza4":
                 showForza4HomeScreen();

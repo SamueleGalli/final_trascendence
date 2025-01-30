@@ -54,7 +54,7 @@ export const addKnockoutPageHandlers = () => {
     
     radioButtons.forEach(radioButton => {
         radioButton.addEventListener('change', (event) => {
-            //console.log(radioButton.value);
+            console.log(radioButton.value);
             navigate("/tournament/knockout/bracket", radioButton.value);
             /*if (radioButton.value === "4")
                 navigate("/tournament/knockout/bracket", "4");

@@ -65,8 +65,9 @@ export default function Modes()
     <div class="menu-container hidden">
     <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile" id="profileIcon"></div>
     <div class="menu-item"><img src="game_engine/images/stats.png" alt="Settings" id="statIcon"></div>
-    <div class="menu-item"><img src="game_engine/images/friends.jpg " alt="Settings" id="friends"></div>
+    <div class="menu-item"><img src="game_engine/images/friends.jpg" alt="Settings" id="friends"></div>
     <div class="menu-item"><img src="game_engine/images/history_match.png" alt="Settings" id="history"></div>
+    <div class="menu-item" id="settings-link"><img src="game_engine/images/settings.png" alt="Settings"></div>
     </div>
     </div> 
     `;

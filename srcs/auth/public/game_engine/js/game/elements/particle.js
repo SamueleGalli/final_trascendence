@@ -26,3 +26,26 @@ export class Particle {
         this.ctx.fill();
     }
 }
+
+
+export function addParticles(game, x, y, count) {
+    for (let i = 0; i < count; i++) {
+        const particle = new Particle(x, y, game.ctx);
+        game.particles.push(particle);
+    }
+}
+
+export function updateParticles(game) {
+        for (let i = game.particles.length - 1; i >= 0; i--) {
+            game.particles[i].update();
+            if (game.particles[i].size <= 0) {
+                game.particles.splice(i, 1); // Remove dead particles
+            }
+        }
+    }
+    
+export function renderParticles(game) {
+    for (const particle of game.particles) {
+        particle.render();
+    }
+}

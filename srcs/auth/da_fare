@@ -1,9 +1,12 @@
-(per ora databese non ha i dati salvati dell'utente ne l'utente ha salvato i dati nel database)
-(se cambi nome,email,immagine,login_name nel profilo devi aggiornare i dati passati al login di javascript e server)
-(pulire e rendere piu chiaro profile)
-1)sistemare statistiche(creare un profilo temporaneo per gestire un utente usandone entrambi gli utenti)
-2)mettere friends e show statistics in 2 tasti del menu a tendina
-3)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
+ROSTIK:
+1)formato icone da png a svg
+SAMUELE:
+1)se refreshi perdi dati?
+2)cambiare dati quante volte vuoi
+3)tasto (salavataggio) e (torna al menu) tasto indietro scarta dati(togliere tasti conferma)
+4)sistemare statistiche(creare un profilo temporaneo per gestire un utente usandone entrambi gli utenti)
+5)mettere friends e show statistics in 2 tasti del menu a tendina
+6)mettere statistiche history match ect in fondo alla pagina aprendole con un pulsante
 • Major module: Standard user management, authentication, users across tournaments.
 ◦ Users can add others as friends and view their online status.
 ◦ User profiles display stats, such as wins and losses.
@@ -13,4 +16,5 @@ Be carefull, the management of duplicate usernames/emails is at your
 discretion. You must provide a solution that makes sense.
 ---------------------------------------------------------
 non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
-(problemi di login risolti controllare errori possibili con gli altri)
+(per ora databese non ha i dati salvati dell'utente ne l'utente ha salvato i dati nel database)
+(se fai un percorso "/modes" va su modes "non deve farlo")

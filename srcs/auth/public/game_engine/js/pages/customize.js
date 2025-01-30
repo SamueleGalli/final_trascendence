@@ -1,6 +1,6 @@
 import { navigate } from "../main.js";
-import { ballColor, paddleColor, ballTrailColor, wallsColor } from "../game/game_global.js";
-import { setBallColor, setBallTrailColor, setPaddleColor, setWallsColor, setPowerUpState, setBackground} from "../game/game_global.js";
+import { ballColor, paddleColor, ballTrailColor, wallsColor } from "../game/data/game_global.js";
+import { setBallColor, setBallTrailColor, setPaddleColor, setWallsColor, setPowerUpState, setBackground} from "../game/data/game_global.js";
 
 export default function Customize() {
     return `

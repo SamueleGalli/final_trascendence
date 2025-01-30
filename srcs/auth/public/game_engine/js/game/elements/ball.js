@@ -1,3 +1,7 @@
+import { matchData } from "../data/game_global.js";
+import { addParticles } from "../elements/particle.js";
+import { screenShake } from "../scene/screenshake.js";
+
 export class Ball {
     constructor(canvas, ctx, x, y, color, trailColor) {
         this.x = x;
@@ -20,6 +24,56 @@ export class Ball {
         this.hide = false;
         this.out = false;
     }
+
+    checkPosition(game) {
+        if (this.out && this.hits > matchData.longestRally)
+            matchData.longestRally = this.hits; 
+
+        // Ball goes out of screen (left side) -> set score
+        if (this.x <= 0 && !this.out) {
+            this.out = true;
+
+            // Remove power-up if present
+            if (game.powerup[0]) {
+                game.powerup.splice(0, 1);
+                game.powerUpTimerStarted = false;
+            }    
+            game.scoreP2++;
+            //AI paddle is paused
+            game.paddle2Paused = true;
+            //screenShake(300, 15);
+
+            // Reposition ball to center
+            setTimeout(() => {
+                if (!this.gameEnd)
+                    this.reset(2); 
+                this.out = false;
+                 //AI paddle is unpaused
+                game.paddle2Paused = false;
+            }, 2000);
+        } 
+        // Ball goes out of screen (right side) -> set score
+        else if (this.x >= game.canvas.width && !this.out) {
+            this.out = true;
+            if (game.powerup[0]) {
+                game.powerup.splice(0, 1);
+                game.powerUpTimerStarted = false;
+            }
+            game.scoreP1++;
+            //AI paddle is paused
+            game.paddle2Paused = true;
+            //screenShake(500, 25);
+
+            // Reposition ball to center
+            setTimeout(() => {
+                if (!this.gameEnd)
+                    this.reset(1);
+                this.out = false;
+                //AI paddle is unpaused
+                game.paddle2Paused = false;
+            }, 2000);
+        }
+    }
     
     update(game, paddle1, paddle2, powerup, wallThickness) {
         let relativeY;
@@ -37,14 +91,14 @@ export class Ball {
         if (this.y + this.radius > this.canvas.height - wallThickness) {
             this.y = this.canvas.height - wallThickness - this.radius;
             this.speedY *= -1;
-            game.addParticles(this.x, this.y, 30);
+            addParticles(game, this.x, this.y, 30);
         }
 
         //Wall up
         else if(this.y - this.radius < wallThickness) {
             this.y = wallThickness + this.radius;
             this.speedY *= -1;
-            game.addParticles(this.x, this.y, 30);
+            addParticles(game, this.x, this.y, 30);
         }
             
          // Left Paddle collision
@@ -55,7 +109,7 @@ export class Ball {
             relativeY = (this.y - (paddle1.y + paddle1.height / 2)) / (paddle1.height / 2)
             bounceAngle = relativeY * this.maxAngle;
             this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX)
-            game.addParticles(this.x, this.y, 20); 
+            addParticles(game, this.x, this.y, 20); 
             if (Math.abs(this.speedX) < this.maxSpeed) {
                 this.speedX *= (1 + this.speedIncreaseFactor);
                 this.speedY *= (1 + this.speedIncreaseFactor);
@@ -69,9 +123,9 @@ export class Ball {
             this.hits++;
             relativeY = (this.y - (paddle2.y + paddle2.height / 2)) / (paddle2.height / 2)
             bounceAngle = relativeY * this.maxAngle;
-            //console.log("bounceAngle: " + bounceAngle);
+            console.log("bounceAngle: " + bounceAngle);
             this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX)
-            game.addParticles(this.x, this.y, 20);
+            addParticles(game, this.x, this.y, 20);
             if (Math.abs(this.speedX) < this.maxSpeed) {
                 this.speedX *= (1 + this.speedIncreaseFactor);
                 this.speedY *= (1 + this.speedIncreaseFactor);
@@ -99,11 +153,11 @@ export class Ball {
                 } else if (powerup.type === "teleport") {
                     this.prevSpeedX = this.speedX;
                     this.prevSpeedY = this.speedY;
-                    this.y = game.getRandomValue(50, this.canvas.height - 50);
+                    this.y = this.respawnToRandomPos(50, this.canvas.height - 50);
                     if (this.speedX > 0) 
-                        this.x = game.getRandomValue(this.canvas.width / 1.5, this.canvas.width / 1.3);
+                        this.x = this.respawnToRandomPos(this.canvas.width / 1.5, this.canvas.width / 1.3);
                     else 
-                        this.x = game.getRandomValue(this.canvas.width / 3, this.canvas.width / 3.3);
+                        this.x = this.respawnToRandomPos(this.canvas.width / 3, this.canvas.width / 3.3);
 
                     this.speedX = 0;
                     this.speedY = 0;
@@ -119,9 +173,13 @@ export class Ball {
 
     }
 
+    respawnToRandomPos(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     resize() {
 
-        //console.log("ball resize");
+        console.log("ball resize");
         // Reposition ball based on new canvas size
         this.x = this.canvas.width / 2;
         this.y = this.canvas.height / 2;
@@ -170,11 +228,11 @@ export class Ball {
         this.x = this.canvas.width / 2; 
         this.y = this.canvas.height / 2; 
         this.hits = 0;
-        bounceAngle = Math.random() * 1.6 - 0.8;
-        //console.log("scorer: " + scorer);
+        bounceAngle = Math.random() * 0.5;
+        console.log("scorer: " + scorer);
         
         this.speedX = (Math.abs(this.canvas.width * 0.005) * (scorer === 1 ? 1 : -1));
         //this.speedY = (Math.random() * - 1);
         this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX);
-    }
+    }   
 }

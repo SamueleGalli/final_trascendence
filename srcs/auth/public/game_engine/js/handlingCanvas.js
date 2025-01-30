@@ -1,14 +1,12 @@
 import { MainPageEffect } from "./main_effect/MainPageEffect.js";
-import { Game } from './game/classic.js';
-import { AI } from './game/AI.js';
-import { startPongGame, TournamentGame } from "./game/tournament.js";
+import { startPongGame, PongGame } from "./game/main/pong.js";
 
 let mainPageEffect;
 let gameInstance;
 
 // Funzione per aggiungere il canvas di gioco
 export function initializeGameCanvas() {
-    //console.log("inizializzo game canvas");
+    console.log("inizializzo game canvas");
     let players = ["Player 1", "Player 2", "Player 3", "Player 4"];
     const path = window.location.pathname;
     const gameCanvas = document.createElement('canvas');
@@ -23,11 +21,14 @@ export function initializeGameCanvas() {
 
     // Determina quale istanza di gioco creare
     if (path === "/aiWars") {
-        gameInstance = new AI(ctx);
+        players[1] = "AI";
+        startPongGame(players, "ai");
+        gameInstance = new PongGame(ctx);
     }
     else if (path === "/classic")
     {
-        gameInstance = new Game(ctx);
+        startPongGame(players, "classic");
+        gameInstance = new PongGame(ctx);
     }
     else if (path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game")
     {
@@ -36,7 +37,7 @@ export function initializeGameCanvas() {
             startPongGame(players, "knockout");
         else
             startPongGame(players, "roundrobin");
-        gameInstance = new TournamentGame(ctx);
+        gameInstance = new PongGame(ctx);
     }
 
     // Avvia l'istanza di gioco selezionata

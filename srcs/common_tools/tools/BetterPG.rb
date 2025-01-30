@@ -3,7 +3,7 @@
 require 'pg'
 require 'timeout'
 
-DEBUG_PG_ADDRESS = "172.26.0.2" if !defined? DEBUG_PG_ADDRESS
+DEBUG_PG_ADDRESS = "172.18.0.2" if !defined? DEBUG_PG_ADDRESS
 
 module BetterPG
   class EmptyNameRequest < StandardError
