@@ -28,13 +28,6 @@ export default function Login() {
     `;
 }
 
-export let let_me_in = false
-
-export function update_state(status)
-{
-    let_me_in = status;
-}
-
 export const addLoginPageHandlers = () => {
     const loginButton = document.getElementById("loginButton");
     const guestButton = document.getElementById("guestButton");
@@ -43,19 +36,13 @@ export const addLoginPageHandlers = () => {
             if (popupOpened === true)
                 alert("popup already open finish authentication before continuing")
             else
-            {
-                update_state(true);
                 performLogin();
-            }
         });
         guestButton.addEventListener("click", () => {
             if (popupOpened === true)
                 alert("Authenticating in progress....\nPlease wait.");
             else
-            {
-                update_state(false);
                 guest_login();
-            }
         });
     }
 };

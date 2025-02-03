@@ -1,153 +1,148 @@
 import { navigate } from "../main.js";
+import { userName } from "./user_data.js";
 
-export function F4UserStats() {
+export function Forza4UserStats() {
     return `
+    <div id="forza4UserStats">   
         <h1 class="text">
-            <span class="letter letter-1">F</span>
-            <span class="letter letter-2">o</span>
-            <span class="letter letter-3">r</span>
-            <span class="letter letter-4">z</span>
-            <span class="letter letter-5">a</span>
-            <span class="letter letter-6"> </span>
-            <span class="letter letter-7"> </span>
-            <span class="letter letter-8">4</span>
-            <span class="letter letter-9"> </span>
-            <span class="letter letter-10"> </span>
-            <span class="letter letter-11">U</span>
-            <span class="letter letter-12">s</span>
-            <span class="letter letter-13">e</span>
-            <span class="letter letter-14">r</span>
-            <span class="letter letter-15"> </span>
-            <span class="letter letter-16"> </span>
-            <span class="letter letter-17">S</span>
-            <span class="letter letter-18">t</span>
-            <span class="letter letter-19">a</span>
-            <span class="letter letter-20">t</span>
-            <span class="letter letter-21">i</span>
-            <span class="letter letter-22">s</span>
-            <span class="letter letter-23">t</span>
-            <span class="letter letter-24">i</span>
-            <span class="letter letter-25">c</span>
-            <span class="letter letter-26">s</span>
-        </h1>
-        <div class="form__group field">
-            <input type="input" class="form__field" id="f4PlayerName" placeholder="Name" name="name" autocomplete="off" required/>
-            <span class="form__label text">Name</span>
-            <div class="stat-button-container">
-                <button id="viewf4StatsButton" class="button-style">Show Statistics</button>
-                <button id="clearDataButton" class="button-style button-erase">Erase all data</button>
-            </div>
+                <span class="letter letter-1">F</span>
+                <span class="letter letter-2">o</span>
+                <span class="letter letter-3">r</span>
+                <span class="letter letter-4">z</span>
+                <span class="letter letter-5">a</span>
+                <span class="letter letter-6"> </span>
+                <span class="letter letter-7"> </span>
+                <span class="letter letter-8">4</span>
+                <span class="letter letter-9"> </span>
+                <span class="letter letter-10"> </span>
+                <span class="letter letter-11">U</span>
+                <span class="letter letter-12">s</span>
+                <span class="letter letter-13">e</span>
+                <span class="letter letter-14">r</span>
+                <span class="letter letter-15"> </span>
+                <span class="letter letter-16"> </span>
+                <span class="letter letter-17">S</span>
+                <span class="letter letter-18">t</span>
+                <span class="letter letter-19">a</span>
+                <span class="letter letter-20">t</span>
+                <span class="letter letter-21">i</span>
+                <span class="letter letter-22">s</span>
+                <span class="letter letter-23">t</span>
+                <span class="letter letter-24">i</span>
+                <span class="letter letter-25">c</span>
+                <span class="letter letter-26">s</span>
+            </h1>
+         <div id="forza4StatsContainer">
+                <p>Total matches played: <span id="totalMatches"></span></p>
+                <p>Wins: <span id="totalWins"></span></p>
+                <p>Losses: <span id="totalLosses"></span></p>
+                <p>Ties: <span id="totalTies"></span></p>
+                <p>Victory Rate: <span id="victoryRate"></span></p>
+                <p>Average Player Moves: <span id="averageMoves"></span></p>
+                <p>Average Match Time: <span id="averageTime"></span></p>
         </div>
+       
+            
+        <div class="avatar-container">
+            <img id="backImageButton" src="game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
+    </div>
+     <button id="f4StatsBackToMenuButton" class="button-style">Back to Menu</button>
+     <button id="f4ShowMatchSatisticsButton" class="button-style">Match Statistics</button>
+    <style>
+        #forza4UserStats {
+        text-align: center;
+        font-family: 'Liberty', sans-serif;
+        color: #fff;
+        padding: 30px;
+        }
+
+        #forza4StatsContainer p {
+            font-size: 40px;
+            margin: 5px 0;
+        }
+    </style>
     `;
 }
 
-export function F4ShowUserStats() {
-    document.getElementById('viewf4StatsButton').addEventListener('click', () => {
-        const f4PlayerName = document.getElementById('f4PlayerName').value.trim();
+function forza4CalculateUserStatistics(name) {
 
-        if (!f4PlayerName) {
-            alert('Insert a Player Name!');
-            return;
-        }
+    console.log("player name is " +name);
+    const f4data = JSON.parse(localStorage.getItem('f4_game_data')) || { players: {} };
+    const playerData = f4data.players[name];
 
-        // Recover f4data from localStorage
-        const f4data = JSON.parse(localStorage.getItem('f4_game_data')) || { players: {} };
-        const f4PlayerData = f4data.players[f4PlayerName];
+    if (!playerData) {
+        return null; // Se il giocatore non ha dati, restituisci null
+    }
 
-        const f4StatsContainer = document.getElementById('f4StatsContainer');
-        f4StatsContainer.innerHTML = '';
+    const totalMatches = playerData.wins + playerData.losses + playerData.tie;
+    const totalWins = playerData.wins || 0;
+    const totalLosses = playerData.losses || 0;
+    const totalTies = playerData.tie || 0;
 
-        if (!f4PlayerData) {
-            f4StatsContainer.innerHTML = `<p>Player not found.</p>`;
-            return;
-        }
+    // Calcola la vittoria rate (percentuale di vittorie)
+    const victoryRate = totalMatches > 0 ? ((totalWins / totalMatches) * 100).toFixed(2) + "%" : "0%";
 
+    // Calcola la media delle mosse per partita
+    const averageMoves = totalMatches > 0 ? (playerData.moves / totalMatches).toFixed(2) : 0;
+
+    // Calcola la media del tempo di gioco per partita
+    let totalTime = 0;
+    if (playerData.matches && playerData.matches.length > 0) {
         
-        // Show Player Stats
-        f4StatsContainer.innerHTML += `
-            <h2>${f4PlayerName} Stats</h2>
-            <p><strong>Wins: ${f4PlayerData.wins}</strong></p>
-           <p><strong>Loss: ${f4PlayerData.losses}</strong></p>
-           <p><strong>XP: ${f4PlayerData.xp}</strong></p>
-            <p><strong>Level: ${f4PlayerData.level}</strong></p>
-            <br><br>
-            <canvas id="winChart" width="150" height="150"></canvas>
-            <br>
-            <label for="winChart" id="winChartLabel"></label>
-           <br><br>
-        `;
-       
-
-        // Matches History
-        /*if (f4PlayerData.matches && f4PlayerData.matches.length > 0) {
-            f4StatsContainer.innerHTML += `<h3>Matches History</h3>`;
-            f4PlayerData.matches.forEach(match => {
-                const opponent = match.player1 === f4PlayerName ? match.player2 : match.player1;
-
-                const matchHtml = `
-                    <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px;">
-                        <p><strong>Match:</strong> ${match.player1} vs. ${match.player2}</p>
-                        <p><strong>Score:</strong> ${match.score1} - ${match.score2}</p>
-                        <p><strong>Winner:</strong> ${match.winner}</p>
-                        <p><strong>Date:</strong> ${new Date(match.date).toLocaleString()}</p>
-                    </div>
-                `;
-                f4StatsContainer.innerHTML += matchHtml;
-            });
-        } else {
-            f4StatsContainer.innerHTML += `<p>No matches found.</p>`;
-        }*/
-        drawChart(f4PlayerData);
-    });
-
-     // Erase all data
-     document.getElementById('clearDataButton').addEventListener('click', () => {
-        const confirmDelete = confirm("Are you sure you want to delete all data?");
-        if (confirmDelete) {
-            localStorage.removeItem('f4_game_data');
-            alert("Game data deleted successfully!");
-            document.getElementById('f4StatsContainer').innerHTML = '';
+        for (const match of playerData.matches) {
+            console.log("match seconds = " +match.seconds);
+            totalTime += match.seconds;
         }
-    });
+    }
+    console.log("total time = " +totalTime);
+    const averageTime = totalMatches > 0 ? (totalTime / totalMatches).toFixed(2) + " seconds" : "0 seconds";
+    console.log("average time = " + averageTime);
+
+    return {
+        totalMatches,
+        totalWins,
+        totalLosses,
+        totalTies,
+        victoryRate,
+        averageMoves,
+        averageTime,
+    };
 }
 
 
-function drawChart(f4PlayerData) {
-    const totalGames = f4PlayerData.wins + f4PlayerData.losses;
-    const winPercentage = (f4PlayerData.wins / totalGames) * 100;
-    const losePercentage = 100 - winPercentage;
-    
-    const f4data = [winPercentage, losePercentage];
-    const colors = ['#02BFB9', '#014c4a']; 
-    
-    const canvas = document.getElementById('winChart');
-    const ctx = canvas.getContext('2d');
-    const winChartLabel = document.getElementById('winChartLabel');
-    
-    let startAngle = 0;
-    
-    f4data.forEach((value, index) => {
-        const sliceAngle = (value / 100) * 2 * Math.PI; 
-        const endAngle = startAngle + sliceAngle;
-    
-        // Disegna il segmento
-        ctx.beginPath();
-        ctx.moveTo(canvas.width / 2, canvas.height / 2); // Centro del grafico
-        ctx.arc(
-            canvas.width / 2, 
-            canvas.height / 2, 
-            Math.min(canvas.width, canvas.height) / 2, 
-            startAngle, 
-            endAngle
-        );
-        ctx.closePath();
-        ctx.fillStyle = colors[index]; // Colore del segmento
-        ctx.fill();
-    
-        // Passa al prossimo segmento
-        startAngle = endAngle;
+export function forza4ShowUserStatistics() {
+    const stats = forza4CalculateUserStatistics(userName);
+
+    if (!stats) {
+        alert("No statistics available for this player.");
+        return;
+    }
+
+    // Popola il template con i dati
+    document.getElementById('totalMatches').textContent = stats.totalMatches;
+    document.getElementById('totalWins').textContent = stats.totalWins;
+    document.getElementById('totalLosses').textContent = stats.totalLosses;
+    document.getElementById('totalTies').textContent = stats.totalTies;
+    document.getElementById('victoryRate').textContent = stats.victoryRate;
+    document.getElementById('averageMoves').textContent = stats.averageMoves;
+    document.getElementById('averageTime').textContent = stats.averageTime;
+
+  
+}
+
+export function addForza4StatsPageHandlers() {
+    const forza4StatsBackToMenuButton = document.getElementById('f4StatsBackToMenuButton');
+    const forza4ShowMatchSatisticsButton = document.getElementById('f4ShowMatchSatisticsButton');
+      
+      
+    forza4StatsBackToMenuButton?.addEventListener('click', () => {
+        navigate("/forza4", "Forza 4 Home");
     });
-    
-    winChartLabel.innerHTML = `<strong>Victory Rate: ${winPercentage.toFixed(1)}%</strong>`;
+
+    forza4ShowMatchSatisticsButton?.addEventListener('click', () => {
+        navigate("/forza4/userstats/matchstats", "Match Statistics");
+    });
+
 
 }

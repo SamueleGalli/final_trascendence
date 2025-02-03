@@ -6,58 +6,79 @@ let playerName;
 
 export function Charts() {
     return `
-    <div class="charts-container">
-        <div class="chart-item"><canvas id="matchLongestRallyChart"></canvas></div>
-        <div class="chart-item"><canvas id="winLossChart"></canvas></div>
-        <div class="chart-item"><h2>Matches Played</h2><h1 id="matchesPlayed"></h1><h2>Average Match Duration</h2><h1 id="avgMatchTime"></h1></div>
-        <div class="chart-item"><canvas id="xpProgressChart"></canvas></div>
-    </div>
-    <div class="charts-button-container"
-            <div class="mode-button-container">
-                <button class="button-style" id="matchDetailsButton"><span class="text-animation">Match Details</span></button>
+        <div class="charts-page">
+            <div id="noMatchesMessage" class="no-matches-message">
+                <h2>No matches played</h2>
             </div>
-            <div class="mode-button-container">
-                <button class="button-style" id="chartsBackMenuButton"><span class="text-animation">Back to Menu</span></button>
+            <div class="charts-container">
+                <div class="chart-item"><canvas id="matchLongestRallyChart"></canvas></div>
+                <div class="chart-item"><canvas id="winLossChart"></canvas></div>
+                <div class="chart-item"><h2>Matches Played</h2><h1 id="matchesPlayed"></h1><h2>Average Match Duration</h2><h1 id="avgMatchTime"></h1></div>
+                <div class="chart-item"><canvas id="xpProgressChart"></canvas></div>
             </div>
-    </div>
-   <style>
-    .charts-container {
-        display: flex;
-        flex-wrap: wrap; /* Permette di disporre i grafici su più righe */
-        justify-content: center; /* Centra i grafici */
-        gap: 20px; /* Spaziatura uniforme tra i grafici */
-        padding: 20px;
-    }
+            <div class="charts-button-container">
+                <div class="mode-button-container">
+                    <button class="button-style" id="matchDetailsButton"><span class="text-animation">Match Details</span></button>
+                </div>
+                <div class="mode-button-container">
+                    <button class="button-style" id="chartsBackMenuButton"><span class="text-animation">Back to Menu</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="avatar-container">
+            <img id="backImageButton" src="game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
+        <style>
+        .charts-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
 
-    .chart-item {
-        width: 40vw; /* Ogni grafico occuperà il 40% della larghezza della finestra */
-        height: 30vh; /* Ogni grafico occuperà il 30% dell'altezza della finestra */
-        min-width: 300px; /* Larghezza minima per evitare dimensioni troppo piccole */
-        min-height: 200px; /* Altezza minima per evitare dimensioni troppo piccole */
-    }
+        .no-matches-message {
+            display: none; /* Inizialmente nascosto */
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
 
-    canvas {
-        width: 100% !important; /* Adatta il canvas al contenitore */
-        height: 100% !important; /* Adatta il canvas al contenitore */
-    }
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
 
-    h2 {
-        color: white;
-        text-align: center;
-    }
+        .chart-item {
+            width: 40vw;
+            height: 30vh;
+            min-width: 300px;
+            min-height: 200px;
+        }
 
-    h1 {
-        color: white;
-        text-align: center;
-    }
-    </style>
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
 
+        h2 {
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+        }
+        </style>
     `;
 }
 
 function getLastMatchesData() {
-
-   
+    
     data = JSON.parse(localStorage.getItem('game_data')) || { players: {} };
     const playerData = data.players[playerName];
 
@@ -176,28 +197,46 @@ function matchesPlayedAndAvgTime() {
 }
 
 export function showCharts() {
-
     playerName = userName;
-    //console.log("player nome chart = "+playerName);
-    let matchesData;
+    data = JSON.parse(localStorage.getItem('game_data')) || { players: {} };
+    const playerData = data.players[playerName];
 
-    matchesData = getLastMatchesData();
+    const noMatchesMessage = document.getElementById('noMatchesMessage');
+    const chartsContainer = document.querySelector('.charts-container');
+    const chartsButtonContainer = document.querySelector('.charts-button-container');
 
+    if (!playerData || !playerData.matches || playerData.matches.length === 0) {
+        noMatchesMessage.style.display = 'block'; // Mostra il messaggio
+        chartsContainer.style.display = 'none'; // Nascondi i grafici
+        chartsButtonContainer.style.display = 'none'; // Nascondi i pulsanti
+        return;
+    }
+
+    noMatchesMessage.style.display = 'none'; // Nascondi il messaggio
+    chartsContainer.style.display = 'flex'; // Mostra i grafici
+    chartsButtonContainer.style.display = 'block'; // Mostra i pulsanti
+
+    let matchesData = getLastMatchesData();
     drawRalliesChart(matchesData);
     drawWinLossChart();
     matchesPlayedAndAvgTime(matchesData);
     drawXpProgressChart(matchesData);
-    
 }
 
 export const addChartsPageHandlers = () => {
     const matchDetailsButton = document.getElementById('matchDetailsButton');
     const chartsBackMenuButton = document.getElementById('chartsBackMenuButton');
+    const backImageButton = document.getElementById('backImageButton');
 
     matchDetailsButton?.addEventListener('click', () => {
-         navigate("/tournament/userstats/matchdetails", "Match Details");
+        navigate("/tournament/userstats/matchdetails", "Match Details");
     });
+    
     chartsBackMenuButton?.addEventListener('click', () => {
-       navigate("/tournament", "Back to Tournament Menu");
+        navigate("/tournament", "Back to Tournament Menu");
+    });
+
+    backImageButton?.addEventListener('click', () => {
+        navigate("/modes", "Return to Game Mode");
     });
 };

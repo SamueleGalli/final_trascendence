@@ -1,0 +1,123 @@
+.button-style {
+    font-family: 'Liberty', sans-serif;
+    font-size: clamp(1rem, 2vw, 2rem);
+    padding: 0.5em 1em;
+    color: #0fffcf;
+    background-color: transparent;
+    border: 2px solid #0fffcf;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+    outline: none;
+    margin: 20px;
+    width: clamp(150px, 20vw, 300px);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.button-style:hover {
+    color: #fff;
+    background-color: rgba(0, 255, 255, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.button-erase:hover {
+    color: #fff;
+    background-color: rgba(255, 0, 0, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.button-style:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.3);
+    background-color: rgba(0, 255, 255, 0.15);
+    transition: all 0.3s ease;
+}
+
+/*-----------Radio button style start-------------*/
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5vh;
+    flex-wrap: wrap;
+}
+
+.label_knockout {
+    display: inline-block;
+    width: 5vw;
+    height: 5vw;
+    border-radius: 50%;
+    position: relative;
+    margin: 4vw;
+    transition: all .3s ease-in-out;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 1.6s;
+    animation-name: dot-anim;
+    animation-fill-mode: both;
+    box-sizing: border-box;
+    font-family: "Liberty", sans-serif;
+    font-size: 2vw;
+    color: #07fff7;
+    text-shadow: 
+        0 0 5px rgba(9, 160, 155, 0.5),
+        0 0 10px rgba(9, 160, 155, 0.3),
+        0 0 15px #014C4A;
+    text-align: center;
+    line-height: 5vw;
+    top: 0;
+}
+
+.radio:checked + .label_knockout {
+    animation-play-state: paused;
+}
+
+.label_knockout:after {
+    content: "";
+    position: absolute;
+    width: 5vw;
+    height: 5vw;
+    background: rgba(255, 255, 255, .5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    top: 50%;
+    left: 50%;
+}
+
+.radio:checked + .label_knockout:after {
+    background: transparent;
+    transition: all .5s;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#radio-1 + .label_knockout {
+    background: #014C4A;
+    animation-delay: 0s;
+}
+
+#radio-2 + .label_knockout {
+    background: #014C4A;
+    animation-delay: .2s;
+}
+
+#radio-3 + .label_knockout {
+    background: #014C4A;
+    animation-delay: .4s;
+}
+
+#radio-4 + .label_knockout {
+    background: #014C4A;
+    animation-delay: .6s;
+}
+
+#radio-5 + .label_knockout {
+    background: #014C4A;
+    animation-delay: .8s;
+}
+
+[type="radio"] {
+    display: none;
+}
+/****************Radio button style end***************/

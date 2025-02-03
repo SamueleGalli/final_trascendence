@@ -27,6 +27,9 @@ export default function RobinRanking() {
             <button class="button-style" id="playRobinMatchButton">Play Match</button>
             <button class="button-style" id="robinBackToMenuButton" style="display:none; margin: 0 auto;">Back to Menu</button>
         </div>
+        <div class="avatar-container">
+            <img id="backImageButton" src="../../game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
     `;
 }
 
@@ -179,28 +182,12 @@ export function robinDraw(players) {
 
     // Check next match to play
     findNextMatch(rankingRobinCtx);
-
-    /*playRobinMatchButton.addEventListener("click", (event) => {
-        const players = [];
-        players.push(nextMatch.player1);
-        players.push(nextMatch.player2);
-        sessionStorage.setItem('matchPlayers', JSON.stringify(players));
-        nextMatch = null;
-        window.history.pushState({}, path, window.location.origin + path);
-        navigate(path, event.target.id);
-    });
-
-    robinBackToMenuButton.addEventListener("click", (event) => {
-        const path = '';
-        robinBackToMenuButton.style.display = "none";
-        window.history.pushState({}, path, window.location.origin + path);
-        navigate(path, event.target.id);
-    });*/
 }
 
 export const addRobinRankingPageHandlers = () => {
     const playRobinMatchButton = document.getElementById('playRobinMatchButton');
     const robinBackToMenuButton = document.getElementById('robinBackToMenuButton');
+    const backImageButton = document.getElementById('backImageButton');
 
 
     playRobinMatchButton?.addEventListener('click', () => {
@@ -215,6 +202,10 @@ export const addRobinRankingPageHandlers = () => {
     robinBackToMenuButton?.addEventListener('click', () => {
         playerList = [];
         robinBackToMenuButton.style.display = "none";
+        navigate("/modes", "Return to Game Mode");
+    });
+
+    backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
     });
 };

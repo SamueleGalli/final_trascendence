@@ -1,11 +1,10 @@
-import { let_me_in } from "./login.js";
+//import { let_me_in } from "./login.js";
+import { current_user } from "./modes.js";
 import { user } from "../login/login_logic.js";
 import { guests, currentGuestId } from "../login/guest_logic.js";
-import {
-getCurrentGuestName, emailHandler,
-displaynameHandler, bioHandler,
-imageAvatarHandler, getCurrentGuestImage
-} from "../login/profile_logic.js";
+import { emailHandler, displaynameHandler,
+bioHandler, imageAvatarHandler
+} from "../another/profile_logic.js";
 import { profile , profiles} from "../login/user.js";
 
 export default function Profile()
@@ -48,7 +47,6 @@ export default function Profile()
             class="form__field"
             placeholder="Insert your new name"
         />
-        <button class="button-style" id="confirmDisplayNameBtn">Confirm Name</button>
         <span id="displayNameLabel" style="display: none;  font-weight: bold;"></span>
     </div>
     <div id="bioSection">
@@ -61,7 +59,6 @@ export default function Profile()
             rows="5" 
             cols="40"
         ></textarea>
-        <button class="button-style" id="confirmBioBtn">Confirm Bio</button>
     </div>
     <div id="bioDisplaySection" style="display: none;">
         <h3>Your Bio:</h3>
@@ -71,8 +68,7 @@ export default function Profile()
         <h2>Profile Image</h2>
         <img 
             id="profileImage" 
-            src="${user && user.image ? user.image : 
-            getCurrentGuestImage(guests)}" 
+            src="${current_user.image}" 
             alt="Profile Image" 
             class="profile-image"
         />
@@ -83,14 +79,18 @@ export default function Profile()
             style="display: none;"
         />
         <button class="button-style" id="changeProfileImageBtn">Change Image</button>
+        <button id="save" class="button-style"><span class="text-animation">Save Changes</span></button>
+        <button onclick="history.back()" class="button-style">
+            <span class="text-animation">Back To Menu</span>
+        </button>
     </div>
     `;
 };
 
-export let me = new profile(null, null, null, null);
+export let me = new profile(null, null, null, null, null, null);
 function insert_user_data()
 {
-    if (let_me_in === true)
+    if (current_user.type === "login")
     {
         if (user.email)
             me.email = user.email;
@@ -114,26 +114,28 @@ function insert_user_data()
 
 export function profileHandler()
 {
+    const save = document.querySelector('#save');
     let logged = 0;
     if (insert_user_data())
         logged = 1;
-    let mename = me.display_name;
-    let meimage = me.image;
-    let mebio = me.bio;
     const yourDataSection = document.querySelector('#yourData');
     fixnames(yourDataSection);
+    addEventListener(save, () => {
+        saving();
+    });
+}
+
+function saving()
+{
+    history.back();
     emailHandler(me, yourDataSection, logged);
     displaynameHandler(me, yourDataSection);
     bioHandler(me, yourDataSection);
     imageAvatarHandler(me, yourDataSection, logged);
-    const popStateHandler = () => {
-        if (yourDataSection)
-        {
-            check_update_data(mename, meimage, mebio);
-            window.removeEventListener('popstate', popStateHandler);
-        }
-    };
-    window.addEventListener('popstate', popStateHandler);
+    //console.log("user data is = ", me);
+    current_user.display_name = me.display_name;
+    current_user.image = me.image;
+    current_user.bio = me.bio;
 }
 
 function check_update_data(mename, meimage, mebio)
@@ -151,10 +153,7 @@ function fixnames(yourDataSection)
     myName.style.fontSize = "1.6em";
     myName.style.fontFamily = "'Liberty', sans-serif";
     myName.style.color = " #09a09b"; 
-    let Name = `the actual name ${
-        user && user.login_name ? user.login_name :
-        (guests.length > 0 && getCurrentGuestName(guests))
-        }`;
+    let Name = `the actual name ${current_user.display_name}`;
     myName.innerText = Name;  
     let display_name = yourDataSection.querySelector("#changeDisplayName");
     display_name.style.color =" #09a09b"

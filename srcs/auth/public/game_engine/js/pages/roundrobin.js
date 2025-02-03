@@ -52,6 +52,9 @@ export default function Roundrobin() {
             <input type="radio" id="radio-5" name="players" value="8" class="radio">
             <label class="label_knockout" for="radio-5">8</label>
         </div>
+        <div class="avatar-container">
+            <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
     `;
 }
 
@@ -97,10 +100,15 @@ export function setupRoundRobinPlayers() {
 
 export const addRoundRobinPageHandlers = () => {
     const radioButtons = document.querySelectorAll("input[name='players']");
+    const backImageButton = document.getElementById('backImageButton');
 
     radioButtons.forEach(radioButton => {
         radioButton.addEventListener('change', (event) => {
             navigate("/tournament/roundrobin/robinranking", radioButton.value);
         });
+    });
+
+    backImageButton?.addEventListener('click', () => {
+        navigate("/modes", "Return to Game Mode");
     });
 }

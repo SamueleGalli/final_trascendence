@@ -2,11 +2,11 @@ import { navigate } from '../../main.js';
 import { Ball } from '../elements/ball.js'
 import { Paddle } from '../elements/paddle.js';
 import { UI } from '../scene/ui.js';
+import { ScreenShake } from '../scene/screenshake.js';
 import { createStarsBackground, renderBackground } from '../scene/background.js';
 import { updateParticles, renderParticles } from '../elements/particle.js';
 import { handlePowerups } from '../elements/powerup.js';
 import { checkScore } from '../other/score.js';
-import { screenShake } from '../scene/screenshake.js';
 import { matchData } from '../data/game_global.js';
 import { saveMatchStatsData, resetMatchStatsData } from '../data/game_stats.js';
 import { updateTimer } from '../other/timer.js';
@@ -34,7 +34,7 @@ export function startPongGame(matchPlayers, gameMode) {
     backToMenuButton = document.getElementById('backToMenuButton');
     
     // Hide the buttons when the game starts
-    backToBracketButton.hidden = true;
+    backToBracketButton.hidden = true; 
     backToRobinButton.hidden = true;
     backToMenuButton.hidden = true;
     
@@ -68,6 +68,7 @@ export class PongGame {
         this.p2Name = players[1];
         this.scoreP1 = 0;
         this.scoreP2 = 0;
+        this.maxScore = 2;
         this.winner = '';
         this.wallThickness = this.canvas.width * 0.008;
         this.wallsColor = wallsColor;
@@ -82,6 +83,7 @@ export class PongGame {
         this.paddle1 = new Paddle(this.canvas, this.wallThickness + 20, 'w', 's', paddleColor);
         this.paddle2 = new Paddle(this.canvas ,this.canvas.width - this.wallThickness - 20, 'ArrowUp', 'ArrowDown', paddleColor);
         this.ui = new UI(this.p1Name, this.p2Name, this.canvas, this.ctx);
+        this.screenShake = new ScreenShake();
         
         this.running = false;
         this.gamePaused = false;
@@ -105,11 +107,12 @@ export class PongGame {
     }
 
     loop() {
-        if (this.running) {
+        if (this.running || (this.gameEnd && this.screenShake.shakeTimer > 0)) {
             this.update();
             this.render();
             requestAnimationFrame(() => this.loop());
         }
+        
     }
 
     update() {
@@ -118,14 +121,14 @@ export class PongGame {
             this.paddle1.update();
             if (mode === "ai") {
                 console.log("is AIII");
-                if (this.ball.x > window.innerWidth / 4 && !this.paddle2Paused) {
+                if (this.ball.x > window.innerWidth / 6 && !this.paddle2Paused) {
                     this.paddle2.move_ia(this.ball, this.lastMoveTime);
                 }
             }
             else
                 this.paddle2.update();
             updateParticles(this);
-
+            this.screenShake.update();
             this.ball.checkPosition(this);
             if (powerUpActive) 
                 handlePowerups(this);
@@ -138,11 +141,14 @@ export class PongGame {
                 this.stars[i].update();
             }
         }
+        
     }
     render() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         renderBackground(this);
         this.ball.render();
+        this.screenShake.update();
+        this.screenShake.apply(this.ctx);
         this.paddle1.render(this.ctx);
         this.paddle2.render(this.ctx);
 
@@ -157,6 +163,14 @@ export class PongGame {
         }
         this.ui.render(this, this.scoreP1, this.scoreP2);
         renderParticles(this);
+        this.screenShake.reset(this.ctx);
+        if (this.gameEnd && this.screenShake.shakeTimer > 0) {
+            requestAnimationFrame(() => this.render());
+        }
+        else if (this.gameEnd) {
+            // Resetta lo screen shake quando l'effetto è terminato
+            this.screenShake.reset(this.ctx);
+        }
     }
 
     resize() {

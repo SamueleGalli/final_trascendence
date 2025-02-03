@@ -55,16 +55,15 @@ export function showUserStats() {
         statsContainer.innerHTML += `
             <h2>${playerName} Stats</h2>
             <p><strong>Wins: ${playerData.wins}</strong></p>
-           <p><strong>Loss: ${playerData.losses}</strong></p>
-           <p><strong>XP: ${playerData.xp}</strong></p>
+            <p><strong>Loss: ${playerData.losses}</strong></p>
+            <p><strong>XP: ${playerData.xp}</strong></p>
             <p><strong>Level: ${playerData.level}</strong></p>
             <br><br>
             <canvas id="winChart" width="150" height="150"></canvas>
             <br>
             <label for="winChart" id="winChartLabel"></label>
-           <br><br>
+            <br><br>
         `;
-       
 
         // Matches History
         if (playerData.matches && playerData.matches.length > 0) {

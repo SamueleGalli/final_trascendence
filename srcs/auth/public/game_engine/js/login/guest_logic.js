@@ -1,8 +1,6 @@
 import { navigate } from "../main.js";
 import { Guest } from "./user.js";
-import { update_image, change_name } from "../pages/modes.js";
-import { let_me_in } from "../pages/login.js";
-import { me } from "../pages/profile.js";
+import { update_image, change_name, current_user } from "../pages/modes.js";
 
 export let guests = JSON.parse(localStorage.getItem('guests')) || [];
 export let currentGuestId = null;
@@ -49,8 +47,7 @@ function addGuest(name) {
 
 function updateUIForGuest(guest) {
     navigate("/modes", "Modalità di gioco");
-    if (let_me_in === false)
-        update_guest(me, guest);
+        update_guest(guest);
 }
 
 window.addEventListener("beforeunload", () => {
@@ -74,51 +71,30 @@ function generateUniqueId() {
     return '_' + Math.random().toString(36).slice(2, 11);
 }
 
-window.addEventListener("popstate", () => {
-    if (let_me_in === false)
-    {
-        const guestId = sessionStorage.getItem('currentGuestId');
-        if (guestId) {
-            const guest = guests.find(guest => guest.id === guestId);
-            if (guest)
-                update_guest(me, guest);
-        }
-    }
-});
-
 function updateGuestDataFromSession() {
     const guestId = sessionStorage.getItem('currentGuestId');
     if (guestId)
     {
         const guest = guests.find(guest => guest.id === guestId);
         if (guest)
-            update_guest(me, guest);
+            update_guest(guest);
     }
 }
 
 updateGuestDataFromSession();
 
 
-function update_guest(me, guest)
+function update_guest(guest)
 {
-    if (let_me_in === 1)
-        return;
-    if (me)
-    {
-        const currentGuest = {
-            name: me.display_name || guest.name,
-            image: me.image || guest.image
-        };
-        sessionStorage.setItem('guests', JSON.stringify(currentGuest));
-        guest.name = currentGuest.name;
-        guest.image = currentGuest.image;
-        change_name(currentGuest.name);
-        update_image(currentGuest.image);
-    }
+    if (current_user && current_user.display_name && current_user.image)
+        return ;
     else
     {
         guest.email = null;
         change_name(guest.name);
         update_image(guest.image);
+        current_user.image = guest.image;
+        current_user.display_name = guest.name;
+        current_user.type = "guest";
     }
 }

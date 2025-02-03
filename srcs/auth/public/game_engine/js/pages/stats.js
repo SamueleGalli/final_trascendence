@@ -1,8 +1,6 @@
-import { me } from "../pages/profile.js";
-import { user } from "../login/login_logic.js";
-import { guests, currentGuestId} from "../login/guest_logic.js";
 import { profile } from "../login/user.js";
 import { show_full_bio } from "../another/bio_cleaner.js";
+import { current_user } from "./modes.js";
 
 export default function Stats()
 {
@@ -98,33 +96,13 @@ export function ShowStats()
     let cont_stat = document.querySelector("#stats-container");
     cont_stat.style.position = 'relative';
     cont_stat.style.top = '-200px'; 
-    let mystats = new profile(null, null, null, null, null);
+    let mystats = new profile(null, null, null, null, null, null);
     let user_realname;
-    if (user)
-    {
-        mystats.display_name = user.login_name;
-        user_realname = user.name;
-        mystats.email = user.email;
-        if (me)
-            mystats.bio = me.bio;
-        else
-            mystats.bio = null;
-        mystats.email = user.email;
-        mystats.image = user.image;
-    }
-    else
-    {
-        if (guests)
-        {
-            const currentGuest = guests.find(guest => guest.id === currentGuestId);
-            if (me)
-                mystats.bio = me.bio;
-            else
-                mystats.bio = null;
-            mystats.display_name = currentGuest.name;
-            mystats.image = currentGuest.image;
-        }
-    }
+    mystats.display_name = current_user.display_name;
+    mystats.realname = current_user.realname;
+    mystats.image = current_user.image;
+    mystats.email = current_user.email;
+    mystats.name = current_user.display_name;
     let SEmail = document.querySelector("#showemail");
     let SName = document.querySelector("#showname");
     let SImage = document.querySelector("#showimage");

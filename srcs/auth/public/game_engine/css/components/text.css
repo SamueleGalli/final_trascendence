@@ -1,0 +1,49 @@
+@font-face {
+    font-family: "Liberty";
+    src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/907368/liberty.otf');
+}
+
+.text {
+    color: #0fffcf;
+    font-family: 'Liberty';
+    font-weight: 100;
+    font-size: clamp(1.5rem, 5vw, 6rem);
+    letter-spacing: -0.24em;
+    z-index: 1;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 200px;
+    padding-bottom: 20px;
+    user-select: none;
+    opacity: 0;
+    transform: translateY(-30px);
+    animation: fadeInUp 1s forwards;
+    animation-delay: 0.5s;
+}
+
+.word {
+    word-spacing: 5px;
+    letter-spacing: 1px;
+    font-size: 30px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.text-userstats {
+    margin-bottom: 600px;
+}
+
+.letter {
+    color: #09a09b;
+    text-shadow: 
+        0 0 5px rgba(9, 160, 155, 0.5),
+        0 0 10px rgba(9, 160, 155, 0.3),
+        0 0 15px #014C4A;
+    display: inline-block;
+}
+
+.letter.letter-6 {
+    display: inline-block;
+    transform: translate(-0.2rem, 1rem) rotate(10deg);
+    animation: flickerBroken 15s infinite, easySwing 9s ease-in-out infinite;
+}

@@ -1,5 +1,5 @@
 import { navigate } from "../main.js";
-
+import { userName } from "./user_data.js";
 
 export function Forza4Home() {
     return `
@@ -29,6 +29,9 @@ export function Forza4Home() {
                 </div>
             </div>
         </div>
+        <div class="avatar-container">
+            <img id="backImageButton" src="game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
     `;
 }
 
@@ -37,7 +40,7 @@ export function showForza4HomeScreen() {
     const forza4StatsButton = document.getElementById('forza4StatsButton');
     
     forza4PlayButton.addEventListener('click', () => {
-        const players = ["Pippo", "Poppi"];
+        const players = [userName, "Poppi"];
         /*let allNamesFilled = true;
         
         for (let i = 1; i <= 2; i++) {
@@ -76,4 +79,10 @@ export function showForza4HomeScreen() {
     });
 }
 
+export const addForza4PageHandlers = () => {
+    const backImageButton = document.getElementById('backImageButton');
 
+    backImageButton?.addEventListener('click', () => {
+        navigate("/modes", "Return to Game Mode");
+    });
+};

@@ -46,11 +46,15 @@ export default function Knockout() {
             <input type="radio" id="radio-3" name="players" value="16" class="radio">
             <label class="label_knockout" for="radio-3">16</label>
         </div>
+        <div class="avatar-container">
+            <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
     `;
 }
 
 export const addKnockoutPageHandlers = () => {
     const radioButtons = document.querySelectorAll("input[name='players']");
+    const backImageButton = document.getElementById('backImageButton');
     
     radioButtons.forEach(radioButton => {
         radioButton.addEventListener('change', (event) => {
@@ -64,5 +68,9 @@ export const addKnockoutPageHandlers = () => {
                 navigate("/tournament/knockout/bracket", "16");*/
             
         });
+    });
+    
+    backImageButton?.addEventListener('click', () => {
+        navigate("/modes", "Return to Game Mode");
     });
 };

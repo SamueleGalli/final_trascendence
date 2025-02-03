@@ -1,12 +1,11 @@
 import { navigate } from "../main.js";
-import { let_me_in } from "../pages/login.js";
-import { update_image, change_name } from "../pages/modes.js";
+
+import { update_image, change_name, current_user } from "../pages/modes.js";
 import { Logged} from "./user.js";
-import { me } from "../pages/profile.js"
+
 let success = false;
 let isCurrentTabLogged = false;
-let auth = false;   
-let userDataRefreshed = false;
+let auth = false;
 export let popupOpened = false;
 export let user;
 
@@ -14,7 +13,6 @@ window.addEventListener('load', () => {
     success = false;
     isCurrentTabLogged = false;
     auth = false;
-    userDataRefreshed = false;
     popupOpened = false;
     if (!localStorage.getItem('authenticated_tab_id'))
     {
@@ -82,7 +80,6 @@ function resetGlobalState()
     success = false;
     isCurrentTabLogged = false;
     auth = false;
-    userDataRefreshed = false;
     sessionStorage.clear();
     localStorage.clear();
 }
@@ -117,49 +114,6 @@ function syncState() {
     popupOpened = localStorage.getItem('popup_opened') === 'true';
     auth = localStorage.getItem('auth_done') === 'true';
 }
-
-function update_logged(me)
-{
-    if (let_me_in === 0)
-        return;
-    if (me)
-    {
-        if (!user)
-            user = {};
-        const userData = {
-            login_name: me.display_name || user.login_name,
-            image: me.image || user.image
-        };
-        localStorage.setItem('user_data', JSON.stringify(userData));
-        user.login_name = userData.login_name;
-        user.image = userData.image;
-        change_name(user.login_name);
-        update_image(user.image);
-    }
-    else
-    {
-        const userData = JSON.parse(localStorage.getItem('user_data'));
-        if (userData)
-        {
-            change_name(userData.login_name);
-            update_image(userData.image);
-        }
-    }
-}
-
-function refreshUserData() {
-    if (userDataRefreshed)
-        return;
-    userDataRefreshed = true;
-    update_logged(me)
-}
-
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-        syncState();
-        refreshUserData();
-    }
-});
 
 window.addEventListener('unload', () => {
     if (!isCurrentTabLogged || auth === false)
@@ -208,7 +162,6 @@ function log_in(popup) {
     success = true;
     auth = true;
     navigate("/modes", "Modalità di gioco");
-    refreshUserData();
     localStorage.setItem('auth_done', 'true');
 }
 
@@ -222,35 +175,25 @@ function get_data(event) {
             event.data.user.login_name,
             event.data.user.email
         );
-    }
-
-    if (user)
-    {
-        localStorage.setItem('user_data', JSON.stringify(user));
-        refreshUserData();
+        console.log("User: ", user)
+        change_name(user.login_name);
+        update_image(user.image);
+        current_user.image = user.image;
+        current_user.display_name = user.login_name;
+        current_user.type = "login";
+        current_user.email = user.email;
     }
 }
-
-
-window.addEventListener('popstate', () => {
-    if (let_me_in === true)
-    {
-        userDataRefreshed = false;
-        refreshUserData();
-    }
-});
 
 function logging(authData) {
     const popup = window.open(authData.auth_url, 'Login', 'width=800,height=800');
     popupHandling(popup);
-
     const messageListener = (event) => {
         if (event.origin !== window.location.origin)
         {
             console.error('Messaggio ricevuto da una origine non valida');
             return;
         }
-
         if (event.data.authenticated)
         {
             get_data(event);

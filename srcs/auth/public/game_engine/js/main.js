@@ -2,9 +2,6 @@ import Login, { addLoginPageHandlers } from "./pages/login.js";
 import Modes, { addModesPageHandlers } from "./pages/modes.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament.js";
 import PongGame from "./pages/ponggame.js";
-import { Forza4Home, showForza4HomeScreen } from "./pages/forza4_home.js";
-import { Forza4Customize, forza4Config } from "./pages/forza4_customize.js";
-import { Forza4, startforza4Game } from "./game/forza4/forza4.js";
 import Knockout, { addKnockoutPageHandlers } from "./pages/knockout.js";
 import Customize, { addCustomizeGame } from "./pages/customize.js";
 import Roundrobin, { addRoundRobinPageHandlers } from "./pages/roundrobin.js";
@@ -12,13 +9,17 @@ import RobinRanking, { addRobinRankingPageHandlers, robinDraw, assignPointsToPla
 import Userstats from "./pages/userstats.js";
 import { Charts, addChartsPageHandlers,showCharts } from "./pages/charts.js";
 import MatchDetails, {showMatchDetails } from "./pages/matchdetails.js";
-import { F4UserStats, F4ShowUserStats } from "./pages/forza4_statistics.js";
-import Bracket, { addBracketPageHandlers, drawBracket, backToBracket } from "./pages/bracket.js";
-import { initializeGameCanvas, destroyGameCanvas, addCanvas, removeCanvas } from "./handlingCanvas.js";
+import Bracket, { addBracketPageHandlers, drawBracket, backToBracket, resetBracketState } from "./pages/bracket.js";
+import { initializeGameCanvas, destroyGameCanvas } from "./handlingCanvas.js"; //, addCanvas, removeCanvas
 import Profile from "./pages/profile.js";
 import Settings, { addSettingsPageHandlers } from "./pages/settings.js";
 import Stats from "./pages/stats.js";
 import { userName } from "./pages/user_data.js";
+import { Forza4Home, showForza4HomeScreen, addForza4PageHandlers } from "./pages/forza4_home.js";
+import { Forza4Customize, forza4Config } from "./pages/forza4_customize.js";
+import { Forza4, startforza4Game } from "./game/forza4/forza4.js";
+import { Forza4UserStats, forza4ShowUserStatistics, addForza4StatsPageHandlers } from "./pages/forza4_statistics.js";
+import { Forza4MatchStats, forza4ShowMatchDetails } from "./pages/forza4_match_statistics.js";
 
 let buttonTitle;
 let winner;
@@ -32,10 +33,11 @@ const routes = {
     "/tournament": Tournament,
     "/forza4": Forza4Home,
     "/forza4/game": Forza4,
+    "/forza4/userstats": Forza4UserStats,
+    "/forza4/userstats/matchstats": Forza4MatchStats,
     "/settings": Settings,
     "/settings/customizepong": Customize,
     "/settings/customizeforza4": Forza4Customize,
-    "/forza4/userstats": F4UserStats,
     "/tournament/knockout": Knockout,
     "/tournament/roundrobin": Roundrobin,
     "/tournament/roundrobin/robinranking": RobinRanking,
@@ -89,15 +91,15 @@ const loadContent = async () => {
         // Se è necessario aggiungere un canvas in altre pagine, lo facciamo qui
         if (path === "/classic" || path === "/aiWars" || path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game") {
             //console.log("game start!!");
-            removeCanvas();
+            //removeCanvas();
             destroyGameCanvas();
             initializeGameCanvas(); // Rimuovi il canvas su queste pagine
         }
         else
         {
             destroyGameCanvas();
-            removeCanvas();
-            addCanvas();
+            //removeCanvas();
+            //addCanvas();
         }
 
         switch (path) {
@@ -112,6 +114,7 @@ const loadContent = async () => {
                 break;
             case "/tournament/knockout":
                 addKnockoutPageHandlers();
+                resetBracketState();
                 break;
             case "/tournament/knockout/bracket":
                 addBracketPageHandlers();
@@ -152,12 +155,17 @@ const loadContent = async () => {
                 break;
             case "/forza4":
                 showForza4HomeScreen();
+                addForza4PageHandlers();
                 break;
             case "/settings/customizeforza4":
                 forza4Config();
                 break;
             case "/forza4/userstats":
-                F4ShowUserStats();
+                addForza4StatsPageHandlers();
+                forza4ShowUserStatistics()
+                break;
+            case "/forza4/userstats/matchstats":
+                forza4ShowMatchDetails();
                 break;
             case "/forza4/game":
                 startforza4Game();

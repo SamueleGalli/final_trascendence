@@ -1,7 +1,7 @@
-import { MainPageEffect } from "./main_effect/MainPageEffect.js";
+//import { MainPageEffect } from "./main_effect/MainPageEffect.js";
 import { startPongGame, PongGame } from "./game/main/pong.js";
 
-let mainPageEffect;
+//let mainPageEffect;
 let gameInstance;
 
 // Funzione per aggiungere il canvas di gioco
@@ -61,7 +61,7 @@ export function destroyGameCanvas() {
     }
 }
 
-// Funzione per aggiungere il canvas principale
+/*// Funzione per aggiungere il canvas principale
 export function addCanvas() {
     // Aggiungi il main_pageCanvas nelle altre pagine
     const canvas = document.getElementById("main_pageCanvas");
@@ -91,4 +91,4 @@ export function removeCanvas() {
         mainPageEffect.stop(); // Ferma l'effetto per main_pageCanvas
         mainPageEffect = null;
     }
-}
+}*/

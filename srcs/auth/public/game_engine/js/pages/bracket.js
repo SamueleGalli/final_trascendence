@@ -3,35 +3,36 @@ import { navigate } from "../main.js";
 // Funzione che restituisce la struttura HTML del torneo con un canvas per disegnare il tabellone
 export default function Bracket() {
     return `
-    <h2 class="text">
-        <span class="letter letter-1">T</span>
-        <span class="letter letter-2">o</span>
-        <span class="letter letter-3">u</span>
-        <span class="letter letter-4">r</span>
-        <span class="letter letter-5">n</span>
-        <span class="letter letter-6">a</span>
-        <span class="letter letter-7">m</span>
-        <span class="letter letter-8">e</span>
-        <span class="letter letter-9">n</span>
-        <span class="letter letter-10">t</span>
-        <span class="letter letter-11"> </span>
-        <span class="letter letter-12"> </span>
-        <span class="letter letter-13">B</span>
-        <span class="letter letter-14">r</span>
-        <span class="letter letter-15">a</span>
-        <span class="letter letter-16">c</span>
-        <span class="letter letter-17">k</span>
-        <span class="letter letter-18">e</span>
-        <span class="letter letter-19">t</span>
-    </h2>
-    <div id="tournamentBracket">
-        <canvas id="bracketCanvas"></canvas>
-    </div>
-    <div class="bracket-button-container">
-            <button class="button-style" id="knockoutMatchButton">Play Match</button>
-            <button class="button-style" id="backToMenuButton">Back to Menu</button>
-            
-    </div>
+        <h2 class="text">
+            <span class="letter letter-1">T</span>
+            <span class="letter letter-2">o</span>
+            <span class="letter letter-3">u</span>
+            <span class="letter letter-4">r</span>
+            <span class="letter letter-5">n</span>
+            <span class="letter letter-6">a</span>
+            <span class="letter letter-7">m</span>
+            <span class="letter letter-8">e</span>
+            <span class="letter letter-9">n</span>
+            <span class="letter letter-10">t</span>
+            <span class="letter letter-11"> </span>
+            <span class="letter letter-12"> </span>
+            <span class="letter letter-13">B</span>
+            <span class="letter letter-14">r</span>
+            <span class="letter letter-15">a</span>
+            <span class="letter letter-16">c</span>
+            <span class="letter letter-17">k</span>
+            <span class="letter letter-18">e</span>
+            <span class="letter letter-19">t</span>
+        </h2>
+        <div id="tournamentBracket">
+            <canvas id="bracketCanvas"></canvas>
+        </div>
+        <div class="bracket-button-container">
+                <button class="button-style" id="knockoutMatchButton">Play Match</button>
+        </div>
+        <div class="avatar-container">
+            <img id="backImageButton" src="../../game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
     `;
 }
 
@@ -202,28 +203,10 @@ export function drawBracket(players) {
         // Per ogni round successivo, sposta xOffset verso destra
         xOffset += roundGap;
     }
-
-    // Aggiungi un evento per il bottone "Play Match"
-    /*knockoutMatchButton.addEventListener('click', (event) => {
-        const matchPlayers = [];
-        matchPlayers.push(bracketPlayers[currentRound][currentMatch * 2]);
-        matchPlayers.push(bracketPlayers[currentRound][currentMatch * 2 + 1]);
-        sessionStorage.setItem('matchPlayers', JSON.stringify(matchPlayers)); // Salva i giocatori della partita
-        window.history.pushState({}, path, window.location.origin + path); // Cambia l'URL
-        navigate(path, event.target.id);
-    });
-
-    // Aggiungi un evento per il bottone "Back to Menu"
-    backToMenuButton.addEventListener('click', (event) => {
-        const path = '';
-        window.history.pushState({}, path, window.location.origin + path);
-        resetBracketState(); // Resetta lo stato del torneo
-        navigate(path, event.target.id);
-    });*/
 }
 
 // Funzione per resettare lo stato del torneo
-function resetBracketState() {
+export function resetBracketState() {
     //console.log("reset bracket state");
     currentMatch = 0;
     currentRound = 0;
@@ -232,7 +215,6 @@ function resetBracketState() {
 }
 
 export function backToBracket(winner) {
-   
     console.log("winz: ", winner);
     if (winner === null){
         drawBracket(bracketPlayers[0]);
@@ -255,8 +237,6 @@ export function backToBracket(winner) {
 
         knockoutMatchButton.hidden = true;
         knockoutMatchButton.style.display = 'none';
-        backToMenuButton.hidden = false;
-        backToMenuButton.style.display = 'block';
         //gameCustomizeButton.hidden = true;
         //gameCustomizeButton.style.display = 'none';
 
@@ -270,7 +250,7 @@ export function backToBracket(winner) {
 
 // Aggiunge gli eventi per il pulsante di personalizzazione
 export const addBracketPageHandlers = () => {
-    
+    const backImageButton = document.getElementById('backImageButton');
 
     knockoutMatchButton?.addEventListener('click', () => {
         const matchPlayers = [];
@@ -280,9 +260,7 @@ export const addBracketPageHandlers = () => {
         navigate("/tournament/knockout/bracket/game", "Bracket Pong Game");
     });
 
-    backToMenuButton?.addEventListener('click', () => {
-        bracketPlayers = [];
-        resetBracketState(); // Resetta lo stato del torneo
+    backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
     });
 };

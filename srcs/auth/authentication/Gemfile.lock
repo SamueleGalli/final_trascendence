@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     base64 (0.2.0)
+    bigdecimal (3.1.9)
     cgi (0.4.1)
     colorize (1.1.0)
     did_you_mean (1.6.3)
@@ -19,7 +20,8 @@ GEM
     jwt (2.10.1)
       base64
     logger (1.6.5)
-    multi_xml (0.6.0)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     net-http (0.6.0)
       uri
     oauth2 (2.0.9)
@@ -30,7 +32,7 @@ GEM
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
     pg (1.5.9)
-    rack (3.1.8)
+    rack (3.1.9)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -56,4 +58,4 @@ DEPENDENCIES
   webrick
 
 BUNDLED WITH
-   2.5.23
+   2.6.2

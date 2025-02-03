@@ -43,6 +43,9 @@ export default function Tournament() {
                 <button class="button-style" id="userStatisticsButton">Statistics</button>
             </div>
         </div>
+        <div class="avatar-container">
+            <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
+        </div>
     `;
 }
 
@@ -50,6 +53,7 @@ export const addTournamentPageHandlers = () => {
     const knockoutTournament = document.getElementById('knockoutTournament');
     const roundrobinTournament = document.getElementById('roundrobinTournament');
     const userStatisticsButton = document.getElementById('userStatisticsButton');
+    const backImageButton = document.getElementById('backImageButton');
 
     knockoutTournament?.addEventListener('click', () => {
         navigate("/tournament/knockout", "Knockout");
@@ -61,5 +65,9 @@ export const addTournamentPageHandlers = () => {
 
     userStatisticsButton?.addEventListener('click', () => {
         navigate("/tournament/userstats", "Userstats");
+    });
+
+    backImageButton?.addEventListener('click', () => {
+        navigate("/modes", "Return to Game Mode");
     });
 };

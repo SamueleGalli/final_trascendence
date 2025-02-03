@@ -1,0 +1,49 @@
+#f4players {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    display: block;
+    margin-top: 30px;
+    font-size: 30px;
+    gap: 10px;
+}
+
+.f4player-info {
+    font-family: 'Liberty', sans-serif;
+    color: #09a09b;
+    margin-left: 30px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+}
+
+.color {
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
+    border-radius: 50%;
+}
+
+#f4grid-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#f4grid {
+    display: grid;
+    grid-template-columns: repeat(7, 60px);
+    grid-gap: 5px;
+}
+
+.cell {
+    width: 60px;
+    height: 60px;
+    background-color: lightgray;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
