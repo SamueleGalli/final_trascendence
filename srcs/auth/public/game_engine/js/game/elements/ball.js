@@ -1,7 +1,5 @@
 import { matchData } from "../data/game_global.js";
 import { addParticles } from "../elements/particle.js";
-import { screenShake } from "../scene/screenshake.js";
-
 export class Ball {
     constructor(canvas, ctx, x, y, color, trailColor) {
         this.x = x;
@@ -30,9 +28,9 @@ export class Ball {
             matchData.longestRally = this.hits; 
 
         // Ball goes out of screen (left side) -> set score
-        if (this.x <= 0 && !this.out) {
+        if (this.x <= -10 && !this.out) {
             this.out = true;
-
+            game.screenShake.start(20, 40);
             // Remove power-up if present
             if (game.powerup[0]) {
                 game.powerup.splice(0, 1);
@@ -45,16 +43,17 @@ export class Ball {
 
             // Reposition ball to center
             setTimeout(() => {
-                if (!this.gameEnd)
-                    this.reset(2); 
+                if (!this.gameEnd && game.scoreP2 < game.maxScore)
+                    this.reset(2);
                 this.out = false;
                  //AI paddle is unpaused
                 game.paddle2Paused = false;
             }, 2000);
         } 
         // Ball goes out of screen (right side) -> set score
-        else if (this.x >= game.canvas.width && !this.out) {
+        else if (this.x >= game.canvas.width + 10 && !this.out) {
             this.out = true;
+            game.screenShake.start(20, 40);
             if (game.powerup[0]) {
                 game.powerup.splice(0, 1);
                 game.powerUpTimerStarted = false;
@@ -66,7 +65,7 @@ export class Ball {
 
             // Reposition ball to center
             setTimeout(() => {
-                if (!this.gameEnd)
+                if (!this.gameEnd && game.scoreP1 < game.maxScore)
                     this.reset(1);
                 this.out = false;
                 //AI paddle is unpaused

@@ -1,6 +1,5 @@
 import { navigate } from "../main.js";
-
-import { update_image, change_name, current_user } from "../pages/modes.js";
+import { update_image, change_name, current_user, updateUserProfile } from "../pages/modes.js";
 import { Logged} from "./user.js";
 
 let success = false;
@@ -175,13 +174,14 @@ function get_data(event) {
             event.data.user.login_name,
             event.data.user.email
         );
-        console.log("User: ", user)
         change_name(user.login_name);
         update_image(user.image);
         current_user.image = user.image;
         current_user.display_name = user.login_name;
         current_user.type = "login";
         current_user.email = user.email;
+        current_user.realname = user.name;
+        updateUserProfile(current_user);
     }
 }
 

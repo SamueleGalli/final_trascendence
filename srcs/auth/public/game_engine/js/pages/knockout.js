@@ -1,4 +1,5 @@
 import { navigate } from "../main.js";
+import { change_name, update_image, current_user } from "./modes.js";
 
 export default function Knockout() {
     return `
@@ -58,7 +59,7 @@ export const addKnockoutPageHandlers = () => {
     
     radioButtons.forEach(radioButton => {
         radioButton.addEventListener('change', (event) => {
-            console.log(radioButton.value);
+            //console.log(radioButton.value);
             navigate("/tournament/knockout/bracket", radioButton.value);
             /*if (radioButton.value === "4")
                 navigate("/tournament/knockout/bracket", "4");
@@ -72,5 +73,7 @@ export const addKnockoutPageHandlers = () => {
     
     backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     });
 };

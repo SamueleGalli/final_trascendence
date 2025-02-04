@@ -1,4 +1,5 @@
 import { navigate } from "../main.js";
+import { change_name, update_image, current_user } from "./modes.js";
 
 export default function Tournament() {
     return `
@@ -39,9 +40,9 @@ export default function Tournament() {
             <div class="tour-button-container">
                 <button class="button-style" id="roundrobinTournament">Round-robin</button>
             </div>
-            <div class="tour-button-container">
+            <!--<div class="tour-button-container">
                 <button class="button-style" id="userStatisticsButton">Statistics</button>
-            </div>
+            </div>-->
         </div>
         <div class="avatar-container">
             <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
@@ -63,11 +64,13 @@ export const addTournamentPageHandlers = () => {
         navigate("/tournament/roundrobin", "Roundrobin");
     });
 
-    userStatisticsButton?.addEventListener('click', () => {
+    /*userStatisticsButton?.addEventListener('click', () => {
         navigate("/tournament/userstats", "Userstats");
-    });
+    });*/
 
     backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     });
 };

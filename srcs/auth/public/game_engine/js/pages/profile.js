@@ -1,11 +1,7 @@
-//import { let_me_in } from "./login.js";
-import { current_user } from "./modes.js";
-import { user } from "../login/login_logic.js";
-import { guests, currentGuestId } from "../login/guest_logic.js";
-import { emailHandler, displaynameHandler,
-bioHandler, imageAvatarHandler
-} from "../another/profile_logic.js";
+import { current_user, updateUserProfile} from "./modes.js";
+import { emailHandler} from "../another/profile_logic.js";
 import { profile , profiles} from "../login/user.js";
+import { savebio, saveimage, savename } from "../another/profile_logic.js";
 
 export default function Profile()
 {
@@ -44,20 +40,18 @@ export default function Profile()
             style="font-size: 1.5em;"
             type="text" 
             id="displayNameInput" 
-            class="form__field"
+            class="profile_form__field"
             placeholder="Insert your new name"
         />
         <span id="displayNameLabel" style="display: none;  font-weight: bold;"></span>
     </div>
     <div id="bioSection">
-        <label for="longbioInput" class="bio-label">Modify your bio:</label>
+        <label for="bioInput" class="bio-label">Modify your bio:</label>
         <textarea
-            style="font-size: 0.3em;"
+            style="font-size: 0.5em; width: 60%; height: 100px;"
             id="bioInput" 
-            class="form__field"
+            class="profile_form__field"
             placeholder="Insert bio here"
-            rows="5" 
-            cols="40"
         ></textarea>
     </div>
     <div id="bioDisplaySection" style="display: none;">
@@ -90,83 +84,65 @@ export default function Profile()
 export let me = new profile(null, null, null, null, null, null);
 function insert_user_data()
 {
-    if (current_user.type === "login")
-    {
-        if (user.email)
-            me.email = user.email;
-        if (user.image)
-            me.image = user.image;
-        if (user.login_name)
-            me.display_name = user.login_name;
-        profiles.push(me);
-        return (1);
-    }
-    else
-    {
-        const currentGuest = guests.find(guest => guest.id === currentGuestId);
-        if (currentGuest)
-        {
-            me.display_name = currentGuest.name;
-            me.image = currentGuest.image;
-        }
-    }
+    me.display_name = current_user.display_name;
+    me.realname = current_user.realname || null;
+    me.image = current_user.image;
+    me.email = current_user.email || null;
+    profiles.push(me);
 }
 
 export function profileHandler()
 {
-    const save = document.querySelector('#save');
-    let logged = 0;
-    if (insert_user_data())
-        logged = 1;
+    insert_user_data();
     const yourDataSection = document.querySelector('#yourData');
     fixnames(yourDataSection);
-    addEventListener(save, () => {
-        saving();
+    emailHandler(me, yourDataSection);
+    const save = yourDataSection.querySelector('#save');
+    saveimage(me, yourDataSection);
+    save.addEventListener('click', () => {
+        saved(yourDataSection);
     });
 }
 
-function saving()
+function saved(yourDataSection)
 {
-    history.back();
-    emailHandler(me, yourDataSection, logged);
-    displaynameHandler(me, yourDataSection);
-    bioHandler(me, yourDataSection);
-    imageAvatarHandler(me, yourDataSection, logged);
-    //console.log("user data is = ", me);
-    current_user.display_name = me.display_name;
+    let saving = "saved image successfully\n";
     current_user.image = me.image;
+    saving += savebio(me, yourDataSection);
     current_user.bio = me.bio;
-}
-
-function check_update_data(mename, meimage, mebio)
-{
-    let yes = 0;
-    if (mename !== me.display_name || meimage !== me.image || mebio !== me.bio)
-        yes = 1;
-    if (yes === 1)
-        alert("Changes saved successfully.");
+    saving += savename(me, yourDataSection);
+    current_user.display_name = me.display_name;
+    alert(saving);
+    updateUserProfile(current_user);
+    history.back();
 }
 
 function fixnames(yourDataSection)
 {
+    yourDataSection.style.marginTop = '-20';
+
     let myName = yourDataSection.querySelector("#myName");
     myName.style.fontSize = "1.6em";
     myName.style.fontFamily = "'Liberty', sans-serif";
     myName.style.color = " #09a09b"; 
     let Name = `the actual name ${current_user.display_name}`;
     myName.innerText = Name;  
+
     let display_name = yourDataSection.querySelector("#changeDisplayName");
     display_name.style.color =" #09a09b"
     display_name.style.fontSize = "2em";
     display_name.style.fontFamily = "'Liberty', sans-serif";
+
     let myBio = yourDataSection.querySelector("#bioSection");
     myBio.style.fontSize = "5em";
     myBio.style.fontFamily = "'Liberty', sans-serif";
     myBio.style.color =" #09a09b"
+
     let myImage = yourDataSection.querySelector("#profileImageSection");
     myImage.style.fontSize = "1.6em";
     myImage.style.fontFamily = "'Liberty', sans-serif";
     myImage.style.color =" #09a09b"
+
     let emailtext = yourDataSection.querySelector("#emailtext");
     emailtext.style.fontSize = "2em";
     emailtext.style.fontFamily = "'Liberty', sans-serif";

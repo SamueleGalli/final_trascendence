@@ -1,3 +1,5 @@
+import { updateTimer } from '../other/timer.js';
+import { matchData } from '../data/game_global.js';
 export class UI {
     constructor(p1, p2, canvas, ctx) {
         this.player1Name = p1;
@@ -63,9 +65,18 @@ export class UI {
     
             if (this.countdownValue <= 0) {
                 clearInterval(this.countdownInterval); // Clear the interval
+
                 this.countdownInterval = null; // Reset the interval property
                 pong.gamePaused = false; // Resume the game
                 pong.backToGameTimer = false; // Disable countdown timer
+
+                // Restart the timer
+                if (matchData.timer){
+                    clearInterval(matchData.timer);
+                    matchData.timer = null;
+                    matchData.timer = setInterval(updateTimer.bind(pong), 1000);
+                }
+                
             }
         }, 1000); // 1 second interval
     }

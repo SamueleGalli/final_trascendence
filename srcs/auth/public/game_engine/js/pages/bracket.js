@@ -1,4 +1,5 @@
 import { navigate } from "../main.js";
+import { change_name, update_image, current_user } from "./modes.js";
 
 // Funzione che restituisce la struttura HTML del torneo con un canvas per disegnare il tabellone
 export default function Bracket() {
@@ -215,7 +216,7 @@ export function resetBracketState() {
 }
 
 export function backToBracket(winner) {
-    console.log("winz: ", winner);
+    //console.log("winz: ", winner);
     if (winner === null){
         drawBracket(bracketPlayers[0]);
         return;
@@ -262,5 +263,7 @@ export const addBracketPageHandlers = () => {
 
     backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     });
 };

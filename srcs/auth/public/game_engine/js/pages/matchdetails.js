@@ -1,5 +1,5 @@
 import { userName } from "./user_data.js";
-
+import { current_user } from "./modes.js";
 export default function MatchDetails() {
     return `
     <div>

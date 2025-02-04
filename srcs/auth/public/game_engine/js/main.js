@@ -1,5 +1,5 @@
 import Login, { addLoginPageHandlers } from "./pages/login.js";
-import Modes, { addModesPageHandlers } from "./pages/modes.js";
+import Modes, { addModesPageHandlers, current_user } from "./pages/modes.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament.js";
 import PongGame from "./pages/ponggame.js";
 import Knockout, { addKnockoutPageHandlers } from "./pages/knockout.js";
@@ -20,6 +20,7 @@ import { Forza4Customize, forza4Config } from "./pages/forza4_customize.js";
 import { Forza4, startforza4Game } from "./game/forza4/forza4.js";
 import { Forza4UserStats, forza4ShowUserStatistics, addForza4StatsPageHandlers } from "./pages/forza4_statistics.js";
 import { Forza4MatchStats, forza4ShowMatchDetails } from "./pages/forza4_match_statistics.js";
+import Friends from "./pages/friends.js";
 
 let buttonTitle;
 let winner;
@@ -47,7 +48,8 @@ const routes = {
     "/tournament/knockout/bracket": Bracket,
     "/tournament/knockout/bracket/game": PongGame,
     "/profile": Profile,
-    "/stats": Stats
+    "/stats": Stats,
+    "/friends": Friends
 };
 
 // Funzione universale per la navigazione
@@ -83,9 +85,9 @@ const loadContent = async () => {
 
     players = createPlayersArray(numPlayers);
 
-    console.log("Players? " +players);
+    //console.log("Players? " +players);
     playerNames = players;  
-    console.log("path => " + path);
+    //console.log("path => " + path);
     if (component) {
         app.innerHTML = await component(); // Carica dinamicamente il componente
         // Se è necessario aggiungere un canvas in altre pagine, lo facciamo qui
@@ -104,7 +106,7 @@ const loadContent = async () => {
 
         switch (path) {
             case "/":
-                addLoginPageHandlers();
+                    addLoginPageHandlers();
                 break;
             case "/modes":
                 addModesPageHandlers();
@@ -119,9 +121,9 @@ const loadContent = async () => {
             case "/tournament/knockout/bracket":
                 addBracketPageHandlers();
                 //players = JSON.parse(sessionStorage.getItem('players'));
-                console.log("title => " + buttonTitle);
+                //console.log("title => " + buttonTitle);
                 if (buttonTitle === "Return from Match") {
-                    console.log("return to bracket");
+                    //console.log("return to bracket");
                     winner = sessionStorage.getItem('winner');
                     backToBracket(winner);
                 }
@@ -134,7 +136,7 @@ const loadContent = async () => {
             case "/tournament/roundrobin/robinranking":
                 addRobinRankingPageHandlers();
                 if (buttonTitle === "Return from Match") {
-                    console.log("return to bracket");
+                    //console.log("return to bracket");
                     winner = sessionStorage.getItem('winner');
                     assignPointsToPlayer(winner);
                 }

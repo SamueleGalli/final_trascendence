@@ -1,6 +1,7 @@
 import { navigate } from "../main.js";
 import { ballColor, paddleColor, ballTrailColor, wallsColor } from "../game/data/game_global.js";
 import { setBallColor, setBallTrailColor, setPaddleColor, setWallsColor, setPowerUpState, setBackground} from "../game/data/game_global.js";
+import { change_name, update_image, current_user } from "./modes.js";
 
 export default function Customize() {
     return `
@@ -143,5 +144,7 @@ export function addCustomizeGame() {
             setPowerupPlayer(powerupSelected.value, 1);
         }
         navigate("/modes", "Return to Game Mode");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     })  
 }

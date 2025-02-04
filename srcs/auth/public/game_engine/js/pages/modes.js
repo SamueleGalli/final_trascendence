@@ -2,13 +2,13 @@ import { navigate } from "../main.js";
 import { profileHandler } from "./profile.js";
 import { ShowStats } from "./stats.js";
 import { profile } from "../login/user.js";
+import Friends, { Friendlists } from "./friends.js";
 
-export let current_user = new profile(null, null, null, null, null, null);
-
-sessionStorage.setItem("your_profile", current_user);
+export let current_user;
 
 window.addEventListener('load', () => {
     let storedUser = sessionStorage.getItem('your_profile');
+    
     if (storedUser)
     {
         let parsedUser = JSON.parse(storedUser);
@@ -21,16 +21,51 @@ window.addEventListener('load', () => {
             parsedUser.type
         );
     }
-    console.log("retrived current storage = ", current_user);
-});
-
-
-window.addEventListener('popstate', () => {
+    else
+        current_user = new profile(null, null, null, null, null, null);
     if (current_user.display_name)
         change_name(current_user.display_name);
     if (current_user.image)
         update_image(current_user.image);
 });
+
+function updateUserDataInSessionStorage() {
+    sessionStorage.setItem("your_profile", JSON.stringify(current_user));
+}
+
+export function updateUserProfile(newUserData) {
+    current_user = new profile(
+        newUserData.email,
+        newUserData.display_name,
+        newUserData.realname,
+        newUserData.bio,
+        newUserData.image,
+        newUserData.type
+    );
+    updateUserDataInSessionStorage();
+}
+
+window.addEventListener('popstate', (event) => {
+    let storedUser = sessionStorage.getItem('your_profile');
+    if (storedUser) {
+        let parsedUser = JSON.parse(storedUser);
+        current_user = new profile(
+            parsedUser.email,
+            parsedUser.display_name,
+            parsedUser.realname,
+            parsedUser.bio,
+            parsedUser.image,
+            parsedUser.type
+        );
+        if (current_user.display_name) {
+            change_name(current_user.display_name);
+        }
+        if (current_user.image) {
+            update_image(current_user.image);
+        }
+    }
+});
+
 
 export function update_image(image)
 {
@@ -54,6 +89,8 @@ export function change_name(name) {
         }
     }, 100);
 }
+
+
 
 export default function Modes()
 {
@@ -105,10 +142,9 @@ export default function Modes()
 }
 
 history.pushState(null, null, location.href);
-
 window.onpopstate = function () {
     const currentPath = location.pathname;
-    if (currentPath === "/modes") {
+    if (currentPath === "/modes" || currentPath === "/") {
         history.pushState(null, null, location.href);
     }
 };
@@ -180,15 +216,15 @@ export const addModesPageHandlers = () => {
     const friends = document.getElementById("friends");
     if (friends)
     {
-        /*friends.addEventListener("click", () => {
+        friends.addEventListener("click", () => {
             navigate("/friends", "Friends");
             setTimeout(() => {
-                Friends();
+                Friendlists();
             }, 100);
-        });*/
+        });
     }
-    else 
-        console.error("friends icon not found!");
+    else
+        console.error("friend icon not found!");
     const history = document.getElementById("history");
     if (history)
     {

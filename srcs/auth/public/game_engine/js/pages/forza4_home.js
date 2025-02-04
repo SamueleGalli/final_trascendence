@@ -1,5 +1,6 @@
 import { navigate } from "../main.js";
 import { userName } from "./user_data.js";
+import { change_name, update_image, current_user } from "./modes.js";
 
 export function Forza4Home() {
     return `
@@ -84,5 +85,7 @@ export const addForza4PageHandlers = () => {
 
     backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     });
 };

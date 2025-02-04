@@ -1,59 +1,47 @@
-import { guests } from "../login/guest_logic.js";
 import { current_user } from "../pages/modes.js";
 
-export function bioHandler(me, yourDataSection)
+export function savebio(me, yourDataSection)
 {
     const bioInput = yourDataSection.querySelector('#bioInput');
-    const bioDisplaySection = document.querySelector('#bioDisplaySection');
     const bioDisplay = document.querySelector('#bioDisplay');
     const newBio = bioInput.value;
+
+    let polbio = yourDataSection.querySelector('#bioSection');
+    polbio.style.width = "50%";
+
     if (!newBio)
-    {
-        alert("Please enter a bio.");
-        return;
-    }
+        return ("Error: No Bio saved(Please enter a bio)\n");
     if (newBio.length >= 400)
-    {
-        alert("bio too big");
-        return;
-    }
-    alert("bio correctly inserted");
+        return ("Error: Bio too big\n");
     me.bio = JSON.stringify(newBio);
-    bioDisplay.textContent = me.bio.slice(1, -1);
+    return("saved bio successfully\n");
 }
 
 
-export function displaynameHandler(me, yourDataSection)
+export function savename(me, yourDataSection)
 {
     const changeName = yourDataSection.querySelector('#displayNameInput');
-        const newname = changeName.value;
-        if (!newname)
-        {
-            alert("Please enter a name.");
-            return;
-        }
-        const GuestName = getCurrentGuestName(guests);
-        if (newname.length < 4)
-        {
-            alert("Name too short.");
-            return;
-        }
-        if (newname.length >= 15)
-        {
-            alert("name too long");
-            return;
-        }
-        if (newname !== GuestName && newname != me.display_name)
-        {
-            alert("new name confirmed!");
-            me.display_name = newname;
-            changeName.value = me.display_name;
-        }
-        else
-            alert("error inserting new name or name already taken");
+    const newname = changeName.value;
+    
+    let polname = yourDataSection.querySelector('#changeDisplayName');
+    polname.style.width = "50%";
+    
+    if (!newname)
+        return("Error: No Name saved(Please enter a name)\n");
+    if (newname.length < 4)
+        return("Error: Name too short(" + me.display_name + ")\n");
+    if (newname.length >= 15)
+        return("Error: Name too long(" + me.display_name + ")\n");
+    if (me.display_name !== newname)
+    {
+        me.display_name = newname;
+        return ("Saved name successfully(" + me.display_name + ")\n");
+    }
+    else
+        return ("Error: name already taken(" + me.display_name + ")\n");
 }
 
-export function emailHandler(me, yourDataSection, logged)
+export function emailHandler(me, yourDataSection)
 {
     const emailInput = yourDataSection.querySelector('#emailInput');
     const emailContainer = yourDataSection.querySelector('.email-container');
@@ -73,30 +61,37 @@ export function emailHandler(me, yourDataSection, logged)
 }
 
 
-export function imageAvatarHandler(me, yourDataSection) {
+export function saveimage(me, yourDataSection)
+{
     const changeProfileImageBtn = yourDataSection.querySelector('#changeProfileImageBtn');
     const imageUploadInput = yourDataSection.querySelector('#imageUploadInput');
     const profileImage = yourDataSection.querySelector('#profileImage');
+    
     changeProfileImageBtn.addEventListener('click', () => {
         imageUploadInput.click();
     });
+
     imageUploadInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
-
         if (file)
         {
+            if (!file.type.startsWith('image/'))
+            {
+                alert("Error: Please select a valid image file.\n");
+                return;
+            }
             const reader = new FileReader();
             reader.onload = (e) => {
-                if (me.image === e.target.result)
-                    alert("Error same image inserted")
-                else
-                {
-                    alert("image correctly inserted");
-                    me.image = e.target.result;
-                    profileImage.src = e.target.result;
-                }
+                const newImage = e.target.result;
+                me.image = newImage;
+                profileImage.src = newImage;
             };
             reader.readAsDataURL(file);
+        }
+        else
+        {
+            alert("Error: No file selected.");
+            return;
         }
     });
 }

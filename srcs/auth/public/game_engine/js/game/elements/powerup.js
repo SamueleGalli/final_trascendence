@@ -10,7 +10,6 @@ export class Powerup {
     }
 
     getType() { 
-    
         const typeNum = Math.floor(Math.random() * 3) + 1;
     
         switch (typeNum) {

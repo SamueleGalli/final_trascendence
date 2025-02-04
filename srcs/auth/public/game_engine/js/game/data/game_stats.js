@@ -67,7 +67,7 @@ function saveUserStatsData(matchData) {
     data.players[player1].matches.push(matchDetails);
     data.players[player2].matches.push(matchDetails);
 
-    console.log(data.players[player1].matches);
+    //console.log(data.players[player1].matches);
     // Save in local (TODO -> Change with storage in Postgres DB)
     localStorage.setItem('game_data', JSON.stringify(data));
     //console.log("Dati aggiornati:", data);

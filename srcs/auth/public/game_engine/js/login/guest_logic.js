@@ -1,6 +1,6 @@
 import { navigate } from "../main.js";
 import { Guest } from "./user.js";
-import { update_image, change_name, current_user } from "../pages/modes.js";
+import { update_image, change_name, current_user, updateUserProfile } from "../pages/modes.js";
 
 export let guests = JSON.parse(localStorage.getItem('guests')) || [];
 export let currentGuestId = null;
@@ -96,5 +96,6 @@ function update_guest(guest)
         current_user.image = guest.image;
         current_user.display_name = guest.name;
         current_user.type = "guest";
+        updateUserProfile(current_user);
     }
 }

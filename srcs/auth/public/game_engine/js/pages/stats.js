@@ -58,10 +58,10 @@ function highlight_title(mystats, user_realname, biobutton)
     });
 }
 
-function insert_stats(mystats, user_realname, SEmail, SName, SImage, RealName)
+function insert_stats(mystats, SEmail, SName, SImage, RealName)
 {
     let biobutton = document.querySelector("#showBioBtn");
-    highlight_title(mystats, user_realname, biobutton);
+    highlight_title(mystats, mystats.realname, biobutton);
     if (!mystats.email)
         SEmail.style.display = "none";
     else
@@ -82,10 +82,10 @@ function insert_stats(mystats, user_realname, SEmail, SName, SImage, RealName)
     SImage.style.width = "150px";
     SImage.style.height = "150px";
 
-    if (user_realname)
+    if (mystats.realname)
     {            
         RealName.style.display = "block";
-        RealName.innerText = user_realname;
+        RealName.innerText = mystats.realname;
         RealName.style.color = " #09a09b";
         RealName.style.fontSize = "3em";
     }
@@ -97,15 +97,14 @@ export function ShowStats()
     cont_stat.style.position = 'relative';
     cont_stat.style.top = '-200px'; 
     let mystats = new profile(null, null, null, null, null, null);
-    let user_realname;
     mystats.display_name = current_user.display_name;
     mystats.realname = current_user.realname;
     mystats.image = current_user.image;
     mystats.email = current_user.email;
-    mystats.name = current_user.display_name;
+    mystats.bio = current_user.bio;
     let SEmail = document.querySelector("#showemail");
     let SName = document.querySelector("#showname");
     let SImage = document.querySelector("#showimage");
     let RealName = document.querySelector("#realname");
-    insert_stats(mystats, user_realname, SEmail, SName, SImage, RealName);
+    insert_stats(mystats, SEmail, SName, SImage, RealName);
 }

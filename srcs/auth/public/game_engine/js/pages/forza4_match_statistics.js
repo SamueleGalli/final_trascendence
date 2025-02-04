@@ -47,7 +47,7 @@ export function forza4ShowMatchDetails() {
     const f4data = JSON.parse(localStorage.getItem('f4_game_data')) || { players: {} };
     const playerData = f4data.players[playerName];
 
-    console.log("player matches data" +playerData.matches);
+    //console.log("player matches data" +playerData.matches);
 
     if (playerData.matches && playerData.matches.length > 0) {
         playerData.matches.forEach(match => {

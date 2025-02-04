@@ -1,4 +1,5 @@
 import { navigate } from "../main.js";
+import { change_name, update_image, current_user } from "./modes.js";
 
 let playerList;
 let playerNames = [];
@@ -137,7 +138,7 @@ function populateMatchesList(playerList) {
     for (let i = 0; i < playerList.length; i++) {
         for (let j = i + 1; j < playerList.length; j++) {
             matchesListRobin.push({player1: playerList[i].name, player2: playerList[j].name});
-            console.log(playerList[i].name + " vs " + playerList[j].name);
+            //console.log(playerList[i].name + " vs " + playerList[j].name);
         }
     }
     shuffleMatchesArray(matchesListRobin);
@@ -203,9 +204,13 @@ export const addRobinRankingPageHandlers = () => {
         playerList = [];
         robinBackToMenuButton.style.display = "none";
         navigate("/modes", "Return to Game Mode");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     });
 
     backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     });
 };

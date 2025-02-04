@@ -18,7 +18,7 @@ export class Guest {
     }
 }
 
-export const profiles = [];
+export let profiles = [];
 
 export class profile {
     constructor(email, display_name, realname, bio, image, type)
@@ -29,9 +29,19 @@ export class profile {
         this.bio = bio;
         this.image = image;
         this.type = type;
+        this.num_friends = 0;
     }
 }
 
+export let friend_list = [];
+
+export class Friend {
+    constructor(name, status)
+    {
+        this.name = name;
+        this.status = status;
+    }
+}
 export function getProfileByField(field, value) {
     return profiles.find(profile => profile[field] === value);
 }

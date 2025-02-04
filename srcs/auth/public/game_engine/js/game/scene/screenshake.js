@@ -1,4 +1,38 @@
-export function screenShake(duration, intensity) {
+// ScreenShake.js
+export class ScreenShake {
+    constructor() {
+        this.shakeIntensity = 0;
+        this.shakeDuration = 0;
+        this.shakeTimer = 0;
+    }
+
+    start(intensity, duration) {
+        this.shakeIntensity = intensity;
+        this.shakeDuration = duration;
+        this.shakeTimer = duration;
+    }
+
+    update() {
+        if (this.shakeTimer > 0) {
+            this.shakeTimer--;
+        }
+    }
+
+    apply(context) {
+        if (this.shakeTimer > 0) {
+            const offsetX = (Math.random() - 0.5) * this.shakeIntensity;
+            const offsetY = (Math.random() - 0.5) * this.shakeIntensity;
+            context.translate(offsetX, offsetY);
+        }
+    }
+
+    reset(context) {
+        context.setTransform(1, 0, 0, 1, 0, 0);
+    }
+}
+
+
+/*export function screenShake(game, duration, intensity) {
         const startTime = performance.now();
     
         function shakeFrame(time) {
@@ -10,12 +44,14 @@ export function screenShake(duration, intensity) {
     
                 const offsetX = (Math.random() - 0.5) * currentIntensity;
                 const offsetY = (Math.random() - 0.5) * currentIntensity;
-    
-                gameContainer.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+                game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
+                game.ctx.translate(offsetX, offsetY);
+                //gameContainer.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
                 requestAnimationFrame(shakeFrame);
             } else {
-                gameContainer.style.transform = 'translate(0, 0)';
+                game.ctx.setTransform(1, 0, 0, 1, 0, 0);
             }
         }
         requestAnimationFrame(shakeFrame);
-    }
+}*/
