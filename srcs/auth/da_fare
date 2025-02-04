@@ -2,7 +2,7 @@ ROSTIK:
 1)formato icone da png a svg
 SAMUELE:
 1)far si che se il server non trova la route ti porta alla home
-2)modes ti fa tornare indietro con "<-"
+2)modes ti fa tornare indietro con "<-" e non deve
 3)non per ora(rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect))
 
 ---------------------------------------------------------
