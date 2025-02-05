@@ -19,17 +19,8 @@ export default function Friends() {
             <button id="toggleFriends" class="button-style">Friends</button>
             <button id="showAllFriends" class="button-style">Show All Friends</button>
         </div>
-        <div id="friendsList" class="friends-dropdown" style="display: none;"></div>
-
-        <!-- Contenitore separato per "Show All Friends" -->
-        <div id="allFriendsList" class="friends-dropdown" style="display: none;
-            position: absolute;
-            top: -500px;
-            left: 500px;
-            background-color: #00FFFF;
-            padding: 20px;
-            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);">
-        </div>
+        <div id="friendsList" class="friends-dropdown"></div>
+        <div id="allFriendsList" class="friends-dropdown"></div>
     </div>
     `;
 }
@@ -59,11 +50,7 @@ function friend_searcher(friend_list) {
     const friendsListContainer = document.querySelector("#friendsList");
     const friendSearchInput = document.querySelector("#friendSearch");
 
-    friendsListContainer.style.position = "fixed";
-    friendsListContainer.style.top = "0";
-    friendsListContainer.style.left = "0";
-    friendsListContainer.style.width = "250px";
-    friendsListContainer.style.height = "100%";
+    // Rimuoviamo il posizionamento fisso e facciamo tutto tramite il CSS
     friendsListContainer.style.backgroundColor = "#00FFFF";
     friendsListContainer.style.padding = "20px";
     friendsListContainer.style.boxShadow = "2px 0px 5px rgba(0, 0, 0, 0.1)";
@@ -84,30 +71,32 @@ function updateFriendList(friend_list, searchTerm) {
             friend.status.toLowerCase() === "online"
         );
 
-    if (filteredFriends.length === 0) {
+    if (filteredFriends.length === 0)
         friendsListContainer.innerHTML = `<p>No friends found.</p>`;
-    } else {
-        friendsListContainer.innerHTML = filteredFriends.map(friend => `
-            <div class="friend-item ${friend.status.toLowerCase()}">
-                <span class="friend-status">${friend.status}</span>
-                <span class="friend-name">${friend.name}</span>
-            </div>
-        `).join('');
+    else 
+    {
+        friendsListContainer.innerHTML = `
+            <h3>Your Friends</h3>
+            ${filteredFriends.map(friend => `  
+                <div class="friend-item ${friend.status.toLowerCase()}">
+                    <span class="friend-status">${friend.status}</span>
+                    <span class="friend-name">${friend.name}</span>
+                </div>
+            `).join('')}
+        `;
     }
 }
-
 
 function handleFriendsButton() {
     const toggleFriendsButton = document.querySelector("#toggleFriends");
     const friendsListContainer = document.querySelector("#friendsList");
 
     toggleFriendsButton.addEventListener("click", () => {
-        //if(current_user.num_friends === 0)
-        //  alert("NO friends");
         if (friendsListContainer.style.display === "none" || friendsListContainer.style.display === "") {
             friendsListContainer.style.display = "block";
-        } else
+        } else {
             friendsListContainer.style.display = "none";
+        }
     });
 }
 
@@ -118,15 +107,20 @@ function handleShowAllFriendsButton(friend_list) {
     showAllFriendsButton.addEventListener("click", () => {
         if (allFriendsListContainer.style.display === "none" || allFriendsListContainer.style.display === "") {
             allFriendsListContainer.style.display = "block";
-        } else
+        } else {
             allFriendsListContainer.style.display = "none";
+        }
+
         if (allFriendsListContainer.style.display === "block") {
-            allFriendsListContainer.innerHTML = friend_list.map(friend => `
-                <div class="friend-item ${friend.status.toLowerCase()}">
-                    <span class="friend-status">${friend.status}</span>
-                    <span class="friend-name">${friend.name}</span>
-                </div>
-            `).join('');
+            allFriendsListContainer.innerHTML = `
+                <h3>All your Friends</h3>
+                ${friend_list.map(friend => `
+                    <div class="friend-item ${friend.status.toLowerCase()}">
+                        <span class="friend-status">${friend.status}</span>
+                        <span class="friend-name">${friend.name}</span>
+                    </div>
+                `).join('')}
+            `;
         }
     });
 }

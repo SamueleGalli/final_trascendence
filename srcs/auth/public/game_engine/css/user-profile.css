@@ -131,31 +131,31 @@
 /*friends list*/
 
 .friends-container {
-    position: relative;
-    width: 250px;
-    margin: 20px auto;
-    text-align: center;
-}
-
-.search-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-end;
+    position: relative;
+    padding: 20px;
 }
 
 .friends-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    max-height: 300px;
+    width: 45%;
+    height: 200px;
+    background-color: #00FFFF;
+    padding: 20px;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    margin-top: 5px;
+    display: none;
+}
+
+#friendsList, #allFriendsList {
+    width: 48%;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    overflow-y: auto;
 }
 
 .friend-item {
@@ -179,3 +179,11 @@
 
 .online { background-color: green; }
 .offline { background-color: red; }
+
+#friendsList {
+    background-color: #00FFFF;
+}
+
+#allFriendsList {
+    background-color: #e0e0e0;
+}

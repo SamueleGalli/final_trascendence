@@ -27,6 +27,10 @@ else
     echo "❌ Errore durante la pulizia delle gemme."
 fi
 
+#echo "making server https"
+#chmod +x setup_https.sh
+#bash ./server.sh
+
 cd authentication/
 echo "==============================="
 echo "Aggiornamento delle gemme con Bundler..."
