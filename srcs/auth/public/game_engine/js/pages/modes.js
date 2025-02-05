@@ -142,9 +142,11 @@ export default function Modes()
 }
 
 history.pushState(null, null, location.href);
+
 window.onpopstate = function () {
-    const currentPath = location.pathname;
-    if (currentPath === "/modes" || currentPath === "/") {
+    if (location.pathname === "/")
+    {
+        navigate("/modes", "Modes");
         history.pushState(null, null, location.href);
     }
 };

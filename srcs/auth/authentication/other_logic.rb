@@ -8,11 +8,9 @@ require 'colorize'
 
 module Other_logic
   def not_found(response)
-    response.status = 404
-    response.content_type = 'application/json'
-    response.write({ success: false, error: "Not Found" }.to_json)
+    response.redirect('/')
   end
-
+  
   def get_user_data_from_oauth_provider(token)
     uri = URI("https://api.intra.42.fr/v2/me")
     request = Net::HTTP::Get.new(uri)

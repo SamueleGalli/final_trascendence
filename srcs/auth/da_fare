@@ -1,15 +1,13 @@
 ROSTIK:
 1)formato icone da png a svg
 SAMUELE:
-1)far si che se il server non trova la route ti porta alla home
-2)modes ti fa tornare indietro con "<-" e non deve
-3)endere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect)
+1)rendere il sito https.(per ora sto configurando apache2 in piu non mi reindirizza correttamente.controlla uri website link ect)
 
 ---------------------------------------------------------
 DA VEDERE PER BENE
 (per ora databese non ha i dati salvati dell'utente ne l'utente ha salvato i dati nel database)
-(se refreshi perdi dati?(per ora il refresh non funziona))
-(server non trova favicon/non trova elementi forza4/statistics)
+(se refreshi perdi torni alla home da vedere)
+(server non trova favicon/non trova elementi forza4/statistics?)
 (friends momentaneo fatto da sitemare e rendere funzionante con gli utenti il database ecctera poi da salvare gli amici qunado vai in altre tab)
 
 
