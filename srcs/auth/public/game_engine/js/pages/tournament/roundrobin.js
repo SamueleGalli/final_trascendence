@@ -1,8 +1,9 @@
-import { navigate } from "../main.js";
-import { change_name, update_image, current_user } from "./modes.js";
+import { navigate } from "../../main.js";
+import { current_user, change_name, update_image} from "../modes.js";
 
 export default function Roundrobin() {
     return `
+        <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
         <h1 class="text">
             <span class="letter letter-1">S</span>
             <span class="letter letter-2">e</span>
@@ -53,9 +54,6 @@ export default function Roundrobin() {
             <input type="radio" id="radio-5" name="players" value="8" class="radio">
             <label class="label_knockout" for="radio-5">8</label>
         </div>
-        <div class="avatar-container">
-            <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
-        </div>
     `;
 }
 
@@ -66,18 +64,18 @@ export function setupRoundRobinPlayers() {
     const playerSelection = document.getElementById('playerSelectionRobin');
 
     if (!startRobinTournamentButton || !playerSelection || !playerNamesRobin || !nameInputRobin) {
-        //console.error("Missing required elements for Round Robin setup.");
+        console.error("Missing required elements for Round Robin setup.");
         return;
     }
 
-    //console.log("Round Robin setup initialized");
+    console.log("Round Robin setup initialized");
 
     playerSelection.addEventListener('change', (event) => {
-        //console.log("Change event triggered");
+        console.log("Change event triggered");
         const selectedRadio = document.querySelector('input[name="players"]:checked');
         if (selectedRadio) {
             const selectedPlayers = selectedRadio.value;
-            //console.log("Selected players: ", selectedPlayers);
+            console.log("Selected players: ", selectedPlayers);
 
             nameInputRobin.style.display = 'block';
 
@@ -89,11 +87,11 @@ export function setupRoundRobinPlayers() {
                 input.id = 'player' + i;
                 input.placeholder = 'Player ' + i;
                 input.autocomplete = 'off';
-                //console.log("Creating input field for Player ", i);
+                console.log("Creating input field for Player ", i);
                 playerNamesRobin.appendChild(input);
             }
         } else {
-            //console.error("No radio button selected");
+            console.error("No radio button selected");
             alert('Please select the number of players.');
         }
     });

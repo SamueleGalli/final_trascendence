@@ -1,11 +1,12 @@
-import { navigate } from "../main.js";
-import { update_image, change_name, current_user} from "./modes.js";
-import { userName } from "./user_data.js";
+import { navigate } from "../../main.js";
+import { userName } from "../user_data.js";
+import { current_user, change_name, update_image} from "../modes.js";
 let data;
 let playerName;
 
 export function Charts() {
     return `
+        <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
         <div class="charts-page">
             <div id="noMatchesMessage" class="no-matches-message">
                 <h2>No matches played</h2>
@@ -24,9 +25,6 @@ export function Charts() {
                     <button class="button-style" id="chartsBackMenuButton"><span class="text-animation">Back to Menu</span></button>
                 </div>
             </div>
-        </div>
-        <div class="avatar-container">
-            <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
         </div>
         <style>
         .charts-page {
@@ -77,32 +75,13 @@ export function Charts() {
     `;
 }
 
-function hide_stats()
-{
-    let xphidden = document.getElementById('xpProgressChart');
-    let charthidden = document.getElementById('matchLongestRallyChart');
-    let matchStats = document.querySelector('.chart-item h1#matchesPlayed')?.parentElement;
-
-    if (charthidden) charthidden.parentElement.style.display = 'none';
-    if (xphidden) xphidden.parentElement.style.display = 'none';
-    if (matchStats) matchStats.style.display = 'none';
-
-    document.querySelectorAll('.chart-item').forEach(item => {
-        item.style.display = 'none';
-    });
-    let noMatchesMessage = document.getElementById("noMatchesMessage");
-    if (noMatchesMessage) noMatchesMessage.style.display = "block";
-    document.getElementById("chartsBackMenuButton").style.display = "block";
-
-}
-
 function getLastMatchesData() {
     
     data = JSON.parse(localStorage.getItem('game_data')) || { players: {} };
     const playerData = data.players[playerName];
 
 
-    //console.log(playerData);
+    console.log(playerData);
     const lastMatchesData = playerData.matches.slice(-10);
     
     
@@ -216,11 +195,6 @@ function matchesPlayedAndAvgTime() {
 }
 
 export function showCharts() {
-    if (current_user.type === "guest")
-    {
-        hide_stats();
-        return;
-    }
     playerName = userName;
     data = JSON.parse(localStorage.getItem('game_data')) || { players: {} };
     const playerData = data.players[playerName];
@@ -251,8 +225,7 @@ export const addChartsPageHandlers = () => {
     const matchDetailsButton = document.getElementById('matchDetailsButton');
     const chartsBackMenuButton = document.getElementById('chartsBackMenuButton');
     const backImageButton = document.getElementById('backImageButton');
-    if (current_user.type === "guest")
-        matchDetailsButton.style.display = 'none';
+
     matchDetailsButton?.addEventListener('click', () => {
         navigate("/tournament/userstats/matchdetails", "Match Details");
     });

@@ -30,7 +30,12 @@ class App
       callback(request, response, @client)
 
     else
-      not_found(response)
+      if spa_route?(request.path)
+        response.write(File.read(File.join(__dir__, '../public', 'index.html')))
+        response.content_type = 'text/html'
+      else
+        page_not_found(response)
+      end
     end
 
     response.finish

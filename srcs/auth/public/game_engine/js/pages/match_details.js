@@ -1,9 +1,9 @@
 import { userName } from "./user_data.js";
-import { current_user } from "./modes.js";
+
 export default function MatchDetails() {
     return `
     <div>
-        <h1 class="text text-userstats">
+        <h1 class="text">
             <span class="letter letter-1">M</span>
             <span class="letter letter-2">a</span>
             <span class="letter letter-3">t</span>
@@ -20,7 +20,6 @@ export default function MatchDetails() {
             <span class="letter letter-14">s</span>
         </h1>
         <div id="matchDetailsContainer">
-           
         </div>
     </div>
 

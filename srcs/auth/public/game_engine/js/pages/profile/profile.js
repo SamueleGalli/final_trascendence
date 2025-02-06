@@ -1,7 +1,7 @@
-import { current_user, updateUserProfile} from "./modes.js";
-import { emailHandler} from "../another/profile_logic.js";
-import { profile , profiles} from "../login/user.js";
-import { savebio, saveimage, savename } from "../another/profile_logic.js";
+import { current_user, updateUserProfile} from "../modes.js";
+import { emailHandler} from "../../game/other/profile_logic.js";
+import { profile , profiles} from "../../login/user.js";
+import { savebio, saveimage, savename } from "../../game/other/profile_logic.js";
 
 export default function Profile()
 {
@@ -72,7 +72,7 @@ export default function Profile()
             accept="image/*" 
             style="display: none;"
         />
-        <button class="button-style" id="changeProfileImageBtn">Change Image</button>
+        <!--<button class="button-style" id="changeProfileImageBtn">Change Image</button> -->
         <button id="save" class="button-style"><span class="text-animation">Save Changes</span></button>
         <button onclick="history.back()" class="button-style">
             <span class="text-animation">Back To Menu</span>

@@ -1,7 +1,6 @@
 import { navigate } from '../../main.js';
 import { Ball } from '../elements/ball.js'
 import { Paddle } from '../elements/paddle.js';
-import { update_image, change_name, current_user } from '../../pages/modes.js';
 import { UI } from '../scene/ui.js';
 import { ScreenShake } from '../scene/screenshake.js';
 import { createStarsBackground, renderBackground } from '../scene/background.js';
@@ -12,11 +11,6 @@ import { matchData } from '../data/game_global.js';
 import { saveMatchStatsData, resetMatchStatsData } from '../data/game_stats.js';
 import { updateTimer } from '../other/timer.js';
 import { ballColor, paddleColor, ballTrailColor, wallsColor, powerUpActive, background } from '../data/game_global.js';
-
-
-// Canvas and context
-export const canvas = document.getElementById('gameCanvas');
-export const ctx = canvas.getContext('2d');
 
 export let gameContainer;
 
@@ -73,7 +67,6 @@ export class PongGame {
         this.winner = '';
         this.wallThickness = this.canvas.width * 0.008;
         this.wallsColor = wallsColor;
-       
         
         this.stars = [];
         this.particles = [];
@@ -121,7 +114,7 @@ export class PongGame {
             this.ball.update(this, this.paddle1, this.paddle2, this.powerup[0], this.wallThickness);
             this.paddle1.update();
             if (mode === "ai") {
-                //console.log("is AIII");
+                console.log("is AIII");
                 if (this.ball.x > window.innerWidth / 6 && !this.paddle2Paused) {
                     this.paddle2.move_ia(this.ball, this.lastMoveTime);
                 }
@@ -242,11 +235,8 @@ export class PongGame {
                 saveMatchStatsData(this.p1Name, this.p2Name, this.scoreP1, this.scoreP2);
             //resetMatchStatsData();
             navigate("/modes", "Return from Classic");
-            change_name(current_user.display_name);
-            update_image(current_user.image);
         })
 
         window.addEventListener('resize', () => this.resize());
     } 
 }
-

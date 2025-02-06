@@ -67,7 +67,7 @@
 .color-picker label {
     font-family: "Liberty", sans-serif;
     font-size: 14px;
-    color: #09a09b;
+    color: #00f2ea;
 }
 
 .color-picker input {
@@ -147,7 +147,7 @@
 .background-text {
     font-family: "Liberty", sans-serif;
     font-size: 18px;
-    color: #6c6c6c;
+    color: #122322;
     transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
     user-select: none;
     margin-left: 12px;
@@ -207,7 +207,7 @@
 .powerup-text {
     font-family: "Liberty", sans-serif;
     font-size: 18px;
-    color: #6c6c6c;
+    color: #122322;
     transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 

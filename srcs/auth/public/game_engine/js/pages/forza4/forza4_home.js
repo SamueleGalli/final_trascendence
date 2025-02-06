@@ -1,10 +1,11 @@
-import { navigate } from "../main.js";
-import { userName } from "./user_data.js";
-import { change_name, update_image, current_user } from "./modes.js";
+import { navigate } from "../../main.js";
+import { userName } from "../user_data.js";
+import { current_user, change_name, update_image} from "../modes.js";
 
 export function Forza4Home() {
     return `
-        <h1 class="text">
+        <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
+        <h1 class="text h1_margin">
             <span class="letter letter-1">F</span>
             <span class="letter letter-2">O</span>
             <span class="letter letter-3">R</span>
@@ -29,9 +30,6 @@ export function Forza4Home() {
                     <button id="forza4StatsButton" class="button-style">Forza 4 Statistics</button>
                 </div>
             </div>
-        </div>
-        <div class="avatar-container">
-            <img id="backImageButton" src="game_engine/images/home.png" alt="Back" class="back-button">
         </div>
     `;
 }

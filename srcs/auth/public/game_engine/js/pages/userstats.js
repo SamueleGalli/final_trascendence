@@ -1,6 +1,6 @@
 export default function Userstats() {
     return `
-        <h1 class="text text-userstats">
+        <h1 class="text">
             <span class="letter letter-1">U</span>
             <span class="letter letter-2">s</span>
             <span class="letter letter-3">e</span>

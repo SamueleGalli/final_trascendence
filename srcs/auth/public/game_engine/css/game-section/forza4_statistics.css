@@ -1,0 +1,245 @@
+#forza4UserStats {
+    position: relative;
+    width: 80%;
+    padding: 30px;
+    background-color: rgba(9, 160, 155, 0.1);
+    box-shadow: 0 0 12px rgba(9, 160, 155, 0.3);
+    border-radius: 13px;
+    overflow: hidden;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.stats-content-container {
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+}
+
+.stats-card {
+    width: 100%;
+    min-height: 500px;
+    padding: 0.5rem;
+    background: rgb(1 56 55);
+    backdrop-filter: blur(10px);
+    border-radius: 13px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    transition: all 0.3s ease;
+}
+
+.stat-item {
+    background: rgba(0, 0, 0, 0.15);
+    padding: 0.5rem;
+    border-radius: 13px;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+
+.stats-card, #f4MatchDetailsContainer {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    width: 100%;
+}
+
+#generalStatsSection .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 0;
+    width: 100%;
+}
+
+#generalStatsSection::-webkit-scrollbar {
+    width: 8px;
+}
+
+#generalStatsSection::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #09A09B, #04BFBF);
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+#generalStatsSection::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.stat-item {
+    background: rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    border-radius: 13px;
+    transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+}
+
+.stat-item dt {
+    color: #aaa;
+    font-family: 'Liberty', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-item dd {
+    color: #fff;
+    font-family: 'Liberty', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+#f4MatchDetailsContainer {
+    max-height: 600px;
+    overflow: auto;
+    width: 100%;
+    padding-right: 10px;
+}
+
+#f4MatchDetailsContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#f4MatchDetailsContainer::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #09A09B, #04BFBF);
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+#f4MatchDetailsContainer::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.match-card {
+    font-family: "Liberty", sans-serif;
+    background-color: rgba(9, 160, 155, 0.1);
+    box-shadow: 0 0 12px rgba(9, 160, 155, 0.3);
+    border-radius: 13px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.match-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.match-summary {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.match-summary.win {
+    border-left: 6px solid #4CAF50;
+    color: #4CAF50;
+}
+
+.match-summary.loss {
+    border-left: 6px solid #f44336;
+    color: #f44336;
+}
+
+.players {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.match-info {
+    text-align: right;
+}
+
+.result {
+    display: block;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.date {
+    color: #ffffff;
+    font-size: 0.9em;
+}
+
+.match-details {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 20px;
+    transition: max-height 0.4s ease-out, padding 0.3s ease-out;
+    background: #f9f9f9;
+}
+
+.match-card:not(.collapsed) .match-details {
+    max-height: 250px;
+    padding: 15px 20px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #000000;
+    font-size: 0.95rem;
+}
+
+.detail-item span:first-child {
+    font-weight: 600;
+    color: #000000;
+}
+
+.no-matches {
+    text-align: center;
+    color: #888;
+    padding: 25px;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.stats-switcher {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.stats-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #444;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.stats-button.active {
+    background: #007bff;
+    transform: scale(1.05);
+}
+
+.hidden1 {
+    display: none !important;
+}
+
+.visible {
+    display: block;
+}

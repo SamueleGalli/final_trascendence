@@ -110,24 +110,6 @@
     animation-delay: 0.2s;
 }
 
-@media (max-width: 768px) {
-    .avatar-container {
-        top: 4%;
-        right: 8%;
-    }
-
-    .menu-container {
-        top: 130%;
-        right: 4%;
-        width: clamp(25px, 4vw, 40px);
-    }
-
-    .menu-item {
-        width: clamp(15px, 3vw, 25px);
-        height: clamp(15px, 3vw, 25px);
-    }
-}
-
 /*friends list*/
 
 .friends-container {

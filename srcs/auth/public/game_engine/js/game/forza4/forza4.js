@@ -1,6 +1,6 @@
 import { navigate } from "../../main.js";
 import { token1Color, token2Color, boardBackground, f4matchData} from "./forza4_game_global.js";
-import { change_name, update_image, current_user } from "../../pages/modes.js";
+import { current_user } from "../../pages/modes.js";
 
 let f4ReplayButton;
 let f4BackToMenuButton;
@@ -23,6 +23,7 @@ let elapsedTime = 0;
 
 export function Forza4() {
     return `
+        <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
         <div id="forza4Game">
             <h1>Forza 4</h1>
             <div id="f4players">
@@ -41,14 +42,11 @@ export function Forza4() {
             <button id="f4ReplayMatchButton" style="display: none; margin: 0 auto;">Replay Match</button>
             <button id="f4BackToMenuButton" class="button-style" style="display: none; margin: 20px auto;">Back to Menu</button>
         </div>
-        <div class="avatar-container">
-            <img id="backImageButton" src="game_engine/images/home.png" alt="Back" class="back-button">
-        </div>
     `;
 }
 
 function createGrid() {
-    //console.log("Creo griglia Forza 4");
+    console.log("Creo griglia Forza 4");
 
     const boardElement = document.getElementById('f4board');
     boardElement.innerHTML = '';
@@ -86,7 +84,6 @@ function createGrid() {
             cell.dataset.row = row;
             cell.dataset.col = col;
 
-           
             cell.style.border = '1px solid #fff'; 
             cell.style.backgroundColor = 'transparent';
 
@@ -161,8 +158,6 @@ function savef4StatsData() {
     f4data.players[p1].moves += moves;
     f4data.players[p2].moves += moves;
 
-   
-
     // Salva il tempo della partita
     const f4matchDetails = {
         player1: p1,
@@ -178,12 +173,12 @@ function savef4StatsData() {
     //f4data.players[p1].matches.push({ opponent: p2, result: currentPlayer === 'token1' ? 'win' : 'loss', time: elapsedTime });
     //f4data.players[p2].matches.push({ opponent: p1, result: currentPlayer === 'token2' ? 'win' : 'loss', time: elapsedTime });
     
-    //console.log("moves = " + moves);
-    //console.log(f4data);
+    console.log("moves = " + moves);
+    console.log(f4data);
     calculateXpF4Players(f4data, winner, loser);
     calculateLevelF4Players(f4data, winner, loser);
     localStorage.setItem('f4_game_data', JSON.stringify(f4data));
-    //console.log("Dati aggiornati:", f4data);
+    console.log("Dati aggiornati:", f4data);
 }
 
 
@@ -268,9 +263,9 @@ function updateGrid(row, col) {
 
 function checkWin(row, col) {
     return checkDirection(row, col, 1, 0) || 
-           checkDirection(row, col, 0, 1) || 
-           checkDirection(row, col, 1, 1) || 
-           checkDirection(row, col, 1, -1);
+            checkDirection(row, col, 0, 1) || 
+            checkDirection(row, col, 1, 1) || 
+            checkDirection(row, col, 1, -1);
 }
 
 function checkDirection(row, col, rowDir, colDir) {
@@ -350,8 +345,6 @@ export function startforza4Game() {
     message = document.getElementById('f4message');
     board = Array.from({ length: rows }, () => Array(cols).fill(null));
     gameEnded = false;
-
-   
 
     f4Players = JSON.parse(sessionStorage.getItem('forza4players'));
     p1 = f4Players[0];

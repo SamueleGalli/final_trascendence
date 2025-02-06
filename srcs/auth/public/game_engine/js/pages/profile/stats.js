@@ -1,6 +1,6 @@
-import { profile } from "../login/user.js";
-import { show_full_bio } from "../another/bio_cleaner.js";
-import { current_user } from "./modes.js";
+import { profile } from "../../login/user.js";
+import { show_full_bio } from "../../game/other/bio_cleaner.js";
+import { current_user, change_name, update_image} from "../modes.js";
 
 export default function Stats()
 {

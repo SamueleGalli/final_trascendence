@@ -1,10 +1,11 @@
-import { navigate } from "../main.js";
-import { change_name, update_image, current_user } from "./modes.js";
+import { navigate } from "../../main.js";
+import { current_user, change_name, update_image} from "../modes.js";
 
 // Funzione che restituisce la struttura HTML del torneo con un canvas per disegnare il tabellone
 export default function Bracket() {
     return `
-        <h2 class="text">
+        <img id="backImageButton" src="../../game_engine/images/home.png" alt="Back" class="back-button">
+        <h1 class="text">
             <span class="letter letter-1">T</span>
             <span class="letter letter-2">o</span>
             <span class="letter letter-3">u</span>
@@ -24,15 +25,12 @@ export default function Bracket() {
             <span class="letter letter-17">k</span>
             <span class="letter letter-18">e</span>
             <span class="letter letter-19">t</span>
-        </h2>
+        </h1>
         <div id="tournamentBracket">
             <canvas id="bracketCanvas"></canvas>
         </div>
         <div class="bracket-button-container">
                 <button class="button-style" id="knockoutMatchButton">Play Match</button>
-        </div>
-        <div class="avatar-container">
-            <img id="backImageButton" src="../../game_engine/images/home.png" alt="Back" class="back-button">
         </div>
     `;
 }
@@ -216,7 +214,7 @@ export function resetBracketState() {
 }
 
 export function backToBracket(winner) {
-    //console.log("winz: ", winner);
+    console.log("winz: ", winner);
     if (winner === null){
         drawBracket(bracketPlayers[0]);
         return;

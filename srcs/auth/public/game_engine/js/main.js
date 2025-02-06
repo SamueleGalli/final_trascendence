@@ -1,27 +1,24 @@
-import Login, { addLoginPageHandlers } from "./pages/login.js";
-import Modes, { addModesPageHandlers, current_user } from "./pages/modes.js";
-import Tournament, { addTournamentPageHandlers } from "./pages/tournament.js";
-import PongGame from "./pages/ponggame.js";
-import Knockout, { addKnockoutPageHandlers } from "./pages/knockout.js";
-import Customize, { addCustomizeGame } from "./pages/customize.js";
-import Roundrobin, { addRoundRobinPageHandlers } from "./pages/roundrobin.js";
-import RobinRanking, { addRobinRankingPageHandlers, robinDraw, assignPointsToPlayer } from "./pages/robindraw.js";
-import Userstats from "./pages/userstats.js";
-import { Charts, addChartsPageHandlers,showCharts } from "./pages/charts.js";
-import MatchDetails, {showMatchDetails } from "./pages/matchdetails.js";
-import Bracket, { addBracketPageHandlers, drawBracket, backToBracket, resetBracketState } from "./pages/bracket.js";
-import { initializeGameCanvas, destroyGameCanvas } from "./handlingCanvas.js"; //, addCanvas, removeCanvas
-import Profile from "./pages/profile.js";
-import Settings, { addSettingsPageHandlers } from "./pages/settings.js";
-import Stats from "./pages/stats.js";
+import Login, { addLoginPageHandlers } from "./pages/profile/login.js";
+import Modes, { addModesPageHandlers } from "./pages/modes.js";
+import Tournament, { addTournamentPageHandlers } from "./pages/tournament/tournament.js";
+import PongGame from "./pages/pong_game.js";
+import Knockout, { addKnockoutPageHandlers } from "./pages/tournament/knockout.js";
+import Customize, { addCustomizeGame } from "./pages/profile/customize.js";
+import Roundrobin, { addRoundRobinPageHandlers } from "./pages/tournament/roundrobin.js";
+import RobinRanking, { addRobinRankingPageHandlers, robinDraw, assignPointsToPlayer } from "./pages/tournament/robindraw.js";
+import { Charts, addChartsPageHandlers,showCharts } from "./pages/tournament/charts.js";
+import MatchDetails, {showMatchDetails } from "./pages/match_details.js";
+import Bracket, { addBracketPageHandlers, drawBracket, backToBracket, resetBracketState } from "./pages/tournament/bracket.js";
+import { initializeGameCanvas } from "./game/main/handling_Canvas.js";
+import Profile from "./pages/profile/profile.js";
+import Settings, { addSettingsPageHandlers } from "./pages/profile/settings.js";
+import Stats from "./pages/profile/stats.js";
 import { userName } from "./pages/user_data.js";
-import { Forza4Home, showForza4HomeScreen, addForza4PageHandlers } from "./pages/forza4_home.js";
-import { Forza4Customize, forza4Config } from "./pages/forza4_customize.js";
+import { Forza4Home, showForza4HomeScreen, addForza4PageHandlers } from "./pages/forza4/forza4_home.js";
+import { Forza4Customize, forza4Config } from "./pages/forza4/forza4_customize.js";
 import { Forza4, startforza4Game } from "./game/forza4/forza4.js";
-import { Forza4UserStats, forza4ShowUserStatistics, addForza4StatsPageHandlers } from "./pages/forza4_statistics.js";
-import { Forza4MatchStats, forza4ShowMatchDetails } from "./pages/forza4_match_statistics.js";
+import { Forza4UserStats, forza4ShowUserStatistics, forza4ShowMatchDetails, addForza4StatsPageHandlers } from "./pages/forza4/forza4_statistics.js";
 import Friends from "./pages/friends.js";
-
 let buttonTitle;
 let winner;
 
@@ -30,12 +27,11 @@ const routes = {
     "/": Login,
     "/modes": Modes,
     "/classic": PongGame,
-    "/aiWars": PongGame,
+    "/V.S._AI": PongGame,
     "/tournament": Tournament,
     "/forza4": Forza4Home,
     "/forza4/game": Forza4,
     "/forza4/userstats": Forza4UserStats,
-    "/forza4/userstats/matchstats": Forza4MatchStats,
     "/settings": Settings,
     "/settings/customizepong": Customize,
     "/settings/customizeforza4": Forza4Customize,
@@ -54,9 +50,9 @@ const routes = {
 
 // Funzione universale per la navigazione
 export const navigate = (path, title = "") => {
-    history.pushState({ path }, title, path); // Aggiorna l'URL e la cronologia
+    history.pushState({ path }, title, path);
     buttonTitle = title;
-    loadContent(); // Carica il nuovo contenuto
+    loadContent();
 };
 
 function createPlayersArray(numPlayers) {
@@ -70,9 +66,14 @@ function createPlayersArray(numPlayers) {
     return players;
 }
 
+
+function restoreBackground() {
+    document.getElementById('app').classList.remove('no-background');
+}
+
 // Caricamento dinamico del contenuto
 const loadContent = async () => {
-    const path = window.location.pathname; // Ottieni il percorso attuale
+    const path = window.location.pathname;
     const app = document.getElementById("app");
     const component = routes[path];
     let players;
@@ -85,24 +86,17 @@ const loadContent = async () => {
 
     players = createPlayersArray(numPlayers);
 
-    //console.log("Players? " +players);
+    console.log("Players? " +players);
     playerNames = players;  
-    //console.log("path => " + path);
+    console.log("path => " + path);
     if (component) {
-        app.innerHTML = await component(); // Carica dinamicamente il componente
-        // Se è necessario aggiungere un canvas in altre pagine, lo facciamo qui
-        if (path === "/classic" || path === "/aiWars" || path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game") {
-            //console.log("game start!!");
-            //removeCanvas();
-            destroyGameCanvas();
-            initializeGameCanvas(); // Rimuovi il canvas su queste pagine
+        app.innerHTML = await component();
+        if (path === "/classic" || path === "/V.S._AI" || path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game") {
+            initializeGameCanvas();
+            document.getElementById('app').classList.add('no-background');
         }
         else
-        {
-            destroyGameCanvas();
-            //removeCanvas();
-            //addCanvas();
-        }
+            restoreBackground();
 
         switch (path) {
             case "/":
@@ -163,11 +157,9 @@ const loadContent = async () => {
                 forza4Config();
                 break;
             case "/forza4/userstats":
+                Forza4UserStats();
                 addForza4StatsPageHandlers();
-                forza4ShowUserStatistics()
-                break;
-            case "/forza4/userstats/matchstats":
-                forza4ShowMatchDetails();
+                forza4ShowUserStatistics();
                 break;
             case "/forza4/game":
                 startforza4Game();
@@ -177,7 +169,7 @@ const loadContent = async () => {
         }
     }
     else
-        app.innerHTML = "<h1>404 - Pagina non trovata</h1>"; // Pagina non trovata
+        app.innerHTML = "<h1 class='text'>404 - Pagina non trovata</h1>"; // Pagina non trovata
 };
 
 // Gestione dei pulsanti "Indietro" e "Avanti" nel browser

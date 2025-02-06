@@ -1,17 +1,10 @@
-import { navigate } from "../main.js";
-import { change_name, update_image, current_user } from "./modes.js";
+import { navigate } from "../../main.js";
+import { current_user, change_name, update_image} from "../modes.js";
 
 export default function Knockout() {
     return `
+        <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
         <h1 class="text">
-            <span class="letter letter-1">S</span>
-            <span class="letter letter-2">e</span>
-            <span class="letter letter-3">l</span>
-            <span class="letter letter-4">e</span>
-            <span class="letter letter-5">c</span>
-            <span class="letter letter-6">t</span>
-            <span class="letter letter-7"> </span>
-            <span class="letter letter-8"> </span>
             <span class="letter letter-9">t</span>
             <span class="letter letter-10">h</span>
             <span class="letter letter-11">e</span>
@@ -47,9 +40,6 @@ export default function Knockout() {
             <input type="radio" id="radio-3" name="players" value="16" class="radio">
             <label class="label_knockout" for="radio-3">16</label>
         </div>
-        <div class="avatar-container">
-            <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
-        </div>
     `;
 }
 
@@ -59,7 +49,7 @@ export const addKnockoutPageHandlers = () => {
     
     radioButtons.forEach(radioButton => {
         radioButton.addEventListener('change', (event) => {
-            //console.log(radioButton.value);
+            console.log(radioButton.value);
             navigate("/tournament/knockout/bracket", radioButton.value);
             /*if (radioButton.value === "4")
                 navigate("/tournament/knockout/bracket", "4");

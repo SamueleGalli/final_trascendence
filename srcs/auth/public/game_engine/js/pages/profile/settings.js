@@ -1,4 +1,4 @@
-import { navigate } from "../main.js";
+import { navigate } from "../../main.js";
 
 export default function Settings() {
     return `

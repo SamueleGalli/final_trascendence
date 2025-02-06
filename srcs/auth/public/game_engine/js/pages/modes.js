@@ -1,14 +1,13 @@
 import { navigate } from "../main.js";
-import { profileHandler } from "./profile.js";
-import { ShowStats } from "./stats.js";
+import { profileHandler } from "./profile/profile.js";
+import { ShowStats } from "./profile/stats.js";
 import { profile } from "../login/user.js";
-import Friends, { Friendlists } from "./friends.js";
+import { Friendlists } from "./friends.js";
 
 export let current_user;
 
 window.addEventListener('load', () => {
-    let storedUser = sessionStorage.getItem('your_profile');
-    
+    let storedUser = sessionStorage.getItem('your_profile');    
     if (storedUser)
     {
         let parsedUser = JSON.parse(storedUser);
@@ -96,48 +95,51 @@ export default function Modes()
 {
     return `
     <h1 class="text">
-    <span class="letter letter-1">S</span>
-    <span class="letter letter-2">E</span>
-    <span class="letter letter-3">L</span>
-    <span class="letter letter-4">E</span>
-    <span class="letter letter-5">C</span>
-    <span class="letter letter-6">T</span>
-    <span class="letter letter-7"> </span>
-    <span class="letter letter-8"> </span>
-    <span class="letter letter-9">G</span>
-    <span class="letter letter-10">A</span>
-    <span class="letter letter-11">M</span>
-    <span class="letter letter-12">E</span>
-    <span class="letter letter-13"> </span>
-    <span class="letter letter-14"> </span>
-    <span class="letter letter-15">M</span>
-    <span class="letter letter-16">O</span>
-    <span class="letter letter-17">D</span>
-    <span class="letter letter-18">E</span>
+        <span class="letter letter-1">S</span>
+        <span class="letter letter-2">E</span>
+        <span class="letter letter-3">L</span>
+        <span class="letter letter-4">E</span>
+        <span class="letter letter-5">C</span>
+        <span class="letter letter-6">T</span>
+        <span class="letter letter-7"> </span>
+        <span class="letter letter-8"> </span>
+        <span class="letter letter-9">G</span>
+        <span class="letter letter-10">A</span>
+        <span class="letter letter-11">M</span>
+        <span class="letter letter-12">E</span>
+        <span class="letter letter-13"> </span>
+        <span class="letter letter-14"> </span>
+        <span class="letter letter-15">M</span>
+        <span class="letter letter-16">O</span>
+        <span class="letter letter-17">D</span>
+        <span class="letter letter-18">E</span>
     </h1>
     <script src="../../login/guest_logic.js"></script>
     <div id="modeButtonsContainer">
-    <div class="mode-button-container">
-    <button class="button-style" id="classicButton"><span class="text-animation">CLASSIC</span></button>
-    </div>
-    <div class="mode-button-container">
-    <button class="button-style" id="tournamentButton"><span class="text-animation">TOURNAMENT</span></button>
-    </div>
-    <div class="mode-button-container">
-    <button class="button-style" id="aiButton"><span class="text-animation">AI Wars</span></button>
-    </div>
+        <div class="mode-button-container">
+            <button class="button-style" id="classicButton"><span class="text-animation">CLASSIC</span></button>
+        </div>
+        <div class="mode-button-container">
+            <button class="button-style" id="tournamentButton"><span class="text-animation">TOURNAMENT</span></button>
+        </div>
+        <div class="mode-button-container">
+            <button class="button-style" id="aiButton"><span class="text-animation">V.S._AI</span></button>
+        </div>
+        <div class="mode-button-container">
+            <button class="button-style" id="forza4Button"><span class="text-animation">FORZA 4</span></button>
+        </div>
     </div>
     <span id="avatarName">Default</span>
     <div class="avatar-container">
-    <img alt="Avatar" class="avatar-image" id="avatarImage">
-    <div class="menu-container hidden">
-    <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile" id="profileIcon"></div>
-    <div class="menu-item"><img src="game_engine/images/stats.png" alt="Settings" id="statIcon"></div>
-    <div class="menu-item"><img src="game_engine/images/friends.jpg" alt="Settings" id="friends"></div>
-    <div class="menu-item"><img src="game_engine/images/history_match.png" alt="Settings" id="history"></div>
-    <div class="menu-item" id="settings-link"><img src="game_engine/images/settings.png" alt="Settings"></div>
-    </div>
-    </div> 
+        <img alt="Avatar" class="avatar-image" id="avatarImage">
+        <div class="menu-container hidden">
+            <div class="menu-item"><img src="game_engine/images/profile.png" alt="Profile" id="profileIcon"></div>
+            <div class="menu-item"><img src="game_engine/images/stats.png" alt="Settings" id="statIcon"></div>
+            <div class="menu-item"><img src="game_engine/images/friends.jpg" alt="Settings" id="friends"></div>
+            <div class="menu-item"><img src="game_engine/images/history_match.png" alt="Settings" id="history"></div>
+            <div class="menu-item" id="settings-link"><img src="game_engine/images/settings.png" alt="Settings"></div>
+            </div>
+        </div> 
     `;
 }
 
@@ -165,7 +167,7 @@ export const addModesPageHandlers = () => {
     });
     
     aiButton?.addEventListener('click', () => {
-        navigate("/aiWars", "Modalità AI");
+        navigate("/V.S._AI", "Modalità AI");
     });
 
     tournamentButton?.addEventListener('click', () => {

@@ -1,5 +1,5 @@
-import { navigate } from "../main.js";
-import { change_name, update_image, current_user } from "./modes.js";
+import { navigate } from "../../main.js";
+import { current_user, change_name, update_image} from "../modes.js";
 
 let playerList;
 let playerNames = [];
@@ -11,7 +11,8 @@ let playRobinMatchButton;
 let robinBackToMenuButton
 
 export default function RobinRanking() {
-    return `  
+    return `
+        <img id="backImageButton" src="../../game_engine/images/home.png" alt="Back" class="back-button">
         <h1 class="text">
             <span class="letter letter-1">R</span>
             <span class="letter letter-2">a</span>
@@ -26,10 +27,6 @@ export default function RobinRanking() {
         </div>
         <div>
             <button class="button-style" id="playRobinMatchButton">Play Match</button>
-            <button class="button-style" id="robinBackToMenuButton" style="display:none; margin: 0 auto;">Back to Menu</button>
-        </div>
-        <div class="avatar-container">
-            <img id="backImageButton" src="../../game_engine/images/home.png" alt="Back" class="back-button">
         </div>
     `;
 }
@@ -138,7 +135,7 @@ function populateMatchesList(playerList) {
     for (let i = 0; i < playerList.length; i++) {
         for (let j = i + 1; j < playerList.length; j++) {
             matchesListRobin.push({player1: playerList[i].name, player2: playerList[j].name});
-            //console.log(playerList[i].name + " vs " + playerList[j].name);
+            console.log(playerList[i].name + " vs " + playerList[j].name);
         }
     }
     shuffleMatchesArray(matchesListRobin);

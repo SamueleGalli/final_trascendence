@@ -7,8 +7,30 @@ require 'colorize'
 #LOGIN = BetterPG::SimplePG.new "users", ["login_name TEXT", "name TEXT", "email TEXT", "image TEXT", "bio TEXT", "id INT"]
 
 module Other_logic
-  def not_found(response)
-    response.redirect('/')
+
+  def page_not_found(response)
+    response.status = 404
+    response.write("Page Not Found")
+    response.content_type = 'text/plain'
+  end
+
+  def spa_route?(path)
+    spa_routes = [
+      '/', '/modes', '/friends', '/stats', '/profile', '/classic', '/V.S._AI',
+      '/tournament', '/forza4', '/forza4/game', '/forza4/userstats',
+      '/settings', '/settings/customizepong',
+      '/settings/customizeforza4', '/tournament/knockout',
+      '/tournament/roundrobin', '/tournament/roundrobin/robinranking',
+      '/tournament/roundrobin/robinranking/game', '/tournament/userstats',
+      '/tournament/userstats/matchdetails', '/tournament/knockout/bracket',
+      '/tournament/knockout/bracket/game'
+    ]
+    !File.extname(path).empty? || spa_routes.include?(path)
+  end
+
+  def other(response)
+    response.write(File.read(File.join(__dir__, '../public', 'index.html')))
+    response.content_type = 'text/html'
   end
   
   def get_user_data_from_oauth_provider(token)

@@ -1,9 +1,8 @@
-import { current_user } from "../pages/modes.js";
+import { current_user } from "../../pages/modes.js";
 
 export function savebio(me, yourDataSection)
 {
     const bioInput = yourDataSection.querySelector('#bioInput');
-    const bioDisplay = document.querySelector('#bioDisplay');
     const newBio = bioInput.value;
 
     let polbio = yourDataSection.querySelector('#bioSection');
@@ -29,16 +28,16 @@ export function savename(me, yourDataSection)
     if (!newname)
         return("Error: No Name saved(Please enter a name)\n");
     if (newname.length < 4)
-        return("Error: Name too short(" + me.display_name + ")\n");
+        return("Error: Name too short(" + newname + ")\n");
     if (newname.length >= 15)
-        return("Error: Name too long(" + me.display_name + ")\n");
+        return("Error: Name too long(" + newname + ")\n");
     if (me.display_name !== newname)
     {
         me.display_name = newname;
-        return ("Saved name successfully(" + me.display_name + ")\n");
+        return ("Saved name successfully(" + newname + ")\n");
     }
     else
-        return ("Error: name already taken(" + me.display_name + ")\n");
+        return ("Error: name already taken(" + newname + ")\n");
 }
 
 export function emailHandler(me, yourDataSection)
@@ -63,11 +62,11 @@ export function emailHandler(me, yourDataSection)
 
 export function saveimage(me, yourDataSection)
 {
-    const changeProfileImageBtn = yourDataSection.querySelector('#changeProfileImageBtn');
+    //const changeProfileImageBtn = yourDataSection.querySelector('#changeProfileImageBtn');
     const imageUploadInput = yourDataSection.querySelector('#imageUploadInput');
     const profileImage = yourDataSection.querySelector('#profileImage');
     
-    changeProfileImageBtn.addEventListener('click', () => {
+    profileImage.addEventListener('click', () => {
         imageUploadInput.click();
     });
 
