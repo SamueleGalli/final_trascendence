@@ -1,6 +1,6 @@
 import { navigate } from "../main.js";
 import { update_image, change_name, current_user, updateUserProfile } from "../pages/modes.js";
-import { Logged} from "./user.js";
+import { Logged, setAuthenticated } from "./user.js";
 
 let success = false;
 let isCurrentTabLogged = false;
@@ -160,6 +160,7 @@ function log_in(popup) {
     popupOpened = false;
     success = true;
     auth = true;
+    setAuthenticated()
     navigate("/modes", "Modalità di gioco");
     localStorage.setItem('auth_done', 'true');
 }

@@ -1,5 +1,5 @@
 import { navigate } from "../main.js";
-import { Guest } from "./user.js";
+import { Guest, setAuthenticated } from "./user.js";
 import { update_image, change_name, current_user, updateUserProfile } from "../pages/modes.js";
 
 export let guests = JSON.parse(localStorage.getItem('guests')) || [];
@@ -46,6 +46,7 @@ function addGuest(name) {
 }
 
 function updateUIForGuest(guest) {
+    setAuthenticated();
     navigate("/modes", "Modalità di gioco");
         update_guest(guest);
 }

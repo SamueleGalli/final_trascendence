@@ -45,3 +45,13 @@ export class Friend {
 export function getProfileByField(field, value) {
     return profiles.find(profile => profile[field] === value);
 }
+
+export function setAuthenticated() {
+    fetch('/set_authenticated', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ access_granted: true })
+    });
+}

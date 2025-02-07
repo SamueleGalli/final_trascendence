@@ -34,7 +34,7 @@ fi
 cd authentication/
 echo "==============================="
 echo "Aggiornamento delle gemme con Bundler..."
-if bundle update &>/dev/null; then
+if bundle update && &>/dev/null; then
     echo "✅ Aggiornamento completato."
 else
     echo "❌ Errore durante l'aggiornamento delle gemme."

@@ -2,6 +2,7 @@
 require 'json'
 require 'pg'
 require 'colorize'
+require 'logger'
 #load ((File.file? '/var/common/BetterPG.rb') ? '/var/common/BetterPG.rb' : '../../common_tools/tools/BetterPG.rb')
 
 #LOGIN = BetterPG::SimplePG.new "users", ["login_name TEXT", "name TEXT", "email TEXT", "image TEXT", "bio TEXT", "id INT"]
@@ -9,23 +10,10 @@ require 'colorize'
 module Other_logic
 
   def page_not_found(response)
-    response.status = 404
-    response.write("Page Not Found")
-    response.content_type = 'text/plain'
-  end
-
-  def spa_route?(path)
-    spa_routes = [
-      '/', '/modes', '/friends', '/stats', '/profile', '/classic', '/V.S._AI',
-      '/tournament', '/forza4', '/forza4/game', '/forza4/userstats',
-      '/settings', '/settings/customizepong',
-      '/settings/customizeforza4', '/tournament/knockout',
-      '/tournament/roundrobin', '/tournament/roundrobin/robinranking',
-      '/tournament/roundrobin/robinranking/game', '/tournament/userstats',
-      '/tournament/userstats/matchdetails', '/tournament/knockout/bracket',
-      '/tournament/knockout/bracket/game'
-    ]
-    !File.extname(path).empty? || spa_routes.include?(path)
+    response.status = 200
+    html_content = File.read('./pages_auth/no_page.html')
+    response.content_type = 'text/html  '
+    response.write(html_content)
   end
 
   def other(response)

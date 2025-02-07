@@ -1,4 +1,3 @@
-# server.rb
 require 'webrick'
 require 'colorize'
 require_relative 'Oauth'
@@ -13,7 +12,7 @@ SERVICE_NAME = "auth"
 PORT = PortFinder::FindPort.new(SERVICE_NAME).getPort
 
 logger = Logger.new(STDOUT)
-logger.level = Logger::ERROR
+logger.level = Logger::DEBUG
 app = App.new(OAuthClient.new, logger)
 server = WEBrick::HTTPServer.new(Port: PORT)
 
@@ -21,7 +20,11 @@ server.mount_proc '/' do |req, res|
   status, headers, body = app.call(req.meta_vars)
   res.status = status
   headers.each { |k, v| res[k] = v }
-  body.each { |chunk| res.body << chunk }
+  if body.is_a?(String)
+    res.body = body
+  else
+    body.each { |chunk| res.body << chunk }
+  end
   if status >= 400 
     logger.error("#{status} Error: #{req.path}".red)
   end

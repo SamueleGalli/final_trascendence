@@ -75,7 +75,7 @@ export function Forza4UserStats() {
 
 function forza4CalculateUserStatistics(name) {
 
-    console.log("player name is " +name);
+    //console.log("player name is " +name);
     const f4data = JSON.parse(localStorage.getItem('f4_game_data')) || { players: {} };
     const playerData = f4data.players[name];
 
@@ -99,13 +99,13 @@ function forza4CalculateUserStatistics(name) {
     if (playerData.matches && playerData.matches.length > 0) {
         
         for (const match of playerData.matches) {
-            console.log("match seconds = " +match.seconds);
+            //console.log("match seconds = " +match.seconds);
             totalTime += match.seconds;
         }
     }
-    console.log("total time = " +totalTime);
+    //console.log("total time = " +totalTime);
     const averageTime = totalMatches > 0 ? (totalTime / totalMatches).toFixed(2) + " seconds" : "0 seconds";
-    console.log("average time = " + averageTime);
+    //console.log("average time = " + averageTime);
 
     return {
         totalMatches,

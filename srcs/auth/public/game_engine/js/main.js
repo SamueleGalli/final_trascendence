@@ -86,9 +86,9 @@ const loadContent = async () => {
 
     players = createPlayersArray(numPlayers);
 
-    console.log("Players? " +players);
+    //console.log("Players? " +players);
     playerNames = players;  
-    console.log("path => " + path);
+    //console.log("path => " + path);
     if (component) {
         app.innerHTML = await component();
         if (path === "/classic" || path === "/V.S._AI" || path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game") {

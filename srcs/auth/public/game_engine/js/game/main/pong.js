@@ -114,7 +114,7 @@ export class PongGame {
             this.ball.update(this, this.paddle1, this.paddle2, this.powerup[0], this.wallThickness);
             this.paddle1.update();
             if (mode === "ai") {
-                console.log("is AIII");
+                //console.log("is AIII");
                 if (this.ball.x > window.innerWidth / 6 && !this.paddle2Paused) {
                     this.paddle2.move_ia(this.ball, this.lastMoveTime);
                 }

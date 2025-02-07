@@ -214,7 +214,7 @@ export function resetBracketState() {
 }
 
 export function backToBracket(winner) {
-    console.log("winz: ", winner);
+    //console.log("winz: ", winner);
     if (winner === null){
         drawBracket(bracketPlayers[0]);
         return;
