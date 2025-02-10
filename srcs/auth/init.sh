@@ -54,4 +54,4 @@ fi
 echo "==============================="
 echo "Script completato.avvio server..."
 
-bundle exec ruby server.rb
+bundle exec ruby -v server.rb

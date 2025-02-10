@@ -4,7 +4,7 @@ let gameInstance;
 
 // Funzione per aggiungere il canvas di gioco
 export function initializeGameCanvas() {
-    //console.log("Inizializzazione game canvas");
+    console.log("Inizializzazione game canvas");
     const path = window.location.pathname;
     let players;
 

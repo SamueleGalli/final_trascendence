@@ -1,4 +1,4 @@
-import { navigate } from '../../main.js';
+import { navigate } from '../../../main.js';
 import { Ball } from '../elements/ball.js'
 import { Paddle } from '../elements/paddle.js';
 import { UI } from '../scene/ui.js';
@@ -12,6 +12,7 @@ import { saveMatchStatsData, resetMatchStatsData } from '../data/game_stats.js';
 import { updateTimer } from '../other/timer.js';
 import { ballColor, paddleColor, ballTrailColor, wallsColor, powerUpActive, background } from '../data/game_global.js';
 
+
 export let gameContainer;
 
 export let players;
@@ -24,14 +25,8 @@ export let backToRobinButton;
 export let backToMenuButton;
 
 export function startPongGame(matchPlayers, gameMode) {
-    backToBracketButton = document.getElementById('backToBracketButton');
-    backToRobinButton = document.getElementById('backToRobinButton');
-    backToMenuButton = document.getElementById('backToMenuButton');
-    
-    // Hide the buttons when the game starts
-    backToBracketButton.hidden = true; 
-    backToRobinButton.hidden = true;
-    backToMenuButton.hidden = true;
+    console.log("start pong game");
+   
     
     resetMatchStatsData();
     // Set the game mode (classic, ai, knocknout, rondrobin)
@@ -53,6 +48,17 @@ export class PongGame {
             console.error('Canvas context not found.');
             return;
         }
+
+        backToBracketButton = document.getElementById('backToBracketButton');
+        backToRobinButton = document.getElementById('backToRobinButton');
+        backToMenuButton = document.getElementById('backToMenuButton');
+        backToBracketButton.style.display = "none";
+        backToRobinButton.style.display = "none";
+        backToMenuButton.style.display = "none";
+    
+    
+            // Hide the buttons when the game starts
+        
         
         // Set canvas width and height as window dimensions
         this.canvas.width = window.innerWidth;
@@ -67,6 +73,7 @@ export class PongGame {
         this.winner = '';
         this.wallThickness = this.canvas.width * 0.008;
         this.wallsColor = wallsColor;
+       
         
         this.stars = [];
         this.particles = [];
@@ -114,7 +121,7 @@ export class PongGame {
             this.ball.update(this, this.paddle1, this.paddle2, this.powerup[0], this.wallThickness);
             this.paddle1.update();
             if (mode === "ai") {
-                //console.log("is AIII");
+                console.log("is AIII");
                 if (this.ball.x > window.innerWidth / 6 && !this.paddle2Paused) {
                     this.paddle2.move_ia(this.ball, this.lastMoveTime);
                 }
@@ -238,5 +245,10 @@ export class PongGame {
         })
 
         window.addEventListener('resize', () => this.resize());
+        window.addEventListener("popstate", (event) => {
+            clearInterval(matchData.timer);
+         });
+         
     } 
 }
+

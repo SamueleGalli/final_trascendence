@@ -4,8 +4,8 @@ require_relative 'Oauth'
 require_relative 'session'
 require_relative 'error_logger'
 require_relative 'handle_route'
-load((File.file?('/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../../common_tools/tools/Ports.rb'))
 
+load((File.file?('/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../../common_tools/tools/Ports.rb'))
 $stdout.sync = true
 
 SERVICE_NAME = "auth"
@@ -20,25 +20,17 @@ server.mount_proc '/' do |req, res|
   status, headers, body = app.call(req.meta_vars)
   res.status = status
   headers.each { |k, v| res[k] = v }
+  log_error_details(req, status, body, logger)
   if body.is_a?(String)
-    res.body = body
+      res.body = body
   else
-    body.each { |chunk| res.body << chunk }
+      body.each { |chunk| res.body << chunk }
   end
   if status >= 400 
-    logger.error("#{status} Error: #{req.path}".red)
+      logger.error("#{status} Error: #{req.path}".red)
   end
 end
 
-server.mount_proc '/reload' do |req, res|
-  status, headers, body = app.call(req.meta_vars)
-  res.status = status
-  headers.each { |k, v| res[k] = v }
-  body.each { |chunk| res.body << chunk }
-  if status >= 400
-    logger.error("#{status} Error: #{req.path}".red)
-  end
-end
 
 set_routes(server)
 

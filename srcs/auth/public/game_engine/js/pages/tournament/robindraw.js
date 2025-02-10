@@ -135,7 +135,7 @@ function populateMatchesList(playerList) {
     for (let i = 0; i < playerList.length; i++) {
         for (let j = i + 1; j < playerList.length; j++) {
             matchesListRobin.push({player1: playerList[i].name, player2: playerList[j].name});
-            //console.log(playerList[i].name + " vs " + playerList[j].name);
+            console.log(playerList[i].name + " vs " + playerList[j].name);
         }
     }
     shuffleMatchesArray(matchesListRobin);

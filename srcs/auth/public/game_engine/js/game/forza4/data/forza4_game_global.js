@@ -2,6 +2,7 @@
 export let token1Color = '#ff0000';
 export let token2Color = '#0000ff';
 export let boardBackground = 'classic';
+export let powerUpMode = false;
 
 export let f4matchData = {
     player1: "",
@@ -23,4 +24,8 @@ export function setToken2Color(color) {
 
 export function setBoardBackground(bg) {
     boardBackground = bg;
+}
+
+export function setPowerUpState(state) {
+    powerUpMode = state;
 }

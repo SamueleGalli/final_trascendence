@@ -1,5 +1,4 @@
 import { matchData } from "../data/game_global.js";
-
 export function checkScore(game, mode) {
     if (game.scoreP1 >= game.maxScore || game.scoreP2 >= game.maxScore) {
         game.gameEnd = true;
@@ -12,11 +11,15 @@ export function checkScore(game, mode) {
             game.winner = game.p2Name;
         
         if (mode === "roundrobin")
-            backToRobinButton.hidden = false;
+            backToRobinButton.style.display = "block";
         else if (mode === "knockout")
-            backToBracketButton.hidden = false;
-        /*else
-            backtoMenuButton.hidden = false;*/
+            backToBracketButton.style.display = "block";
+        else {
+            backToMenuButton.style.display = "block";
+            backToMenuButton.hidden = false;
+        }
+          
+
         game.ui.render(game, game.scoreP1, game.scoreP2); 
     }
 }

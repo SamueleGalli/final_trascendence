@@ -1,4 +1,4 @@
-import { current_user } from "../../pages/modes.js";
+import { current_user } from "../../../pages/modes.js";
 
 export function savebio(me, yourDataSection)
 {

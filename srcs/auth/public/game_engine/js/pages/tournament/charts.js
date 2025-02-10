@@ -81,7 +81,7 @@ function getLastMatchesData() {
     const playerData = data.players[playerName];
 
 
-    //console.log(playerData);
+    console.log(playerData);
     const lastMatchesData = playerData.matches.slice(-10);
     
     

@@ -3,6 +3,7 @@ require 'uri'
 require 'json'
 require 'cgi'
 require 'erb'
+require 'colorize'
 require_relative 'other_logic'
 
 module AuthMethods

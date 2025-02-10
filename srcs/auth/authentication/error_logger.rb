@@ -1,4 +1,3 @@
-# error_logger.rb
 def log_error_details(req, status, body, logger)
     if status >= 400
         ip = req.peeraddr[3]

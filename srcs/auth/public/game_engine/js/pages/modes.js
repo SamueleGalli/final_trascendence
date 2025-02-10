@@ -4,10 +4,10 @@ import { ShowStats } from "./profile/stats.js";
 import { profile } from "../login/user.js";
 import { Friendlists } from "./friends.js";
 
-export let current_user;
+export let current_user = JSON.parse(sessionStorage.getItem('your_profile'));
 
 window.addEventListener('load', () => {
-    let storedUser = sessionStorage.getItem('your_profile');    
+    let storedUser = sessionStorage.getItem('your_profile');
     if (storedUser)
     {
         let parsedUser = JSON.parse(storedUser);
@@ -64,32 +64,6 @@ window.addEventListener('popstate', (event) => {
         }
     }
 });
-
-
-export function update_image(image)
-{
-    const checkImageInterval = setInterval(() => {
-        const avatarImage = document.getElementById('avatarImage');
-        if (avatarImage)
-        {
-            avatarImage.src = image;
-            clearInterval(checkImageInterval);
-        }
-    }, 100);
-}
-
-export function change_name(name) {
-    const checknameInterval = setInterval(() => {
-        const avatarName = document.getElementById('avatarName');
-        if (avatarName)
-        {
-            avatarName.innerText = name;
-            clearInterval(checknameInterval);
-        }
-    }, 100);
-}
-
-
 
 export default function Modes()
 {
@@ -154,6 +128,13 @@ window.onpopstate = function () {
 };
 
 export const addModesPageHandlers = () => {
+    if (current_user === null)
+    {
+        navigate("/access_denied", "Access Denied");
+        setTimeout(() => {
+            navigate("/", "home");
+        }, 3000);
+    }
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');
     const tournamentButton = document.getElementById('tournamentButton');
@@ -171,6 +152,11 @@ export const addModesPageHandlers = () => {
     });
 
     tournamentButton?.addEventListener('click', () => {
+        if (current_user.type === "guest")
+        {
+            alert("You must be logged to use this feature!");
+            return;
+        }
         navigate("/tournament", "Modalità Torneo");
     });
 
@@ -221,6 +207,11 @@ export const addModesPageHandlers = () => {
     if (friends)
     {
         friends.addEventListener("click", () => {
+            if (current_user.type == "guest")
+            {
+                alert("You must be logged to use this feature!");
+                return;
+            }
             navigate("/friends", "Friends");
             setTimeout(() => {
                 Friendlists();
@@ -242,3 +233,26 @@ export const addModesPageHandlers = () => {
     else 
         console.error("history icon not found!");
 };
+
+export function update_image(image)
+{
+    const checkImageInterval = setInterval(() => {
+        const avatarImage = document.getElementById('avatarImage');
+        if (avatarImage)
+        {
+            avatarImage.src = image;
+            clearInterval(checkImageInterval);
+        }
+    }, 100);
+}
+
+export function change_name(name) {
+    const checknameInterval = setInterval(() => {
+        const avatarName = document.getElementById('avatarName');
+        if (avatarName)
+        {
+            avatarName.innerText = name;
+            clearInterval(checknameInterval);
+        }
+    }, 100);
+}

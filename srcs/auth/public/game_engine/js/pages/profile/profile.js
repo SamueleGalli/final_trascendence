@@ -1,7 +1,7 @@
 import { current_user, updateUserProfile} from "../modes.js";
-import { emailHandler} from "../../game/other/profile_logic.js";
+import { emailHandler} from "../../game/pong/other/profile_logic.js";
 import { profile , profiles} from "../../login/user.js";
-import { savebio, saveimage, savename } from "../../game/other/profile_logic.js";
+import { savebio, saveimage, savename } from "../../game/pong/other/profile_logic.js";
 
 export default function Profile()
 {

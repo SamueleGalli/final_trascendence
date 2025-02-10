@@ -15,11 +15,6 @@ module Other_logic
     response.content_type = 'text/html  '
     response.write(html_content)
   end
-
-  def other(response)
-    response.write(File.read(File.join(__dir__, '../public', 'index.html')))
-    response.content_type = 'text/html'
-  end
   
   def get_user_data_from_oauth_provider(token)
     uri = URI("https://api.intra.42.fr/v2/me")

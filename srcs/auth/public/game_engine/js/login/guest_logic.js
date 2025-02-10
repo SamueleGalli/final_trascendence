@@ -1,5 +1,5 @@
 import { navigate } from "../main.js";
-import { Guest, setAuthenticated } from "./user.js";
+import { Guest } from "./user.js";
 import { update_image, change_name, current_user, updateUserProfile } from "../pages/modes.js";
 
 export let guests = JSON.parse(localStorage.getItem('guests')) || [];
@@ -46,9 +46,8 @@ function addGuest(name) {
 }
 
 function updateUIForGuest(guest) {
-    setAuthenticated();
     navigate("/modes", "Modalità di gioco");
-        update_guest(guest);
+    update_guest(guest);
 }
 
 window.addEventListener("beforeunload", () => {
@@ -87,16 +86,12 @@ updateGuestDataFromSession();
 
 function update_guest(guest)
 {
-    if (current_user && current_user.display_name && current_user.image)
-        return ;
-    else
-    {
-        guest.email = null;
-        change_name(guest.name);
-        update_image(guest.image);
-        current_user.image = guest.image;
-        current_user.display_name = guest.name;
-        current_user.type = "guest";
-        updateUserProfile(current_user);
-    }
+    guest.email = null;
+    change_name(guest.name);
+    update_image(guest.image);
+    current_user.image = guest.image;
+    current_user.display_name = guest.name;
+    current_user.type = "guest";
+    updateUserProfile(current_user);
+
 }

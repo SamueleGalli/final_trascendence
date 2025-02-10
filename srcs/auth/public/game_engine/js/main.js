@@ -9,16 +9,17 @@ import RobinRanking, { addRobinRankingPageHandlers, robinDraw, assignPointsToPla
 import { Charts, addChartsPageHandlers,showCharts } from "./pages/tournament/charts.js";
 import MatchDetails, {showMatchDetails } from "./pages/match_details.js";
 import Bracket, { addBracketPageHandlers, drawBracket, backToBracket, resetBracketState } from "./pages/tournament/bracket.js";
-import { initializeGameCanvas } from "./game/main/handling_Canvas.js";
+import { initializeGameCanvas } from "./game/pong/main/handling_Canvas.js";
 import Profile from "./pages/profile/profile.js";
 import Settings, { addSettingsPageHandlers } from "./pages/profile/settings.js";
 import Stats from "./pages/profile/stats.js";
 import { userName } from "./pages/user_data.js";
 import { Forza4Home, showForza4HomeScreen, addForza4PageHandlers } from "./pages/forza4/forza4_home.js";
 import { Forza4Customize, forza4Config } from "./pages/forza4/forza4_customize.js";
-import { Forza4, startforza4Game } from "./game/forza4/forza4.js";
+import { Forza4, startForza4Game } from "./game/forza4/main/forza4.js";
 import { Forza4UserStats, forza4ShowUserStatistics, forza4ShowMatchDetails, addForza4StatsPageHandlers } from "./pages/forza4/forza4_statistics.js";
 import Friends from "./pages/friends.js";
+import Access_Denied from "./pages/access_denied.js";
 let buttonTitle;
 let winner;
 
@@ -45,7 +46,8 @@ const routes = {
     "/tournament/knockout/bracket/game": PongGame,
     "/profile": Profile,
     "/stats": Stats,
-    "/friends": Friends
+    "/friends": Friends,
+    "/access_denied": Access_Denied
 };
 
 // Funzione universale per la navigazione
