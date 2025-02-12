@@ -15,3 +15,6 @@
 #    headers.each { |k, v| res[k] = v }
 #    body.each { |chunk| res.body << chunk }
 #end
+    
+sudo nano /etc/hosts
+127.0.0.1 finaltrascendence.com

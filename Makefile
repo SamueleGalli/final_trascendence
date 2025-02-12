@@ -1,9 +1,10 @@
-CONTAINERS	= tokenizer receiver postgres request_manager auth user_manager
+CONTAINERS	= tokenizer receiver postgres request_manager auth user_manager nginx
 
 # ========================================= #
 SHELL:=/bin/bash
 
 all: prep_dirs #stop_containers
+	@clear
 	make -C ./srcs/common_tools/ all
 	@if [ "$(DETATCH)" = "true" ]; then \
 		docker-compose -f ./docker-compose.yml up -d; \
@@ -52,6 +53,7 @@ prep_dirs:
 	@chmod +x ./srcs/request_manager/init.sh
 
 clean:
+	@clear
 	make -C srcs/common_tools/ clean
 	@docker-compose -f docker-compose.yml stop
 	@docker ps -qa | xargs -r docker stop
@@ -62,4 +64,4 @@ clean:
 	# Destroy all directories
 	rm -rf /data/wordpress
 
-.PHONY: all stop_containers down re clean
+.PHONY: all stop_containers down re clean remove_all
