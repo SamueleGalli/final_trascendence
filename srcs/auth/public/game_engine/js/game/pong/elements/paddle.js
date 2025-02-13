@@ -7,7 +7,8 @@ export class Paddle {
         this.y = canvas.height / 2 - this.height / 2;
         this.radius = this.width / 2;
         this.color = color;
-        this.baseSpeed = canvas.height * 0.008; // Base speed based on screen height
+        this.speedPercentage = 0.5;
+        this.baseSpeed = canvas.height * this.speedPercentage; // Base speed based on screen height
         this.speed = this.baseSpeed; // Initialize speed based on canvas height
         this.upKey = upKey;
         this.downKey = downKey;
@@ -21,22 +22,32 @@ export class Paddle {
         if (key === this.downKey) this.moveDown = isPressed;
     }
 
-    update() {
-        if (this.moveUp && this.y > 15) this.y -= this.speed;
-        if (this.moveDown && this.y + this.height < this.canvas.height - 15) this.y += this.speed;
+    update(game) {
+        if (this.moveUp && this.y > game.wallThickness * 1.5) this.y -= this.speed * game.deltaTime;
+        if (this.moveDown && this.y + this.height < this.canvas.height - game.wallThickness * 1.5) this.y += this.speed * game.deltaTime;
     }
 
-    resize(x) {
-        this.width = this.canvas.width * 0.01;
-        this.height = this.canvas.height * 0.2;
-        this.x = x - this.width / 2;
-        this.y = this.canvas.height / 2 - this.height / 2;
+    resize(game) {
+        const paddleRelativeX = this.x / game.oldCanvasWidth;
+        const paddleRelativeY = this.y / game.oldCanvasHeight;
+        const paddleRelativeSpeed = this.baseSpeed / game.oldCanvasHeight;
+
+        this.x = paddleRelativeX * game.canvas.width;
+        this.y = paddleRelativeY * game.canvas.height;
+    
+        // Ricalcola la velocità della palla
+        this.baseSpeed = paddleRelativeSpeed * game.canvas.height;
+        // Calculate new radius
+        this.radius = game.canvas.width * 0.006;
+        this.width = game.canvas.width * 0.01;
+        this.height = game.canvas.height * 0.2;
+        //this.x = x - this.width / 2;
+        //this.y = game.canvas.height / 2 - this.height / 2;
         this.radius = this.width / 2;
-        this.baseSpeed = this.canvas.height * 0.008; // Base speed based on screen height
         this.speed = this.baseSpeed; // Initialize speed based on canvas height
-        if (this.isPaddle2) {
+        /*if (this.isPaddle2) {
             this.x = newCanvasWidth - this.width - 10;
-        }
+        }*/
     }
 
     reset() {
@@ -74,34 +85,34 @@ export class Paddle {
         return ball.y;
     }
 
-    move_ia(ball, lastMoveTime) {
+    move_ia(ball, game, lastMoveTime) {
         const now = Date.now();
-        if (now - lastMoveTime > 1000) { // 1 secondo
+        if (now - lastMoveTime > 1000) // 1 secondo
             lastMoveTime = now;
+        
+        if (ball.speedX > 0) { // Solo se la palla si muove verso destra
+            this.speed = this.baseSpeed * this.speedPercentage;
     
-            // Controlla se la palla sta andando verso destra (verso la paddle2)
-            if (ball.speedX > 0) {
-                this.speed = this.baseSpeed * 0.40;
+            let targetY = this.predictBallY(ball);  // Previsione posizione futura della palla
+            let currentCenter = this.y + this.height / 2; // Centro della paddle
+            let distance = targetY - currentCenter;  // Differenza tra paddle e palla
+            let direction = Math.sign(distance);  // Direzione del movimento
     
-                let targetY = this.predictBallY(ball);  // Prevedi la posizione della palla
-                let distance = targetY - (this.y + this.height / 2);  // Calcola la distanza dalla posizione della paddle
-                let direction = Math.sign(distance);  // Direzione per il movimento della paddle
-                let aiSpeed = this.speed * (this.canvas.height / 500) * 0.5;  // Usa this.canvas.height al posto di canvas.height
+            // Smorzamento per evitare oscillazioni brusche
+            let smoothingFactor = 4; // Riduci se l'IA si muove troppo lenta
+            let aiSpeed = this.speed * game.deltaTime * smoothingFactor; 
     
-                // Muovi la paddle dell'IA in base alla distanza dalla palla
-                if (Math.abs(distance) > aiSpeed)
-                    this.y += aiSpeed * direction;
-                else
-                    this.y += distance;
+            // Se la distanza è maggiore della velocità calcolata, muoviti gradualmente
+            if (Math.abs(distance) > aiSpeed)
+                this.y += aiSpeed * direction;
+            else
+                this.y += distance; // Muoviti direttamente alla posizione target se molto vicina
     
-                // Limita il movimento della paddle dentro i confini del canvas
-                if (this.y < 0) this.y = 0;
-                if (this.y + this.height > this.canvas.height) this.y = this.canvas.height - this.height;
-                if (distance < -5) this.move('up');
-                else if (distance > 5) this.move('down');
-            }
+            // Limita il movimento della paddle dentro i confini del canvas
+            this.y = Math.max(game.wallThickness * 1.5, Math.min(this.canvas.height - this.height - game.wallThickness * 1.5, this.y));
         }
     }
+    
 
     render(ctx) {
         ctx.fillStyle = this.color;

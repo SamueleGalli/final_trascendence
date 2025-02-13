@@ -1,4 +1,4 @@
-import { current_user, updateUserProfile} from "../modes.js";
+import { current_user, updateUserProfile, } from "../modes.js";
 import { emailHandler} from "../../game/pong/other/profile_logic.js";
 import { profile , profiles} from "../../login/user.js";
 import { savebio, saveimage, savename } from "../../game/pong/other/profile_logic.js";
@@ -119,8 +119,8 @@ function saved(yourDataSection)
 
 function fixnames(yourDataSection)
 {
-    yourDataSection.style.marginTop = '-20';
 
+    yourDataSection.style.marginTop = '-20';
     let myName = yourDataSection.querySelector("#myName");
     myName.style.fontSize = "1.6em";
     myName.style.fontFamily = "'Liberty', sans-serif";

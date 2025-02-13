@@ -1,3 +1,5 @@
+import { current_user,  from "./modes";
+
 export default function Userstats() {
     return `
         <h1 class="text">
@@ -30,6 +32,8 @@ export default function Userstats() {
 }
 
 export function showUserStats() {
+    
+
     document.getElementById('viewStatsButton').addEventListener('click', () => {
         const playerName = document.getElementById('playerName').value.trim();
 

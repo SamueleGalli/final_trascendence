@@ -1,5 +1,4 @@
 import { friend_list } from "../login/user.js";
-import { current_user } from "./modes.js";
 
 export default function Friends() {
     return `
@@ -26,6 +25,7 @@ export default function Friends() {
 }
 
 export function Friendlists() {
+    
     let text = document.querySelector('#friendtext');
     text.style.fontSize = "1.6em";
     text.style.fontFamily = "'Liberty', sans-serif";

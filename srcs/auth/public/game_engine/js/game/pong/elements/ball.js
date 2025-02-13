@@ -6,18 +6,20 @@ export class Ball {
         this.y = y;
         this.canvas = canvas;
         this.ctx = ctx;
-        this.speedX = canvas.width * 0.005;
-        this.speedY = canvas.width * 0.005;
+        this.speedPercentage = 0.2;
+        this.speedX = canvas.width * this.speedPercentage;
+        this.speedY = canvas.width * this.speedPercentage;
         this.prevSpeedX = 0;
         this.prevSpeedY = 0;
-        this.maxSpeed = canvas.width * 0.01;
+        this.maxSpeedPercentage = 0.6;
+        this.maxSpeed = canvas.width * this.maxSpeedPercentage;
         this.speedIncreaseFactor = canvas.width * 0.0001;
         this.radius = canvas.width * 0.006;
         this.color = color;
         this.trailColor = trailColor;
         this.maxAngle = Math.PI / 4;
         this.trail = [];
-        this.trailLength = 8;
+        this.trailLength = 1;
         this.hits = 0;
         this.hide = false;
         this.out = false;
@@ -39,7 +41,7 @@ export class Ball {
             game.scoreP2++;
             //AI paddle is paused
             game.paddle2Paused = true;
-            //screenShake(300, 15);
+           
 
             // Reposition ball to center
             setTimeout(() => {
@@ -61,7 +63,7 @@ export class Ball {
             game.scoreP1++;
             //AI paddle is paused
             game.paddle2Paused = true;
-            //screenShake(500, 25);
+            
 
             // Reposition ball to center
             setTimeout(() => {
@@ -77,12 +79,15 @@ export class Ball {
     update(game, paddle1, paddle2, powerup, wallThickness) {
         let relativeY;
         let bounceAngle;
-        
-        this.x += this.speedX;
-        this.y += this.speedY;
 
-        this.trail.push({ x: this.x, y: this.y }); // Save ball trail position
-        if (this.trail.length > this.trailLength) this.trail.shift(); // Remove old trail positions
+       
+        if (game.deltaTime > 0.1) return;
+        
+        this.x += this.speedX * game.deltaTime;
+        this.y += this.speedY * game.deltaTime;
+
+        //this.trail.push({ x: this.x, y: this.y }); // Save ball trail position
+        //if (this.trail.length > this.trailLength) this.trail.shift(); // Remove old trail positions
         
         // Wall collisions
 
@@ -176,24 +181,27 @@ export class Ball {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    resize() {
+    resize(game) {
 
-        console.log("ball resize");
-        // Reposition ball based on new canvas size
-        this.x = this.canvas.width / 2;
-        this.y = this.canvas.height / 2;
+        const ballRelativeX = this.x / game.oldCanvasWidth;
+        const ballRelativeY = this.y / game.oldCanvasHeight;
+        const ballRelativeSpeedX = this.speedX /  game.oldCanvasWidth;
+        const ballRelativeSpeedY = this.speedY / game.oldCanvasHeight;
 
-        // Calculate new speed
-        this.speedX = this.canvas.width * 0.005;
-        this.speedY = this.canvas.width * 0.005;
+        this.x = ballRelativeX * game.canvas.width;
+        this.y = ballRelativeY * game.canvas.height;
+    
+        // Ricalcola la velocità della palla
+        this.speedX = ballRelativeSpeedX * game.canvas.width;
+        this.speedY = ballRelativeSpeedY * game.canvas.height;
         // Calculate new radius
-        this.radius = this.canvas.width * 0.006;
+        this.radius = game.canvas.width * 0.006;
 
         // Calculate new trail length
-        this.trailLength = Math.max(8, Math.floor(this.canvas.width * 0.01));
+        //this.trailLength = Math.max(8, Math.floor(this.canvas.width * 0.01));
     }
 
-    render() {
+    render(game) {
         if (!this.hide) {
             this.ctx.fillStyle = this.trailColor;
             for (let i = 0; i < this.trail.length; i++) {
@@ -230,8 +238,8 @@ export class Ball {
         bounceAngle = Math.random() * 0.5;
         console.log("scorer: " + scorer);
         
-        this.speedX = (Math.abs(this.canvas.width * 0.005) * (scorer === 1 ? 1 : -1));
-        //this.speedY = (Math.random() * - 1);
+        this.speedX = (Math.abs(this.canvas.width * this.speedPercentage) * (scorer === 1 ? 1 : -1));
         this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX);
+        //this.speedY = (Math.random() * - 1);
     }   
 }

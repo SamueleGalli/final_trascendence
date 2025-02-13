@@ -127,14 +127,36 @@ window.onpopstate = function () {
     }
 };
 
+export function access_denied()
+{
+    navigate("/access_denied", "Access Denied");
+    setTimeout(() => {
+        navigate("/", "home");
+    }, 3000);
+}
+
 export const addModesPageHandlers = () => {
+    fetch("http://localhost:8008", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({current_user}),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();  // Process the response as JSON if needed
+        }
+        throw new Error("Network response was not ok.");
+    })
+    .then(data => {
+        console.log("Server Response:", data);
+    })
+    .catch(error => {
+        console.error("There was an error with the fetch operation:", error);
+    });
     if (current_user === null)
-    {
-        navigate("/access_denied", "Access Denied");
-        setTimeout(() => {
-            navigate("/", "home");
-        }, 3000);
-    }
+        access_denied();
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');
     const tournamentButton = document.getElementById('tournamentButton');

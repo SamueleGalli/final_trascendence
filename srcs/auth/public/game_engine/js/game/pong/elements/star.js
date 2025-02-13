@@ -1,9 +1,13 @@
 export class Star {
-    constructor(canvas, ctx) {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.5 + 0.5; 
-        this.twinkleSpeed = Math.random() * 0.02 + 0.02;
+    constructor(game, canvas, ctx) {
+        const maxWidth = canvas.width - game.wallThickness * 2;
+        const minWidth = game.wallThickness * 2;
+        const maxHeight = canvas.height - game.wallThickness * 2;
+        const minHeight = game.wallThickness * 2;
+        this.x = Math.floor(Math.random() * (maxWidth - minWidth + 1)) + minWidth;
+        this.y = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
+        this.size = Math.random() * game.canvas.width * 0.002; 
+        this.twinkleSpeed = Math.random() * 0.05;
         this.alpha = Math.random();
         this.canvas = canvas;
         this.ctx = ctx;

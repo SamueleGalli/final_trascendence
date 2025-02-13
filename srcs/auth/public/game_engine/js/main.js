@@ -164,7 +164,7 @@ const loadContent = async () => {
                 forza4ShowUserStatistics();
                 break;
             case "/forza4/game":
-                startforza4Game();
+                startForza4Game();
                 break;
             default:
                 break;

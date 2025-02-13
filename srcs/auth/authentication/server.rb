@@ -31,7 +31,6 @@ server.mount_proc '/' do |req, res|
   end
 end
 
-
 set_routes(server)
 
 trap 'INT' do

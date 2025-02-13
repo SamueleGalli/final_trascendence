@@ -1,6 +1,6 @@
 import { profile } from "../../login/user.js";
 import { show_full_bio } from "../../game/pong/other/bio_cleaner.js";
-import { current_user, change_name, update_image} from "../modes.js";
+//import { current_user, access_denied } from "../modes.js";
 
 export default function Stats()
 {
@@ -34,6 +34,7 @@ export default function Stats()
 
 function highlight_title(mystats, user_realname, biobutton)
 {
+
     let title = document.querySelector("#title");
     let email_title = document.querySelector("#myemail");
     let rnametitle = document.querySelector("#myrealname");

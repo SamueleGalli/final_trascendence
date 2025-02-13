@@ -1,7 +1,7 @@
 import { navigate } from "../../main.js";
 import { token1Color, token2Color } from "../../game/forza4/data/forza4_game_global.js";
 import { setToken1Color, setToken2Color, setBoardBackground } from "../../game/forza4/data/forza4_game_global.js";
-
+import { current_user, } from "../modes.js";
 export function Forza4Customize() {
     const html = `
     <div id="forza4Customize">
@@ -33,6 +33,7 @@ export function Forza4Customize() {
 
 
 export function forza4Config() {
+
 
     const token1ColorPicker = document.getElementById('token1ColorPicker');
     const token2ColorPicker = document.getElementById('token2ColorPicker');

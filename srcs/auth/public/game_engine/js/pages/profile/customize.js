@@ -1,7 +1,7 @@
 import { navigate } from "../../main.js";
 import { ballColor, paddleColor, ballTrailColor, wallsColor } from "../../game/pong/data/game_global.js";
 import { setBallColor, setBallTrailColor, setPaddleColor, setWallsColor, setPowerUpState, setBackground} from "../../game/pong/data/game_global.js";
-import { current_user, change_name, update_image} from "../modes.js";
+import { current_user, change_name, update_image, } from "../modes.js";
 
 export default function Customize() {
     return `
@@ -72,6 +72,7 @@ export default function Customize() {
 }
 
 export function addCustomizeGame() {
+
     const applyCustomization = document.getElementById('applyCustomization');
     let ballColorPicker = document.getElementById('ballColorPicker');
     let paddleColorPicker = document.getElementById('paddleColorPicker');

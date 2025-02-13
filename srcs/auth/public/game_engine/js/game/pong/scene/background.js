@@ -2,7 +2,7 @@ import { Star } from "../elements/star.js";
 import { background } from "../data/game_global.js";
 export function createStarsBackground(game, count) {
     for (let i = 0; i < count; i++) {
-        const star = new Star(game.canvas, game.ctx);
+        const star = new Star(game, game.canvas, game.ctx);
         game.stars.push(star);
     }
 }
