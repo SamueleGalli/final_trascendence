@@ -1,5 +1,5 @@
 import { navigate } from "../../main.js";
-//import { access_denied, current_user } from "../modes.js";
+import { access_denied, current_user } from "../modes.js";
 export default function Settings() {
     return `
         <h1 class="text">
@@ -31,8 +31,11 @@ export default function Settings() {
     `;
 }
 
-export const addSettingsPageHandlers = () => {
 
+
+export const addSettingsPageHandlers = () => {
+    if (current_user === null)
+        access_denied();
     const customizePongButton = document.getElementById('customizePongButton');
     const customizeForza4Button = document.getElementById('customizeForza4Button');
 

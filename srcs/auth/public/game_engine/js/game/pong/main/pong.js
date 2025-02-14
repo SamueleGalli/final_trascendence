@@ -30,9 +30,12 @@ export function startPongGame(matchPlayers, gameMode) {
     backToMenuButton = document.getElementById('backToMenuButton');
     
     // Hide the buttons when the game starts
-    backToBracketButton.hidden = true; 
-    backToRobinButton.hidden = true;
-    backToMenuButton.hidden = true;
+    if (!backToBracketButton && !backToRobinButton && !backToMenuButton)
+    {
+        backToBracketButton.hidden = true; 
+        backToRobinButton.hidden = true;
+        backToMenuButton.hidden = true;
+    }
     
     resetMatchStatsData();
     // Set the game mode (classic, ai, knocknout, rondrobin)

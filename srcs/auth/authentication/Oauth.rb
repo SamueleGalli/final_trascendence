@@ -1,5 +1,6 @@
 require 'oauth2'
 require 'dotenv'
+require 'colorize'
 Dotenv.load
 
 class OAuthClient

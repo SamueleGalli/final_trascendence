@@ -1,6 +1,6 @@
 import { profile } from "../../login/user.js";
 import { show_full_bio } from "../../game/pong/other/bio_cleaner.js";
-//import { current_user, access_denied } from "../modes.js";
+import { current_user } from "../modes.js";
 
 export default function Stats()
 {

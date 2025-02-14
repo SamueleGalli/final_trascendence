@@ -1,5 +1,5 @@
 import { current_user } from "../../../pages/modes.js";
-
+//import { user_name } from "../../../login/guest_logic.js";
 export function savebio(me, yourDataSection)
 {
     const bioInput = yourDataSection.querySelector('#bioInput');
@@ -32,6 +32,7 @@ export function savename(me, yourDataSection)
     if (newname.length >= 15)
         return("Error: Name too long(" + newname + ")\n");
     if (me.display_name !== newname)
+    //|| me.display_name === user_name(name))
     {
         me.display_name = newname;
         return ("Saved name successfully(" + newname + ")\n");

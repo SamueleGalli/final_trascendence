@@ -3,9 +3,6 @@ require 'json'
 require 'pg'
 require 'colorize'
 require 'logger'
-#load ((File.file? '/var/common/BetterPG.rb') ? '/var/common/BetterPG.rb' : '../../common_tools/tools/BetterPG.rb')
-
-#LOGIN = BetterPG::SimplePG.new "users", ["login_name TEXT", "name TEXT", "email TEXT", "image TEXT", "bio TEXT", "id INT"]
 
 module Other_logic
 
@@ -15,7 +12,6 @@ module Other_logic
     response.content_type = 'text/html  '
     response.write(html_content)
   end
-  
   def get_user_data_from_oauth_provider(token)
     uri = URI("https://api.intra.42.fr/v2/me")
     request = Net::HTTP::Get.new(uri)
@@ -31,6 +27,7 @@ module Other_logic
       puts "Errore API 42: #{response.code}"
       return nil
     end
+    #array di utenti della 42 per controllare login_name
         name = user_data['usual_full_name']
         email = user_data['email']
         image = user_data['image']['link']
@@ -38,4 +35,22 @@ module Other_logic
     #LOGIN.addValues ["'" + login_name.to_s + "'", "'" + name.to_s+ "'" , "'" + email.to_s + "'"], ["login_name", "name", "email"]
     return { 'login_name' => login_name, 'name' => name, 'email' => email, 'image' => image }
   end
+
 end
+
+#def get_user_data_from_oauth_provider(token)
+#  uri = URI("https://api.intra.42.fr/v2/me")
+#  request = Net::HTTP::Get.new(uri)
+#  request["Authorization"] = "Bearer #{token}"
+#
+#  response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+#    http.request(request)
+#  end
+#
+#  payload = { name: name, email: email, image: image, login_name: login_name }.to_json
+#
+#  send_data_to_server("http://localhost:8008", payload)
+#  else
+#    puts "Errore API 42: #{response.code}"
+#  end
+#end

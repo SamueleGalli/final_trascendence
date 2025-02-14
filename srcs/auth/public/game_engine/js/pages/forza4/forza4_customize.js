@@ -1,7 +1,7 @@
 import { navigate } from "../../main.js";
 import { token1Color, token2Color } from "../../game/forza4/data/forza4_game_global.js";
 import { setToken1Color, setToken2Color, setBoardBackground } from "../../game/forza4/data/forza4_game_global.js";
-import { current_user, } from "../modes.js";
+import { current_user, change_name, update_image} from "../modes.js";
 export function Forza4Customize() {
     const html = `
     <div id="forza4Customize">
@@ -55,6 +55,8 @@ export function forza4Config() {
         setToken2Color(token2ColorPicker.value);
         //window.history.pushState({}, path, window.location.origin + path);
         navigate("/modes", "Back to Game Modes");
+        change_name(current_user.display_name);
+        update_image(current_user.image);
     });
 
     f4ButtonBackground1.addEventListener('click', () => {

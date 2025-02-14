@@ -2,7 +2,6 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'cgi'
-require 'erb'
 require 'colorize'
 require_relative 'other_logic'
 
@@ -17,7 +16,6 @@ module AuthMethods
       response.write({ auth_url: auth_url }.to_json)
     end
   end
-
   def callback(request, response, client)
     code = request.params['code']
     if code.nil? || code.empty?
@@ -63,5 +61,33 @@ module AuthMethods
     response.content_type = 'text/html'
     response.write(html_output)
   end
-  
 end
+
+
+#def callback(request, response, client)
+#  code = request.params['code']
+#  if code.nil? || code.empty?
+#    response.content_type = 'application/json'
+#    response.write({ success: false, error: "No authorization code received" }.to_json)
+#    return
+#  end
+#
+#  token = client.get_token(code)
+#  response.set_cookie('access_token', {
+#    value: token.token,
+#    path: '/',
+#    max_age: 3600,
+#    secure: true,    # Only on HTTPS
+#    httponly: true   # Not accessible via JavaScript
+#  })
+#
+#  request.session[:authenticated] = true
+#  request.session[:token] = token.token
+#
+#  get_user_data_from_oauth_provider(token.token)
+#
+#  html_content = File.read('./pages_auth/auth_page.html')
+#
+#  response.content_type = 'text/html'
+#  response.write(html_output)
+#end

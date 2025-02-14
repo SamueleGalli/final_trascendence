@@ -114,7 +114,7 @@ function syncState() {
     auth = localStorage.getItem('auth_done') === 'true';
 }
 
-window.addEventListener('unload', () => {
+window.addEventListener('beforeunload', () => {
     if (!isCurrentTabLogged || auth === false)
         return;
     if (isCurrentTabLogged)
@@ -181,6 +181,7 @@ function get_data(event) {
         current_user.type = "login";
         current_user.email = user.email;
         current_user.realname = user.name;
+        current_user.entered = 1;
         updateUserProfile(current_user);
     }
 }
@@ -212,12 +213,17 @@ export function performLogin() {
     if (already_logged())
         return;
     fetch('/auth/login')
-        .then(response => response.json())
-        .then(data => {
-            logging(data);
-        })
-        .catch(error => {
-            console.error("Errore di rete:", error);
-            localStorage.setItem('authenticated', 'false');
-        });
+    .then(response => response.json())
+    .then(data => {
+        logging(data);
+    })
+    .catch(error => {
+        console.error("Errore di rete:", error);
+        localStorage.setItem('authenticated', 'false');
+    });
+    /*
+window.addEventListener("beforeunload", () => {
+    localStorage.clear();
+});
+    */
 }

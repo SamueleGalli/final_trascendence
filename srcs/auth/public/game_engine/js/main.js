@@ -1,5 +1,5 @@
 import Login, { addLoginPageHandlers } from "./pages/profile/login.js";
-import Modes, { addModesPageHandlers } from "./pages/modes.js";
+import Modes, { access_denied, addModesPageHandlers, current_user} from "./pages/modes.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament/tournament.js";
 import PongGame from "./pages/pong_game.js";
 import Knockout, { addKnockoutPageHandlers } from "./pages/tournament/knockout.js";
@@ -50,6 +50,17 @@ const routes = {
     "/access_denied": Access_Denied
 };
 
+/*window.addEventListener("beforeunload", () => {
+    fetch("http://localhost:8008", {method: "get_user", 
+    body: entered
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        entered = 0;
+    })
+});*/
+
 // Funzione universale per la navigazione
 export const navigate = (path, title = "") => {
     history.pushState({ path }, title, path);
@@ -99,72 +110,147 @@ const loadContent = async () => {
         }
         else
             restoreBackground();
-
         switch (path) {
             case "/":
-                    addLoginPageHandlers();
+                addLoginPageHandlers();
                 break;
-            case "/modes":
-                addModesPageHandlers();
+            case "/stats":
+                if (current_user === null)
+                    access_denied();
                 break;
-            case "/tournament":
-                addTournamentPageHandlers();
+            case "/friends":
+                if (current_user === null)
+                    access_denied();
+                else if (current_user.type === "guest")
+                    alert("You must be logged to use this feature!");
                 break;
-            case "/tournament/knockout":
-                addKnockoutPageHandlers();
-                resetBracketState();
-                break;
-            case "/tournament/knockout/bracket":
-                addBracketPageHandlers();
-                //players = JSON.parse(sessionStorage.getItem('players'));
-                //console.log("title => " + buttonTitle);
-                if (buttonTitle === "Return from Match") {
-                    //console.log("return to bracket");
-                    winner = sessionStorage.getItem('winner');
-                    backToBracket(winner);
-                }
-                else
-                    drawBracket(players);          
-                break;
-            case "/tournament/roundrobin":
-                addRoundRobinPageHandlers();
-                break;
-            case "/tournament/roundrobin/robinranking":
-                addRobinRankingPageHandlers();
-                if (buttonTitle === "Return from Match") {
-                    //console.log("return to bracket");
-                    winner = sessionStorage.getItem('winner');
-                    assignPointsToPlayer(winner);
-                }
-                robinDraw(playerNames);
-                break;
-            case "/settings":
-                addSettingsPageHandlers();
-                break;
-            case "/settings/customizepong":
-                addCustomizeGame();
+            case "/profile":
+                if (current_user === null)
+                    access_denied();
                 break;
             case "/tournament/userstats":
-                addChartsPageHandlers();
-                showCharts();
+                if (current_user === null)
+                    access_denied();
+                break; 
+            case "/classic":
+                if (current_user === null)
+                    access_denied();
+                break;
+            case "/modes":
+                if (current_user === null)
+                    access_denied();
+                else
+                    addModesPageHandlers();
+                break;
+            case "/tournament":
+                if (current_user === null)
+                    access_denied();
+                else if (current_user.type === "guest")
+                    alert("You must be logged to use this feature!");
+                else
+                    addTournamentPageHandlers();
+                break;
+            case "/tournament/knockout":
+                if (current_user === null)
+                    access_denied();
+                else
+                {
+                    addKnockoutPageHandlers();
+                    resetBracketState();
+                }
+                break;
+            case "/tournament/knockout/bracket":
+                if (current_user === null)
+                    access_denied();
+                else
+                {
+                    addBracketPageHandlers();
+                    //players = JSON.parse(sessionStorage.getItem('players'));
+                    //console.log("title => " + buttonTitle);
+                    if (buttonTitle === "Return from Match") {
+                        //console.log("return to bracket");
+                        winner = sessionStorage.getItem('winner');
+                        backToBracket(winner);
+                    }
+                    else
+                    drawBracket(players);          
+                }
+                break;
+            case "/tournament/roundrobin":
+                if (current_user === null)
+                    access_denied();
+                else
+                    addRoundRobinPageHandlers();
+                break;
+            case "/tournament/roundrobin/robinranking":
+                if (current_user === null)
+                    access_denied();
+                else
+                {
+                    addRobinRankingPageHandlers();
+                    if (buttonTitle === "Return from Match") {
+                        //console.log("return to bracket");
+                        winner = sessionStorage.getItem('winner');
+                        assignPointsToPlayer(winner);
+                    }
+                    robinDraw(playerNames);
+                }
+                break;
+            case "/settings":
+                if (current_user === null)
+                    access_denied();
+                else
+                    addSettingsPageHandlers();
+                break;
+            case "/settings/customizepong":
+                if (current_user === null)
+                    access_denied();
+                else
+                    addCustomizeGame();
+                break;
+            case "/tournament/userstats":
+                if (current_user === null)
+                    access_denied();
+                else
+                {
+                    addChartsPageHandlers();
+                    showCharts();
+                }
                 break;
             case "/tournament/userstats/matchdetails":
-                showMatchDetails();
+                if (current_user === null)
+                    access_denied();
+                else
+                    showMatchDetails();
                 break;
             case "/forza4":
-                showForza4HomeScreen();
-                addForza4PageHandlers();
+                if (current_user === null)
+                    access_denied();
+                else
+                    showForza4HomeScreen();
+                    addForza4PageHandlers();
                 break;
             case "/settings/customizeforza4":
-                forza4Config();
+                if (current_user === null)
+                    access_denied();
+                else
+                    forza4Config();
                 break;
             case "/forza4/userstats":
-                Forza4UserStats();
-                addForza4StatsPageHandlers();
-                forza4ShowUserStatistics();
+                if (current_user === null)
+                    access_denied();
+                else
+                {
+                    Forza4UserStats();
+                    addForza4StatsPageHandlers();
+                    forza4ShowUserStatistics();
+                }
                 break;
             case "/forza4/game":
-                startForza4Game();
+                if (current_user === null)
+                    access_denied();
+                else
+                    startForza4Game();
                 break;
             default:
                 break;

@@ -62,7 +62,7 @@ export default function Profile()
         <h2>Profile Image</h2>
         <img 
             id="profileImage" 
-            src="${current_user.image}" 
+            <img src="null">
             alt="Profile Image" 
             class="profile-image"
         />
@@ -93,7 +93,10 @@ function insert_user_data()
 
 export function profileHandler()
 {
+    if (current_user === null)
+        access_denied();
     insert_user_data();
+    myimageis.querySelector("#profileImage").src = me.image;
     const yourDataSection = document.querySelector('#yourData');
     fixnames(yourDataSection);
     emailHandler(me, yourDataSection);
@@ -114,6 +117,14 @@ function saved(yourDataSection)
     current_user.display_name = me.display_name;
     alert(saving);
     updateUserProfile(current_user);
+    /*fetch("http://localhost:8008", {method: "get_user" || "add_user", 
+    body: login_name, displayName, image, email
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        current_user = data;
+    })*/
     history.back();
 }
 

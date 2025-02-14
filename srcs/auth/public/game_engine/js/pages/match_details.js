@@ -1,5 +1,4 @@
 import { userName } from "./user_data.js";
-//import { current_user, access_denied } from "./modes.js";
 
 export default function MatchDetails() {
     return `
@@ -40,7 +39,6 @@ export default function MatchDetails() {
 
 
 export function showMatchDetails() {
-
     const matchDetailsContainer = document.getElementById("matchDetailsContainer");
     matchDetailsContainer.innerHTML = "";
     const playerName = userName;

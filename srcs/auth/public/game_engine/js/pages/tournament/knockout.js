@@ -1,5 +1,5 @@
 import { navigate } from "../../main.js";
-import { current_user, change_name, update_image} from "../modes.js";
+import { current_user, change_name, update_image, access_denied} from "../modes.js";
 
 export default function Knockout() {
     return `
@@ -44,6 +44,8 @@ export default function Knockout() {
 }
 
 export const addKnockoutPageHandlers = () => {
+    if (current_user === null)
+        access_denied();
     const radioButtons = document.querySelectorAll("input[name='players']");
     const backImageButton = document.getElementById('backImageButton');
     

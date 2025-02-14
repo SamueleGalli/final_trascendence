@@ -1,4 +1,4 @@
-import { navigate } from "../main.js";
+import { navigate } from '../main.js';
 import { profileHandler } from "./profile/profile.js";
 import { ShowStats } from "./profile/stats.js";
 import { profile } from "../login/user.js";
@@ -119,14 +119,6 @@ export default function Modes()
 
 history.pushState(null, null, location.href);
 
-window.onpopstate = function () {
-    if (location.pathname === "/")
-    {
-        navigate("/modes", "Modes");
-        history.pushState(null, null, location.href);
-    }
-};
-
 export function access_denied()
 {
     navigate("/access_denied", "Access Denied");
@@ -135,28 +127,38 @@ export function access_denied()
     }, 3000);
 }
 
-export const addModesPageHandlers = () => {
-    fetch("http://localhost:8008", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({current_user}),
+window.onpopstate = function () {
+    if (location.pathname === "/")
+    {
+        navigate("/modes", "Modes");
+        history.pushState(null, null, location.href);
+    }
+};
+
+function    add_user_to_database(user)
+{
+    fetch("http://localhost:8008", {method: "add_user", 
+    body: JSON.stringify(current_user)
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();  // Process the response as JSON if needed
-        }
-        throw new Error("Network response was not ok.");
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log("Server Response:", data);
+        console.log(data);
     })
-    .catch(error => {
-        console.error("There was an error with the fetch operation:", error);
-    });
-    if (current_user === null)
-        access_denied();
+}
+
+export const addModesPageHandlers = () => {
+    if (current_user)
+        add_user_to_database(current_user);
+    /*
+    fetch("http://localhost:8008", {method: "get_user", 
+    body: login_name, displayName, image, email
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        current_user = data;
+    })
+    */
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');
     const tournamentButton = document.getElementById('tournamentButton');

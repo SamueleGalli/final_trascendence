@@ -1,8 +1,4 @@
 //import { navigate } from "../main.js";
-//import { access_denied, current_user} from "./modes.js";
-
-/*if (current_user === null)
-    access_denied();*/
 
 export default function PongGame() {
     return `

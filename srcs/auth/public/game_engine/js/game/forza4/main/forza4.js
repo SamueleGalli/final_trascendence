@@ -3,6 +3,7 @@ import { token1Color, token2Color, boardBackground, f4matchData, powerUpMode} fr
 import { createGrid } from "../board/forza4_grid.js";
 import { updateTimer, resetTimer } from "../other/forza4_timer.js";
 import { activatePowerup } from "../board/forza4_powerup.js";
+import { current_user, change_name, update_image} from "../../../pages/modes.js";
 
 let backImageButton;
 
@@ -137,6 +138,8 @@ class Forza4Game {
         backImageButton?.addEventListener('click', () => {
             resetTimer(this);
             navigate("/modes", "Return to Game Mode");
+            change_name(current_user.display_name);
+            update_image(current_user.image);
         });
         window.addEventListener("popstate", (event) => {
            resetTimer(this);

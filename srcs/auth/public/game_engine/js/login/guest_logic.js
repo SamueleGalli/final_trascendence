@@ -2,17 +2,44 @@ import { navigate } from "../main.js";
 import { Guest } from "./user.js";
 import { update_image, change_name, current_user, updateUserProfile } from "../pages/modes.js";
 
-export let guests = JSON.parse(localStorage.getItem('guests')) || [];
-export let currentGuestId = null;
+export let guest = JSON.parse(localStorage.getItem('guest')) || [];
 
 window.addEventListener('storage', (event) => {
-    if (event.key === 'guests') {
-        guests = JSON.parse(localStorage.getItem('guests')) || [];
+    if (event.key === 'guest') {
+        guest = JSON.parse(localStorage.getItem('guest')) || [];
     }
 });
 
+/*export function user_name(name)
+{
+    console.log("name = " + name);
+    fetch("http://localhost:8008",
+    {
+        method: "get_user",
+        body: JSON.stringify({ "display_name" : name }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("data = ", data);
+        if (data.status === "no users found" || !data.user || data.user.length === 0)
+        {
+            console.log("hi enter here\n");
+            if (data.user === user)
+                return 0;
+            else
+                return 1
+        }
+    })
+    .catch(error => console.error("Fetch error:", error));
+}*/
+
 export function guest_login() {
-    updateLocalStorage();
+    if (sessionStorage.getItem('currentGuestId') !== null) {
+        alert('A guest is already logged in this session.');
+        return;
+    }
+
+    localStorage.setItem('guest', JSON.stringify(guest));
     let name = prompt("Enter your guest name:");
     if (!name) {
         alert('No name. Please try again');
@@ -28,7 +55,9 @@ export function guest_login() {
         alert('Name too long.');
         return;
     }
-    if (guests.some(guest => guest.name === name)) {
+    if (guest.some(guest => guest.name === name))
+    //|| user_name(name) === 1)
+    {
         alert('Name already taken.');
         return;
     }
@@ -36,13 +65,13 @@ export function guest_login() {
 }
 
 function addGuest(name) {
-    const guestId = generateUniqueId();
-    let newGuest = new Guest("game_engine/images/guest.jpg", name, null, guestId);
-    guests.push(newGuest);
-    currentGuestId = guestId;
-    updateLocalStorage();
-    sessionStorage.setItem('currentGuestId', guestId);
+    let newGuest = new Guest("game_engine/images/guest.jpg", name, null);
+    guest.push(newGuest);
+    localStorage.setItem('guest', JSON.stringify(guest));
     updateUIForGuest(newGuest);
+
+    // Salva l'ID del guest nella sessione
+    sessionStorage.setItem('currentGuestId', newGuest.id);
 }
 
 function updateUIForGuest(guest) {
@@ -51,38 +80,8 @@ function updateUIForGuest(guest) {
 }
 
 window.addEventListener("beforeunload", () => {
-    const guestId = sessionStorage.getItem('currentGuestId');
-    if (guestId !== null) {
-        removeGuest(guestId);
-        updateLocalStorage();
-        sessionStorage.removeItem('currentGuestId');
-    }
+    localStorage.clear();
 });
-
-function removeGuest(guestId) {
-    guests = guests.filter(guest => guest.id !== guestId);
-}
-
-function updateLocalStorage() {
-    localStorage.setItem('guests', JSON.stringify(guests));
-}
-
-function generateUniqueId() {
-    return '_' + Math.random().toString(36).slice(2, 11);
-}
-
-function updateGuestDataFromSession() {
-    const guestId = sessionStorage.getItem('currentGuestId');
-    if (guestId)
-    {
-        const guest = guests.find(guest => guest.id === guestId);
-        if (guest)
-            update_guest(guest);
-    }
-}
-
-updateGuestDataFromSession();
-
 
 function update_guest(guest)
 {
@@ -93,5 +92,5 @@ function update_guest(guest)
     current_user.display_name = guest.name;
     current_user.type = "guest";
     updateUserProfile(current_user);
-
+    current_user.entered = 1;
 }

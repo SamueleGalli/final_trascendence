@@ -164,16 +164,16 @@ services:
     entrypoint: /var/www/init.sh
     working_dir: /var/www
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx-server
-    restart: always
-    ports:
-      - "8443:443"
-    volumes:
-      - ./srcs/nginx/:/var/www/nginx
-      - ./srcs/auth/public:/usr/share/nginx/html:ro
-    networks:
-      - app-network
-    entrypoint: bash /var/www/nginx/server.sh
-    working_dir: /var/www
+  #nginx:
+  #  image: nginx:latest
+  #  container_name: nginx-server
+  #  restart: always
+  #  ports:
+  #    - "8443:443"
+  #  volumes:
+  #    - ./srcs/nginx/:/var/www/nginx
+  #    - ./srcs/auth/public:/usr/share/nginx/html:ro
+  #  networks:
+  #    - app-network
+  #  entrypoint: bash /var/www/nginx/server.sh
+  #  working_dir: /var/www

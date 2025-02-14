@@ -1,5 +1,5 @@
 import { navigate } from "../../main.js";
-import { current_user, change_name, update_image} from "../modes.js";
+import { current_user, change_name, update_image, access_denied} from "../modes.js";
 export default function Tournament() {
     return `
         <img id="backImageButton" src="../game_engine/images/home.png" alt="Back" class="back-button">
@@ -48,6 +48,8 @@ export default function Tournament() {
 }
 
 export const addTournamentPageHandlers = () => {
+    if (current_user === null)
+        access_denied();
     const knockoutTournament = document.getElementById('knockoutTournament');
     const roundrobinTournament = document.getElementById('roundrobinTournament');
     const userStatisticsButton = document.getElementById('userStatisticsButton');

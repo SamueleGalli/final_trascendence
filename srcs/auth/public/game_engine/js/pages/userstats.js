@@ -1,4 +1,4 @@
-import { current_user,  from "./modes";
+import { current_user, access_denied} from "./modes";
 
 export default function Userstats() {
     return `
@@ -32,8 +32,8 @@ export default function Userstats() {
 }
 
 export function showUserStats() {
-    
-
+    if (current_user === null)
+        access_denied();
     document.getElementById('viewStatsButton').addEventListener('click', () => {
         const playerName = document.getElementById('playerName').value.trim();
 
