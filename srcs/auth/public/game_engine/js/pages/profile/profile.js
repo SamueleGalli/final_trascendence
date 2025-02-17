@@ -40,7 +40,7 @@ export default function Profile()
             style="font-size: 1.5em;"
             type="text" 
             id="displayNameInput" 
-            class="profile_form__field"
+            class="form__field"
             placeholder="Insert your new name"
         />
         <span id="displayNameLabel" style="display: none;  font-weight: bold;"></span>
@@ -50,7 +50,7 @@ export default function Profile()
         <textarea
             style="font-size: 0.5em; width: 60%; height: 100px;"
             id="bioInput" 
-            class="profile_form__field"
+            class="form__field"
             placeholder="Insert bio here"
         ></textarea>
     </div>
@@ -63,16 +63,12 @@ export default function Profile()
         <img 
             id="profileImage" 
             <img src="null">
-            alt="Profile Image" 
-            class="profile-image"
-        />
         <input 
             type="file" 
             id="imageUploadInput" 
             accept="image/*" 
             style="display: none;"
         />
-        <!--<button class="button-style" id="changeProfileImageBtn">Change Image</button> -->
         <button id="save" class="button-style"><span class="text-animation">Save Changes</span></button>
         <button onclick="history.back()" class="button-style">
             <span class="text-animation">Back To Menu</span>
@@ -96,7 +92,7 @@ export function profileHandler()
     if (current_user === null)
         access_denied();
     insert_user_data();
-    myimageis.querySelector("#profileImage").src = me.image;
+    document.querySelector("#profileImage").src = me.image;
     const yourDataSection = document.querySelector('#yourData');
     fixnames(yourDataSection);
     emailHandler(me, yourDataSection);
@@ -130,8 +126,7 @@ function saved(yourDataSection)
 
 function fixnames(yourDataSection)
 {
-
-    yourDataSection.style.marginTop = '-20';
+    yourDataSection.style.marginTop = '-20px'; 
     let myName = yourDataSection.querySelector("#myName");
     myName.style.fontSize = "1.6em";
     myName.style.fontFamily = "'Liberty', sans-serif";
@@ -149,10 +144,17 @@ function fixnames(yourDataSection)
     myBio.style.fontFamily = "'Liberty', sans-serif";
     myBio.style.color =" #09a09b"
 
-    let myImage = yourDataSection.querySelector("#profileImageSection");
-    myImage.style.fontSize = "1.6em";
-    myImage.style.fontFamily = "'Liberty', sans-serif";
-    myImage.style.color =" #09a09b"
+    let myImage_title = yourDataSection.querySelector("#profileImageSection");
+    myImage_title.style.fontSize = "1.6em";
+    myImage_title.style.fontFamily = "'Liberty', sans-serif";
+    myImage_title.style.color =" #09a09b"
+    let myImage = yourDataSection.querySelector("#profileImageSection img"); // Seleziona l'immagine dentro profileImageSection
+    if (myImage)
+    {
+        myImage.style.width = "150px";
+        myImage.style.height = "150px";
+        myImage.style.borderRadius = "50%";
+    }
 
     let emailtext = yourDataSection.querySelector("#emailtext");
     emailtext.style.fontSize = "2em";

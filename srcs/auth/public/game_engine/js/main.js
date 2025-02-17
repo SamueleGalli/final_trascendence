@@ -1,5 +1,6 @@
 import Login, { addLoginPageHandlers } from "./pages/profile/login.js";
-import Modes, { access_denied, addModesPageHandlers, current_user} from "./pages/modes.js";
+import Modes, {addModesPageHandlers, change_name, update_image, current_user} from "./pages/modes.js";
+import { access_denied } from "./game/pong/main/modes_logic.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament/tournament.js";
 import PongGame from "./pages/pong_game.js";
 import Knockout, { addKnockoutPageHandlers } from "./pages/tournament/knockout.js";
@@ -10,9 +11,9 @@ import { Charts, addChartsPageHandlers,showCharts } from "./pages/tournament/cha
 import MatchDetails, {showMatchDetails } from "./pages/match_details.js";
 import Bracket, { addBracketPageHandlers, drawBracket, backToBracket, resetBracketState } from "./pages/tournament/bracket.js";
 import { initializeGameCanvas } from "./game/pong/main/handling_Canvas.js";
-import Profile from "./pages/profile/profile.js";
+import Profile, { profileHandler } from "./pages/profile/profile.js";
 import Settings, { addSettingsPageHandlers } from "./pages/profile/settings.js";
-import Stats from "./pages/profile/stats.js";
+import Stats, {ShowStats} from "./pages/profile/stats.js";
 import { userName } from "./pages/user_data.js";
 import { Forza4Home, showForza4HomeScreen, addForza4PageHandlers } from "./pages/forza4/forza4_home.js";
 import { Forza4Customize, forza4Config } from "./pages/forza4/forza4_customize.js";
@@ -66,6 +67,14 @@ export const navigate = (path, title = "") => {
     history.pushState({ path }, title, path);
     buttonTitle = title;
     loadContent();
+    if (path !== "/" && path !== "/access_denied")
+    {
+        if (current_user !== null)
+        {
+            change_name(current_user.display_name);
+            update_image(current_user.image);
+        }
+    }
 };
 
 function createPlayersArray(numPlayers) {
@@ -93,7 +102,6 @@ const loadContent = async () => {
     let playerNames;
     let numPlayers = 4;
 
-
     if (buttonTitle === "4" || buttonTitle === "5" || buttonTitle === "6" || buttonTitle === "7" || buttonTitle === "8" || buttonTitle === "16")
         numPlayers = +buttonTitle;
 
@@ -105,6 +113,11 @@ const loadContent = async () => {
     if (component) {
         app.innerHTML = await component();
         if (path === "/classic" || path === "/V.S._AI" || path === "/tournament/knockout/bracket/game" || path === "/tournament/roundrobin/robinranking/game") {
+            if (current_user === null)
+            {
+                access_denied();
+                return;
+            }
             initializeGameCanvas();
             document.getElementById('app').classList.add('no-background');
         }
@@ -117,30 +130,29 @@ const loadContent = async () => {
             case "/stats":
                 if (current_user === null)
                     access_denied();
+                else
+                    ShowStats()
                 break;
             case "/friends":
                 if (current_user === null)
                     access_denied();
                 else if (current_user.type === "guest")
                     alert("You must be logged to use this feature!");
+                else 
+                    Friendlists();
                 break;
             case "/profile":
                 if (current_user === null)
                     access_denied();
+                else
+                    profileHandler();
                 break;
-            case "/tournament/userstats":
-                if (current_user === null)
-                    access_denied();
-                break; 
             case "/classic":
                 if (current_user === null)
                     access_denied();
                 break;
             case "/modes":
-                if (current_user === null)
-                    access_denied();
-                else
-                    addModesPageHandlers();
+                addModesPageHandlers();
                 break;
             case "/tournament":
                 if (current_user === null)
@@ -212,10 +224,8 @@ const loadContent = async () => {
                 if (current_user === null)
                     access_denied();
                 else
-                {
                     addChartsPageHandlers();
                     showCharts();
-                }
                 break;
             case "/tournament/userstats/matchdetails":
                 if (current_user === null)

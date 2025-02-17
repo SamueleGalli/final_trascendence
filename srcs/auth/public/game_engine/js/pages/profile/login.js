@@ -1,5 +1,6 @@
 import { guest_login } from "../../login/guest_logic.js";
 import { performLogin, popupOpened } from "../../login/login_logic.js";
+import { current_user } from "../modes.js";
 
 export default function Login() {
     return `
@@ -31,16 +32,22 @@ export default function Login() {
 export const addLoginPageHandlers = () => {
     const loginButton = document.getElementById("loginButton");
     const guestButton = document.getElementById("guestButton");
-    if (loginButton && guestButton) {
+    if (loginButton && guestButton)
+    {
+        let user = (localStorage.getItem(current_user));
         loginButton.addEventListener("click", () => {
             if (popupOpened === true)
                 alert("popup already open finish authentication before continuing")
+            else if (user && user.entered === 1)
+                alert("You've already logged in!");
             else
                 performLogin();
         });
         guestButton.addEventListener("click", () => {
             if (popupOpened === true)
                 alert("Authenticating in progress....\nPlease wait.");
+            else if (user && user.entered === 1)
+                alert("You've already logged in!");
             else
                 guest_login();
         });

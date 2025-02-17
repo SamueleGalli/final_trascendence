@@ -201,13 +201,9 @@ export const addRobinRankingPageHandlers = () => {
         playerList = [];
         robinBackToMenuButton.style.display = "none";
         navigate("/modes", "Return to Game Mode");
-        change_name(current_user.display_name);
-        update_image(current_user.image);
     });
 
     backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
-        change_name(current_user.display_name);
-        update_image(current_user.image);
     });
 };

@@ -55,8 +55,6 @@ export function forza4Config() {
         setToken2Color(token2ColorPicker.value);
         //window.history.pushState({}, path, window.location.origin + path);
         navigate("/modes", "Back to Game Modes");
-        change_name(current_user.display_name);
-        update_image(current_user.image);
     });
 
     f4ButtonBackground1.addEventListener('click', () => {

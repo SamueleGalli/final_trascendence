@@ -31,11 +31,10 @@ export function startPongGame(matchPlayers, gameMode) {
     
     // Hide the buttons when the game starts
     if (!backToBracketButton && !backToRobinButton && !backToMenuButton)
-    {
-        backToBracketButton.hidden = true; 
-        backToRobinButton.hidden = true;
-        backToMenuButton.hidden = true;
-    }
+        return ;
+    backToBracketButton.hidden = true;
+    backToRobinButton.hidden = true;
+    backToMenuButton.hidden = true;
     
     resetMatchStatsData();
     // Set the game mode (classic, ai, knocknout, rondrobin)

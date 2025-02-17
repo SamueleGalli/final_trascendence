@@ -36,7 +36,12 @@ logger.level = Logger::DEBUG
 
 app = App.new(OAuthClient.new, logger)
 
-server = WEBrick::HTTPServer.new(Port: PORT)
+server = WEBrick::HTTPServer.new(
+  Port: PORT,
+  DocumentRoot: File.expand_path("../../public", __FILE__),
+  RequestCallback: proc { |req, res| res['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0' }
+)
+
 
 server.mount_proc '/' do |req, res|
   status, headers, body = app.call(req.meta_vars)

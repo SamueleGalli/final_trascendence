@@ -12,7 +12,7 @@ export function savebio(me, yourDataSection)
         return ("Error: No Bio saved(Please enter a bio)\n");
     if (newBio.length >= 400)
         return ("Error: Bio too big\n");
-    me.bio = JSON.stringify(newBio);
+    me.bio = newBio;
     return("saved bio successfully\n");
 }
 

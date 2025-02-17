@@ -83,7 +83,5 @@ export const addForza4PageHandlers = () => {
 
     backImageButton?.addEventListener('click', () => {
         navigate("/modes", "Return to Game Mode");
-        change_name(current_user.display_name);
-        update_image(current_user.image);
     });
 };

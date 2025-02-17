@@ -1,51 +1,73 @@
 import { navigate } from '../main.js';
-import { profileHandler } from "./profile/profile.js";
-import { ShowStats } from "./profile/stats.js";
 import { profile } from "../login/user.js";
-import { Friendlists } from "./friends.js";
+import { handle_modes_logic } from '../game/pong/main/modes_logic.js';
 
-export let current_user = JSON.parse(sessionStorage.getItem('your_profile'));
+export let current_user = JSON.parse(localStorage.getItem('your_profile'));
 
-window.addEventListener('load', () => {
-    let storedUser = sessionStorage.getItem('your_profile');
-    if (storedUser)
+const storedGuest = JSON.parse(localStorage.getItem("guest"));
+
+if (storedGuest)
+{
+    current_user = new profile(
+        null,
+        storedGuest.name,
+        null,
+        storedGuest.bio,
+        storedGuest.image,
+        "guest"
+    );
+    current_user.entered = 1;
+}
+/*else
+{
+    fetch("http://localhost:8008",
     {
-        let parsedUser = JSON.parse(storedUser);
-        current_user = new profile(
-            parsedUser.email,
-            parsedUser.display_name,
-            parsedUser.realname,
-            parsedUser.bio,
-            parsedUser.image,
-            parsedUser.type
-        );
+        method: "get_user",
+        body: JSON.stringify({name}),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("data = ", data);
+        if (data.status === "no users found" || !data.user || data.user.length === 0)
+        {
+            console.log("hi enter here\n");
+            if (data.user === user)
+                return 0;
+            else
+                return 1
+        }
+    })
+    .catch(error => console.error("Fetch error:", error));
+}*/
+
+history.pushState(null, null, location.href);
+
+window.onpopstate = function () {
+    if (location.pathname === "/")
+    {
+        navigate("/modes", "Modes");
+        history.pushState(null, null, location.href);
     }
-    else
-        current_user = new profile(null, null, null, null, null, null);
-    if (current_user.display_name)
-        change_name(current_user.display_name);
-    if (current_user.image)
-        update_image(current_user.image);
+};
+
+window.addEventListener('storage', (event) => {
+    if (event.key === "your_profile")
+    {
+        if (!event.newValue)
+            current_user = null;
+        else
+            current_user = JSON.parse(event.newValue);
+    }
 });
 
-function updateUserDataInSessionStorage() {
-    sessionStorage.setItem("your_profile", JSON.stringify(current_user));
-}
+window.addEventListener("beforeunload", () => {
+    localStorage.clear();
+    sessionStorage.clear();
+});
 
-export function updateUserProfile(newUserData) {
-    current_user = new profile(
-        newUserData.email,
-        newUserData.display_name,
-        newUserData.realname,
-        newUserData.bio,
-        newUserData.image,
-        newUserData.type
-    );
-    updateUserDataInSessionStorage();
-}
 
 window.addEventListener('popstate', (event) => {
-    let storedUser = sessionStorage.getItem('your_profile');
+    let storedUser = localStorage.getItem('your_profile');
     if (storedUser) {
         let parsedUser = JSON.parse(storedUser);
         current_user = new profile(
@@ -56,14 +78,54 @@ window.addEventListener('popstate', (event) => {
             parsedUser.image,
             parsedUser.type
         );
-        if (current_user.display_name) {
-            change_name(current_user.display_name);
-        }
-        if (current_user.image) {
-            update_image(current_user.image);
-        }
+        updateProfileUI(current_user);
     }
 });
+
+window.addEventListener('load', () => {
+    let storedUser = localStorage.getItem('your_profile');
+    if (storedUser)
+        {
+            let parsedUser = JSON.parse(storedUser);
+            current_user = new profile(
+                parsedUser.email,
+                parsedUser.display_name,
+            parsedUser.realname,
+            parsedUser.bio,
+            parsedUser.image,
+            parsedUser.type
+        );
+        current_user.entered = 1;
+    }
+    else
+    {
+        current_user = new profile(null, null, null, null, null, null);
+        return ;
+    }
+    updateProfileUI(current_user);
+});
+
+export function updateUserProfile(newUserData) {
+    current_user = new profile(
+        newUserData.email,
+        newUserData.display_name,
+        newUserData.realname,
+        newUserData.bio,
+        newUserData.image,
+        newUserData.type
+    );
+    current_user.entered = 1;
+    localStorage.setItem("your_profile", JSON.stringify(current_user));
+}
+
+function updateProfileUI(profile) {
+    if (profile.display_name) {
+        change_name(profile.display_name);
+    }
+    if (profile.image) {
+        update_image(profile.image);
+    }
+}
 
 export default function Modes()
 {
@@ -112,30 +174,13 @@ export default function Modes()
             <div class="menu-item"><img src="game_engine/images/friends.jpg" alt="Settings" id="friends"></div>
             <div class="menu-item"><img src="game_engine/images/history_match.png" alt="Settings" id="history"></div>
             <div class="menu-item" id="settings-link"><img src="game_engine/images/settings.png" alt="Settings"></div>
+            <div class="menu-item" id="logout"><img src="game_engine/images/logout.png" alt="Settings"></div>
             </div>
         </div> 
     `;
 }
 
-history.pushState(null, null, location.href);
-
-export function access_denied()
-{
-    navigate("/access_denied", "Access Denied");
-    setTimeout(() => {
-        navigate("/", "home");
-    }, 3000);
-}
-
-window.onpopstate = function () {
-    if (location.pathname === "/")
-    {
-        navigate("/modes", "Modes");
-        history.pushState(null, null, location.href);
-    }
-};
-
-function    add_user_to_database(user)
+/*function    add_user_to_database(user)
 {
     fetch("http://localhost:8008", {method: "add_user", 
     body: JSON.stringify(current_user)
@@ -144,21 +189,19 @@ function    add_user_to_database(user)
     .then(data => {
         console.log(data);
     })
-}
+}*/
 
 export const addModesPageHandlers = () => {
-    if (current_user)
-        add_user_to_database(current_user);
-    /*
-    fetch("http://localhost:8008", {method: "get_user", 
-    body: login_name, displayName, image, email
+    /*if (current_user)
+        add_user_to_database(current_user);*/
+    /*fetch("http://localhost:8008", {method: "get_user", 
+    body: "display_name", "displayName", "image, email"
     })
     .then(response => response.json())
     .then(data => {
         console.log(data);
         current_user = data;
-    })
-    */
+    })*/
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');
     const tournamentButton = document.getElementById('tournamentButton');
@@ -166,96 +209,14 @@ export const addModesPageHandlers = () => {
     const avatarImage = document.getElementById('avatarImage');
     const menuContainer = document.querySelector('.menu-container');
     const Settings = document.getElementById('settings-link');
-    
-    classicButton?.addEventListener('click', () => {
-        navigate("/classic", "Modalità Classic");
-    });
-    
-    aiButton?.addEventListener('click', () => {
-        navigate("/V.S._AI", "Modalità AI");
-    });
-
-    tournamentButton?.addEventListener('click', () => {
-        if (current_user.type === "guest")
-        {
-            alert("You must be logged to use this feature!");
-            return;
-        }
-        navigate("/tournament", "Modalità Torneo");
-    });
-
-    forza4Button?.addEventListener('click', () => {
-        navigate("/forza4", "Modalità Forza 4");
-    })
-    avatarImage.addEventListener("click", (event) => {
-        menuContainer.classList.toggle("visible");
-    });
-
-    Settings?.addEventListener('click', () => {
-        navigate("/settings", "Settings");
-    });
-    
-    // Chiusura del menu quando si clicca fuori dall'avatar o dal menu
-    document.addEventListener("click", (event) => {
-        // Verifica se il clic non è stato effettuato dentro l'avatar o il menu
-        if (!avatarImage.contains(event.target) && !menuContainer.contains(event.target)) {
-            // Se il clic è avvenuto fuori, nasconde il menu
-            menuContainer.classList.remove("visible");
-        }
-    });
     const profileIcon = document.getElementById("profileIcon");
-    if (profileIcon)
-    {
-        profileIcon.addEventListener("click", () => {
-            navigate("/profile", "Profile");
-            setTimeout(() => {
-                profileHandler();
-            }, 100);
-        });
-    }
-    else
-        console.error("profile icon not found!");
     const statIcon = document.getElementById("statIcon");
-    if (statIcon)
-    {
-        statIcon.addEventListener("click", () => {
-            navigate("/stats", "Stats");
-            setTimeout(() => {
-                ShowStats();
-            }, 100);
-        });
-    }
-    else
-        console.error("stat icon not found!");
     const friends = document.getElementById("friends");
-    if (friends)
-    {
-        friends.addEventListener("click", () => {
-            if (current_user.type == "guest")
-            {
-                alert("You must be logged to use this feature!");
-                return;
-            }
-            navigate("/friends", "Friends");
-            setTimeout(() => {
-                Friendlists();
-            }, 100);
-        });
-    }
-    else
-        console.error("friend icon not found!");
     const history = document.getElementById("history");
-    if (history)
-    {
-        history.addEventListener("click", () => {
-            navigate("/history", "History");
-            setTimeout(() => {
-                navigate("/tournament/userstats", "Userstats");
-            }, 100);
-        });
-    }
-    else 
-        console.error("history icon not found!");
+    const logout = document.getElementById("logout");
+    handle_modes_logic(classicButton, aiButton, tournamentButton, 
+    forza4Button, avatarImage, menuContainer, Settings, profileIcon,
+    statIcon, friends, history, logout);
 };
 
 export function update_image(image)

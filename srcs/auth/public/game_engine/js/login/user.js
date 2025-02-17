@@ -1,17 +1,8 @@
-export class Logged {
+export class user {
     constructor(image, name, login_name, email, bio) {
         this.image = image;
         this.name = name;
         this.login_name = login_name;
-        this.email = email;
-        this.bio = bio;
-    }
-}
-
-export class Guest {
-    constructor(image, name, email, bio) {
-        this.image = image;
-        this.name = name;
         this.email = email;
         this.bio = bio;
     }

@@ -1,5 +1,6 @@
 import { navigate } from "../../main.js";
-import { access_denied, current_user } from "../modes.js";
+import {current_user } from "../modes.js";
+import { access_denied } from "../../game/pong/main/modes_logic.js";
 export default function Settings() {
     return `
         <h1 class="text">
