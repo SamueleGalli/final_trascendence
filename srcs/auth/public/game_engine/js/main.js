@@ -1,5 +1,6 @@
 import Login, { addLoginPageHandlers } from "./pages/profile/login.js";
-import Modes, {addModesPageHandlers, change_name, update_image, current_user} from "./pages/modes.js";
+import Modes, {//refresh_reload_var,
+addModesPageHandlers, change_name, update_image, current_user} from "./pages/modes.js";
 import { access_denied } from "./game/pong/main/modes_logic.js";
 import Tournament, { addTournamentPageHandlers } from "./pages/tournament/tournament.js";
 import PongGame from "./pages/pong_game.js";
@@ -51,17 +52,6 @@ const routes = {
     "/access_denied": Access_Denied
 };
 
-/*window.addEventListener("beforeunload", () => {
-    fetch("http://localhost:8008", {method: "get_user", 
-    body: entered
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        entered = 0;
-    })
-});*/
-
 // Funzione universale per la navigazione
 export const navigate = (path, title = "") => {
     history.pushState({ path }, title, path);
@@ -95,6 +85,7 @@ function restoreBackground() {
 
 // Caricamento dinamico del contenuto
 const loadContent = async () => {
+    //refresh_reload_var()
     const path = window.location.pathname;
     const app = document.getElementById("app");
     const component = routes[path];

@@ -87,5 +87,14 @@ function update_guest(curr_guest)
         curr_guest.image,
         "guest"
     );
+    /*
+    fetch("http://localhost:8008", {method: "add_user", 
+    body: JSON.stringify(current_user)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    */
     updateUserProfile(current_user);
 }

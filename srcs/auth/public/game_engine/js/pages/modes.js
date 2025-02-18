@@ -18,28 +18,38 @@ if (storedGuest)
     );
     current_user.entered = 1;
 }
-/*else
+/* User loggato/guest
+else
 {
     fetch("http://localhost:8008",
     {
         method: "get_user",
-        body: JSON.stringify({name}),
+        body: JSON.stringify({type === "guest" || type === "login"}),
     })
     .then(response => response.json())
     .then(data => {
         console.log("data = ", data);
-        if (data.status === "no users found" || !data.user || data.user.length === 0)
-        {
-            console.log("hi enter here\n");
-            if (data.user === user)
-                return 0;
-            else
-                return 1
-        }
+        currentuser = data;
     })
     .catch(error => console.error("Fetch error:", error));
 }*/
 
+/*
+export function refresh_reload_var()
+{
+    fetch("http://localhost:8008",
+    {
+        method: "get_user",
+        body: JSON.stringify({type === "guest" || type === "login"}),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("data = ", data);
+        currentuser = data;
+    })
+    .catch(error => console.error("Fetch error:", error));
+}
+*/
 history.pushState(null, null, location.href);
 
 window.onpopstate = function () {
@@ -63,6 +73,17 @@ window.addEventListener('storage', (event) => {
 window.addEventListener("beforeunload", () => {
     localStorage.clear();
     sessionStorage.clear();
+    /*fetch("http://localhost:8008",
+    {
+        method: "drop_table",
+        body: JSON.stringify(type === "guest"),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("data = ", data);
+    })
+    .catch(error => console.error("Fetch error:", error));
+    */
 });
 
 
@@ -180,28 +201,7 @@ export default function Modes()
     `;
 }
 
-/*function    add_user_to_database(user)
-{
-    fetch("http://localhost:8008", {method: "add_user", 
-    body: JSON.stringify(current_user)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-}*/
-
 export const addModesPageHandlers = () => {
-    /*if (current_user)
-        add_user_to_database(current_user);*/
-    /*fetch("http://localhost:8008", {method: "get_user", 
-    body: "display_name", "displayName", "image, email"
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        current_user = data;
-    })*/
     const classicButton = document.getElementById('classicButton');
     const aiButton = document.getElementById('aiButton');
     const tournamentButton = document.getElementById('tournamentButton');

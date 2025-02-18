@@ -241,5 +241,5 @@ export class Ball {
         this.speedX = (Math.abs(this.canvas.width * this.speedPercentage) * (scorer === 1 ? 1 : -1));
         this.speedY = Math.sin(bounceAngle) * Math.abs(this.speedX);
         //this.speedY = (Math.random() * - 1);
-    }   
+    }
 }
