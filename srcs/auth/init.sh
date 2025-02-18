@@ -1,4 +1,4 @@
-#!/bin/bash
+
 
 echo "==============================="
 echo "Controllo installazione di Ruby..."
@@ -30,7 +30,7 @@ fi
 cd authentication/
 echo "==============================="
 echo "Aggiornamento delle gemme con Bundler..."
-if bundle update && &>/dev/null; then
+if bundle update &>/dev/null; then
     echo "✅ Aggiornamento completato."
 else
     echo "❌ Errore durante l'aggiornamento delle gemme."
@@ -48,6 +48,28 @@ else
 fi
 
 echo "==============================="
-echo "Script completato.avvio server..."
+echo "Script completato. Avvio server..."
 
-bundle exec ruby -v server.rb
+sudo apt update
+sudo apt install -y ufw
+
+IP=$(hostname -I | awk '{print $1}')
+if [[ -z "$IP" ]]; then
+    echo "❌ Impossibile rilevare l'indirizzo IP. Verifica la configurazione di rete."
+    exit 1
+fi
+echo "Indirizzo IP del server: $IP"
+
+echo "==============================="
+echo "Configurazione di UFW per la rete locale..."
+
+sudo ufw allow from $IP/24 to any port 9292 proto tcp
+
+if sudo ufw status | grep -q "inactive"; then
+    echo "UFW non è attivo. Abilitando UFW..."
+    sudo ufw enable
+else
+    echo "UFW è già attivo."
+fi
+
+bundle exec ruby server.rb

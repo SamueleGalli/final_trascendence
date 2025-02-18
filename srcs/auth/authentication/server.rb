@@ -38,6 +38,7 @@ app = App.new(OAuthClient.new, logger)
 
 server = WEBrick::HTTPServer.new(
   Port: PORT,
+  BindAddress: '0.0.0.0',
   DocumentRoot: File.expand_path("../../public", __FILE__),
   RequestCallback: proc { |req, res| res['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0' }
 )
@@ -49,10 +50,14 @@ server.mount_proc '/' do |req, res|
   headers.each { |k, v| res[k] = v }
   log_error_details(req, status, body, logger)
 
-  if body.is_a?(String)
-    res.body = body
+  if body.nil?
+    res.body = "Internal Server Error"
   else
-    body.each { |chunk| res.body << chunk }
+    if body.is_a?(String)
+      res.body = body
+    else
+      body.each { |chunk| res.body << chunk }
+    end
   end
 
   if status >= 400
