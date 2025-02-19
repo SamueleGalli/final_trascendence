@@ -48,7 +48,7 @@ module RequestUnpacker
       req_info = JSON.parse msg.to_s rescue r
       return req_info if req_info
       req_info = {}
-      (request, path, query_string) = get_req_details(msg[0,msg.index("\n")])
+      (request, path, query_string) = get_req_details(msg[0,msg.index("\n").to_i])
     
       puts "unpacked: '" + request.to_s + "'" + " for " + path.to_s + ". QS: '" + query_string.to_s + "'" if DEBUG_MODE
       head = msg[msg.index("\r\n") + 2..msg.index("\r\n\r\n").to_i - 1] if msg.index("\r\n")

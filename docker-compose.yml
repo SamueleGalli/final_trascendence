@@ -113,6 +113,9 @@ services:
 
   auth:
     image: ruby:latest
+    container_name: auth_container
+    user: root
+    privileged: true
     restart: always
     volumes:
       - ./srcs/common_tools/tools:/var/common

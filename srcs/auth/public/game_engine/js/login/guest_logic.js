@@ -13,13 +13,13 @@ window.addEventListener('storage', (event) => {
         guest = JSON.parse(localStorage.getItem('guest')) || [];
 });
 
-/*export function user_name(name)
+export function user_name(name)
 {
     console.log("name = " + name);
     fetch("http://localhost:8008",
     {
         method: "get_user",
-        body: JSON.stringify({name}),
+        body: '{"params":{"display_name": "name"}}',
     })
     .then(response => response.json())
     .then(data => {
@@ -34,7 +34,7 @@ window.addEventListener('storage', (event) => {
         }
     })
     .catch(error => console.error("Fetch error:", error));
-}*/
+}
 
 export function guest_login()
 {
@@ -60,11 +60,11 @@ export function guest_login()
         alert('Name too long.');
         return;
     }
-    /*if (user_name(name) === 1)
+    if (user_name(name) === 1)
     {
         alert('Name already taken.');
         return;
-    }*/
+    }
     addGuest(name);
 }
 
@@ -87,7 +87,6 @@ function update_guest(curr_guest)
         curr_guest.image,
         "guest"
     );
-    /*
     fetch("http://localhost:8008", {method: "add_user", 
     body: JSON.stringify(current_user)
     })
@@ -95,6 +94,5 @@ function update_guest(curr_guest)
     .then(data => {
         console.log(data);
     })
-    */
     updateUserProfile(current_user);
 }

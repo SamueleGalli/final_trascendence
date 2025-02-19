@@ -67,6 +67,9 @@ export const navigate = (path, title = "") => {
     }
 };
 
+window.addEventListener("beforeunload", () => {
+});
+
 function createPlayersArray(numPlayers) {
     let players = [];
     for (let i = 1; i <= numPlayers; i++) {
@@ -261,7 +264,7 @@ const loadContent = async () => {
         app.innerHTML = "<h1 class='text'>404 - Pagina non trovata</h1>"; // Pagina non trovata
 };
 
-// Gestione dei pulsanti "Indietro" e "Avanti" nel browser
+    // Gestione dei pulsanti "Indietro" e "Avanti" nel browser
 window.addEventListener("popstate", loadContent);
 
 // Inizializzazione dell'app

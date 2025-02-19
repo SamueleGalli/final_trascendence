@@ -2,83 +2,6 @@
   <head>
     <title>Access Granted</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f4f4f4;
-      }
-
-      .container {
-        text-align: center;
-      }
-
-      #timer {
-        font-size: 30px;
-        font-weight: bold;
-        color: #333;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Access Granted</h1>
-      <p>The page will close in <span id="timer">3</span> seconds.<br> Or you
-        can close it.</p>
-      <script>
-        const userData = {
-          name: "<%= name %>",
-          email: "<%= email %>",
-          image: "<%= image %>",
-          login_name: "<%= login_name %>"
-        };
-
-        window.onbeforeunload = function() {
-          window.opener.postMessage(userData, window.location.origin);
-          sendAuthMessage();
-        };
-
-        let countdown = 3;
-        const timerElement = document.getElementById('timer');
-
-        function sendAuthMessage() {
-          if (window.opener) {
-            window.opener.postMessage({
-              authenticated: true,
-              user: userData
-            }, window.location.origin);
-          } else {
-            console.error('window.opener non trovato');
-          }
-        }
-
-        const timerInterval = setInterval(function() {
-          countdown--;
-          timerElement.textContent = countdown;
-
-          if (countdown === 0) {
-            clearInterval(timerInterval);
-            sendAuthMessage();
-            window.opener.postMessage({
-              authenticated: true,
-              user: userData
-            }, window.location.origin);
-            window.close();
-          }
-        }, 1000);
-      </script>
-    </div>
-  </body>
-</html>
-
-<!--
-  <html>
-    <head>
-      <title>Access Granted</title>
-      <style>
         body {
           font-family: Arial, sans-serif;
           display: flex;
@@ -99,12 +22,13 @@
           color: #333;
         }
       </style>
-    </head>
-    <body>
-      <div class="container">
-        <h1>Access Granted</h1>
-        <p>The page will close in <span id="timer">3</span> seconds.<br> Or you can close it.</p>
-        <script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Access Granted</h1>
+      <p>The page will close in <span id="timer">3</span> seconds.<br> Or you
+        can close it.</p>
+      <script>
         
         let countdown = 3;
         const timerElement = document.getElementById('timer');
@@ -121,5 +45,4 @@
       </script>
     </div>
   </body>
-  </html>
--->
+</html>

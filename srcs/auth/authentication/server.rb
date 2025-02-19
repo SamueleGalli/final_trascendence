@@ -4,6 +4,7 @@ require_relative 'Oauth'
 require_relative 'session'
 require_relative 'error_logger'
 require_relative 'handle_route'
+require_relative ((File.file?('/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../../common_tools/tools/Ports.rb'))
 
 module WEBrick
   class Log
@@ -25,7 +26,6 @@ module WEBrick
   end
 end
 
-load((File.file?('/var/common/Ports.rb') ? '/var/common/Ports.rb' : '../../common_tools/tools/Ports.rb'))
 $stdout.sync = true
 
 SERVICE_NAME = "auth"

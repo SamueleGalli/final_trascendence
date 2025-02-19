@@ -87,9 +87,11 @@ module BetterPG
       end
     end
 
-    def better_return(obj)
+    def better_return(obj = [])
       r = nil
       reslst = []
+      return [] if obj.nil?
+      
       obj.each do |lol|
         reslst.append lol
       rescue StandardError

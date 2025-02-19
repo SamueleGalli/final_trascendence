@@ -3,32 +3,36 @@
 module Ports
   HASH = {
     # sample:
-    #"method" => ["service_to_call", port_to_service]
+    # "method" => ["service_to_call", port_to_service]
     # "GET" => ["localhost", 9001],
     # "HEAD" => ["localhost", 9090],
     # "log" => ["localhost", 8001],
 
-    "GET" => ["auth", 9292],
-    "POST" => ["request_manager", 9000],
-    "HEAD" => ["request_manager", 9000],
-    "show_users" => ["request_manager", 9000],
-    "TOKEN" => ["tokenizer", 7890],
-    "" => ["receiver", 8008],
-    "add_user" => ["user_manager", 7080],
-    "get_user" => ["user_manager", 7080],
-    "update_user" => ["user_manager", 7080]
+    'GET' => ['auth', 9292],
+    'POST' => ['request_manager', 9000],
+    'HEAD' => ['request_manager', 9000],
+    'show_users' => ['request_manager', 9000],
+    'tokenizer' => ['tokenizer', 7890],
+    '' => ['receiver', 8008],
+    'add_user' => ['user_manager', 7080],
+    'get_user' => ['user_manager', 7080],
+    'drop_users' => ['user_manager', 7080],
+    'update_user' => ['user_manager', 7080],
+    'game_manager' => ['game_manager', 7878],
+    'history_manager' => ['history_manager', 7701],
+    'chat' => ['chat', 6087]
   }
-  MAX_MSG_LEN = 100000
+  MAX_MSG_LEN = 100_000
 end
 
 module FastLogger
   class LogThis
     def initialize(msg)
-      socket = TCPSocket.new Ports::HASH["log"][0], Ports::HASH["log"][1]
-      if !socket.closed?
-        socket.print msg if msg.class.to_s == "String"
-        socket.close
-      end
+      socket = TCPSocket.new Ports::HASH['log'][0], Ports::HASH['log'][1]
+      return if socket.closed?
+
+      socket.print msg if msg.class.to_s == 'String'
+      socket.close
     end
   end
 end
@@ -37,62 +41,77 @@ module PortFinder
   class FindPort
     @@port = -1
     def initialize(name)
-      Ports::HASH.each do |key, val|
+      Ports::HASH.each do |_key, val|
         if val[0] == name
           @@port = val[1]
           return
         end
       end
-      puts "Port not found. Returning crash"
+      puts 'Port not found. Returning crash'
     end
+
     def getPort
-      return @@port
+      @@port
     end
   end
 end
 
-def announceAddress()
+def announceAddress
   addr_infos = Socket.ip_address_list
-  s = ""
+  s = ''
   addr_infos.each do |addr_info|
-    next if !addr_info.ip_address.to_s.include? "172."
+    next unless addr_info.ip_address.to_s.include? '172.'
+
     s << ' '
     s << addr_info.ip_address
   end
-  puts "My addresses:" + s
+  puts 'My addresses:' + s
 end
 
 module SimpleServer
+  # JSON object (not in string form)
+  def self.method_req(method, msg = '', do_close = true)
+    raise "Bad method request (#{method})" if Ports::HASH[method].nil?
+    puts "Resolving host: #{Ports::HASH[method][0]}".red
+    service = TCPSocket.new Ports::HASH[method][0], Ports::HASH[method][1]
+    msg['method'] = method
+    service.write msg.to_json if msg
+    IO.select [service], [], [], 1
+    res = service.read_nonblock Ports::MAX_MSG_LEN
+    service.close if do_close
+    return [service, res] if do_close
 
-	class SimplerTCP
+    res
+  end
+
+  class SimplerTCP
     include FastLogger
-		@@server
-    @@function
-    @@tokens
-		def initialize(port, funct = nil, logs = false)
+    def initialize(port, funct = nil, close = true)
       announceAddress
-			@@server = TCPServer.new port
-			@@function = funct
-      @@logs = logs
-		end
+      @@server = TCPServer.new port
+      @@function = funct
+      @@close = close
+    end
+
     def start_loop
-      loop {
+      loop do
         Thread.start(@@server.accept) do |client|
           begin
             method(@@function).call(client, self)
-          # rescue => r
-					# 	puts "Catched: " + r.to_s + "(" + r.class.to_s + ")\n" + r.backtrace.join("\n") if DEBUG_MODE
-          #   client.close if !client.closed?
+            # rescue => r
+            # 	puts "Catched: " + r.to_s + "(" + r.class.to_s + ")\n" + r.backtrace.join("\n") if DEBUG_MODE
+            client.close if @@close && client.closed?
           end
-          client.close if !client.closed?
-          puts "Connection concluded" if DEBUG_MODE
+          client.close if @@close && client.closed?
+          puts 'Connection concluded' if DEBUG_MODE
         end
-      }
-		end
+      end
+    end
+
     def setFunction(server_side_function)
       @@function = server_side_function
     end
-	end
+  end
 end
 
 DEBUG_MODE = true

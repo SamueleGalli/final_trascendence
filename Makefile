@@ -56,8 +56,8 @@ clean:
 	@clear
 	make -C srcs/common_tools/ clean
 	@docker-compose -f docker-compose.yml stop
-	@docker ps -qa | xargs -r docker stop
-	@docker ps -qa | xargs -r docker rm
+	@docker ps -qa | xargs -r docker stop || true
+	@docker ps -qa | xargs -r docker rm || true
 	#@docker images -qa | xargs -r docker rmi -f
 	# @docker volume ls -q | xargs -r docker volume rm
 	# @docker network ls -q | awk '!$(echo bridge|host|none) {print}' | xargs -r docker network rm
