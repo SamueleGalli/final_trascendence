@@ -1,0 +1,123 @@
+/* Stile generale */
+#forza4Game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #134946;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Sezione giocatori */
+#f4players {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.5vw;
+}
+
+.f4player-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 3vh;
+    font-weight: bold;
+}
+
+.f4-name {
+    color: #fff;
+}
+
+.f4-token {
+    width: 2vw;
+    height: 2vw;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.token1 {
+    background-color: red;
+}
+
+.token2 {
+    background-color: yellow;
+}
+
+
+
+/* Informazioni di gioco */
+#f4powerupinfo, #f4timer, #f4message {
+    color: #fff;
+    margin-top: 1vh;
+    font-size: 2vw;
+    font-family: 'Liberty', sans-serif;
+    text-align: center;
+}
+
+/* Contenitore griglia di gioco */
+#f4grid-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2vh;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+/* Pulsante per tornare al menu */
+#f4BackToMenuButton {
+    display: none;
+    margin: 1vh;
+    width: 2vh;
+    height: 2vh;
+}
+
+
+#backImageButton {
+    position: absolute;
+    margin: 0.2vw;
+    width: 3vw;
+    height: 3vw;
+}
+
+/* Pulsanti power-up*/
+
+.f4-button-style {
+    font-family: 'Liberty', sans-serif;
+    font-size: 2.5vh;
+    padding: 0.75em 1.5em;
+    color: #0fffcf;
+    background-color: transparent;
+    border: 2px solid #0fffcf;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+    outline: none;
+    margin: 12px;
+    width: 16vw;
+    height: 8vh;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.f4-button-style:hover {
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    background-color: rgba(0, 255, 255, 0.2);
+}
+
+
+.f4-button-style:disabled {
+    color: #054d3e;
+    border: 2px solid #054d3e;
+    cursor: not-allowed;
+}
+

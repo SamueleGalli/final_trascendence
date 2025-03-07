@@ -20,7 +20,7 @@ PORT = PortFinder::FindPort.new(SERVICE_NAME).getPort
 
 LOGIN = BetterPG::SimplePG.new 'users',
                                ['id INT', 'display_name TEXT', 'realname TEXT', 'email TEXT', 'image TEXT', 'bio TEXT',
-                                'created NUMERIC', 'num_friends NUMERIC', 'friends_list TEXT[]', 'entered INT', 'type TEXT']
+                                'created NUMERIC', 'num_friends NUMERIC', 'friends_list TEXT[]', 'entered INT', 'type TEXT', 'level FLOAT']
 
 # REQUIRED_FOR_ADDUSER = %w[email display_name realname bio image type]
 
@@ -102,16 +102,16 @@ def update_user(_client, obj = nil)
   puts 'update_user called' if DEBUG_MODE
   r = nil
   res = DEFAULT_ERROR_RES
-  return res if !obj || !(params = obj['new_params']) || !(lname = obj['login_name'])
-  return { 'status' => 'Invalid login name change request', 'success' => 'false' } if params.include? 'login_name'
+  return res if !obj || !(params = obj['new_params']) || !(lname = obj['display_name'])
+  return { 'status' => 'Invalid login name change request', 'success' => 'false' } if params.include? 'display_name'
 
-  # (LOGIN.select ["login_name"], [lname])[0] rescue r
+  # (LOGIN.select ["display_name"], [lname])[0] rescue r
   usr = begin
-    (LOGIN.select ['login_name'], [lname])[0]
+    (LOGIN.select ['display_name'], [lname])[0]
   rescue StandardError
     r
   end
-  return { 'status' => 'login name not found', 'success' => 'false' } if r || usr.nil?
+  return { 'status' => 'display_name not found', 'success' => 'false' } if r || usr.nil?
 
   cols = []
   keys = []
@@ -120,15 +120,15 @@ def update_user(_client, obj = nil)
     keys.append val.to_s
   end
 
-  LOGIN.update cols, keys, "login_name = '" + lname + "'"
+  LOGIN.update cols, keys, "display_name = '" + lname + "'"
   DEFAULT_SUCCESS_RES
 end
 
 def drop_users(_client, _obj = nil)
   does = 'yesiam' # obj['reallysure']
   if does.to_s == 'yesiam'
-    LOGIN.zeroTable
-    return DEFAULT_SUCCESS_RES
+    LOGIN.dropTable
+    exit
   end
   DEFAULT_ERROR_RES
 end
@@ -136,9 +136,9 @@ end
 def user_manager(client, _server)
   res = DEFAULT_ERROR_RES
   t = select [client], [], [], 20 # waits for client, a few seconds
-  return if t[0].empty?
+  return if t[0].empty? || client.closed?
 
-  msg = client.read_nonblock 10_000
+  msg = client.read_nonblock Ports::MAX_MSG_LEN
   bobj = RequestUnpacker::Unpacker.new.unpack msg
   puts bobj
   # client.puts "HTTP/1.1 200 OK\r\n\r\n" if bobj['header'] # parsed an http request
@@ -153,6 +153,7 @@ def user_manager(client, _server)
     res = drop_users client, bobj
   else
     res['status'] = 'bad method: ' + bobj['method'].to_s
+    puts 'no method called'
     # raise "What the hell"
   end
   client.puts res.to_json

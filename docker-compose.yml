@@ -62,7 +62,7 @@ volumes:
 services:
 
   postgres:                                            # database service
-    image: postgres
+    image: postgres:latest
     restart: always
     env_file:
       - .env
@@ -113,13 +113,13 @@ services:
 
   auth:
     image: ruby:latest
-    container_name: auth_container
+    container_name: website_container
     user: root
     privileged: true
     restart: always
     volumes:
       - ./srcs/common_tools/tools:/var/common
-      - ./srcs/auth:/var/www
+      - ./srcs/trascendence:/var/www
     depends_on:
       - postgres
     networks:
@@ -167,16 +167,50 @@ services:
     entrypoint: /var/www/init.sh
     working_dir: /var/www
 
-  #nginx:
-  #  image: nginx:latest
-  #  container_name: nginx-server
-  #  restart: always
-  #  ports:
-  #    - "8443:443"
-  #  volumes:
-  #    - ./srcs/nginx/:/var/www/nginx
-  #    - ./srcs/auth/public:/usr/share/nginx/html:ro
-  #  networks:
-  #    - app-network
-  #  entrypoint: bash /var/www/nginx/server.sh
-  #  working_dir: /var/www
+  chat:
+    image: ruby:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./srcs/common_tools/tools:/var/common
+      - ./srcs/chat:/var/www
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "6087:6087"
+    entrypoint: /var/www/init.sh
+    working_dir: /var/www
+
+  game_data_manager:
+    image: ruby:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./srcs/common_tools/tools:/var/common
+      - ./srcs/game_data_manager:/var/www
+    depends_on:
+      - user_manager
+    networks:
+      - app-network
+    env_file:
+      - .env
+    ports:
+      - "8790:8790"
+    entrypoint: /var/www/init.sh
+    working_dir: /var/www
+
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx-server
+  #   restart: always
+  #   ports:
+  #     - "8443:443"
+  #   volumes:
+  #     - ./srcs/nginx/:/var/www/nginx
+  #     - ./srcs/trascendence/public:/usr/share/nginx/html:ro
+  #   networks:
+  #     - app-network
+  #   entrypoint: bash /var/www/nginx/server.sh
+  #   working_dir: /var/www

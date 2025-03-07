@@ -1,0 +1,17 @@
+@media (max-width: 768px) {
+    .chat-container {
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        transform: none;
+        border-radius: 0;
+    }
+
+    .left-panel {
+        width: 45%;
+    }
+
+    .send-button {
+        padding: 0.8rem;
+    }
+}

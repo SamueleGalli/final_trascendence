@@ -1,0 +1,9 @@
+:root {
+    --primary-color: #097f7bb8;
+    --background-dark: #0f2e2c;
+    --background-light: #1a4341;
+    --text-primary: #e0f7fa;
+    --transition-speed: 0.3s;
+    --header-height: 60px;
+    --input-height: 50px;
+}

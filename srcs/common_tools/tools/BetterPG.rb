@@ -115,27 +115,7 @@ module BetterPG
         fullkeys.each do |k|
           req.append 'WHERE ' + k.to_s if k && !k.to_s.empty?
         end
-        res = exec req
-        better_return res
-      rescue PG::UndefinedColumn, IndexError => e
-        puts e
-        [{}]
-      end
-    end
-
-    def update(cols = [], new_vals = [], key)
-      raise 'No key: would overwrite whole database' if ket.nil? || key.empty?
-
-      begin
-        req = ['UPDATE', @name]
-        t = []
-        new_vals.each_with_index do |k, i|
-          t.append cols[i] + " = '" + k.to_s + "'" if i < cols.count && cols[i] && k && !k.to_s.empty?
-        end
-        req.append('SET ' + t.join(', ')) unless t.empty?
-        req.append 'WHERE ' + key
-        res = exec req
-        better_return res
+        better_return exec(req)
       rescue PG::UndefinedColumn, IndexError => e
         puts e
         [{}]
@@ -166,6 +146,25 @@ module BetterPG
       exec 'INSERT INTO', @name, (format.size != 0 ? '(' + format.join(', ') + ')' : ''), 'VALUES',
            "('" + vals.join("', '") + "')"
       puts 'Added ' + vals.to_s + ' as ' + format.to_s + ' to ' + @name
+    end
+
+    # send a query like this: 'UPDATE table SET set_key1 = set_val1, set_key2 = set_val2, ... WHERE key = val'. KEY VAL PAIR MUST BE UNIVOQUE
+    def updateValue(key = '', val = '', set = {})
+      req = ['UPDATE', @name, 'SET']
+      t = []
+      set.each do |k, v|
+        t << "#{k} = '#{v}'" if k && v
+      end
+      req << t.join(',')
+      req.append ['WHERE', key, '=', "'#{val}'"]
+      exec req
+    end
+
+    # send a query like this: 'UPDATE table SET #{string} WHERE key = val'. KEY VAL PAIR MUST BE UNIVOQUE
+    def valueManipulation(key, val, string = "")
+      return [{}] if string.nil? || string.empty?
+
+      exec ['UPDATE', @name, 'SET', string, 'WHERE', key, '=', "'#{val}'"]
     end
 
     # drop column from current table

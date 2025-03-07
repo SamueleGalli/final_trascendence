@@ -1,0 +1,174 @@
+.friends-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.15);
+    padding: 0.5rem;
+}
+
+/* Impostazioni di base per le icone (dimensioni iniziali) */
+.friends-tabs img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease, background-color 0.3s ease, padding 0.3s ease;
+}
+
+/* Stato hover: ingrandimento moderato e aumento di luminosità */
+.friends-tabs img:hover {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
+/* Stato attivo: ingrandimento maggiore con sfondo a cerchio */
+.friends-tabs img.active {
+    transform: scale(1.5);
+    filter: brightness(1.2);
+    background-color: var(--primary-color);
+    border-radius: 30%;
+    padding: 4px;
+}
+
+#friendRequestsBadge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 1px 4px;
+    display: none;
+}
+
+/* Stili per il contenuto dei tab rimangono invariati */
+.friends-content {
+    font-family: "Liberty", sans-serif; 
+    height: 250px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 1rem 1rem;
+}
+
+.friends-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.friends-list .friend-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.1rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.friends-list .friend-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.blocked-users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.blocked-users-list .blocked-user-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.1rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.blocked-users-list .blocked-user-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.friend-requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.friend-requests-list .friend-request-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.3s ease;
+}
+
+.friend-requests-list .friend-request-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.friend-requests-list .friend-request-item > div {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.friend-requests-list .friend-request-item button.accept-request {
+    background-color: #28a745;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.3rem;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.friend-requests-list .friend-request-item button.accept-request:hover {
+    background-color: #218838;
+}
+
+.friend-requests-list .friend-request-item button.accept-request::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 1rem;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='%23fff' d='M6.173 11.414L2.293 7.535a1 1 0 0 1 1.414-1.414l2.466 2.466 5.207-5.207a1 1 0 0 1 1.414 1.414l-6.414 6.414a1 1 0 0 1-1.414 0z'/></svg>") no-repeat center center;
+    background-size: contain;
+    transform: translate(-50%, -50%);
+}
+
+.friend-requests-list .friend-request-item button.reject-request {
+    background-color: #dc3545;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.3rem;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.friend-requests-list .friend-request-item button.reject-request:hover {
+    background-color: #c82333;
+}
+
+.friend-requests-list .friend-request-item button.reject-request::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 1rem;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='%23fff' d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>") no-repeat center center;
+    background-size: contain;
+    transform: translate(-50%, -50%);
+}

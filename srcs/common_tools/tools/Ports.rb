@@ -8,19 +8,25 @@ module Ports
     # "HEAD" => ["localhost", 9090],
     # "log" => ["localhost", 8001],
 
+    '' => ['receiver', 8008],
     'GET' => ['auth', 9292],
     'POST' => ['request_manager', 9000],
     'HEAD' => ['request_manager', 9000],
     'show_users' => ['request_manager', 9000],
     'tokenizer' => ['tokenizer', 7890],
-    '' => ['receiver', 8008],
     'add_user' => ['user_manager', 7080],
     'get_user' => ['user_manager', 7080],
     'drop_users' => ['user_manager', 7080],
     'update_user' => ['user_manager', 7080],
     'game_manager' => ['game_manager', 7878],
     'history_manager' => ['history_manager', 7701],
-    'chat' => ['chat', 6087]
+    'chat' => ['chat', 6087],
+
+    'save_pong_game' => ['game_data_manager', 8790],
+    'get_pong_games' => ['game_data_manager', 8790],
+    'save_f4_game' => ['game_data_manager', 8790],
+    'get_f4_games' => ['game_data_manager', 8790],
+    'get_all_games' => ['game_data_manager', 8790]
   }
   MAX_MSG_LEN = 100_000
 end
@@ -79,7 +85,7 @@ module SimpleServer
     IO.select [service], [], [], 1
     res = service.read_nonblock Ports::MAX_MSG_LEN
     service.close if do_close
-    return [service, res] if do_close
+    return [service, res] unless do_close
 
     res
   end
@@ -100,9 +106,8 @@ module SimpleServer
             method(@@function).call(client, self)
             # rescue => r
             # 	puts "Catched: " + r.to_s + "(" + r.class.to_s + ")\n" + r.backtrace.join("\n") if DEBUG_MODE
-            client.close if @@close && client.closed?
           end
-          client.close if @@close && client.closed?
+          client.close if @@close && !client.closed?
           puts 'Connection concluded' if DEBUG_MODE
         end
       end

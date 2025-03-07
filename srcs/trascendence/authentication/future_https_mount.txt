@@ -1,0 +1,20 @@
+
+# Protezione per le pagine protette
+#server.mount_proc '/pagina_protetta' do |req, res|
+#    referer = req.meta_vars['HTTP_REFERER']
+
+#    unless referer&.include?('localhost') || referer&.include?('tuosito.com')
+#        res.status = 200
+#        res.body = File.read('./pages_trascendence/not_authenticated_msg.html')
+#        next
+#    end
+
+#    # Continua normalmente se il referer è valido
+#    status, headers, body = app.call(req.meta_vars)
+#    res.status = status
+#    headers.each { |k, v| res[k] = v }
+#    body.each { |chunk| res.body << chunk }
+#end
+    
+sudo nano /etc/hosts
+127.0.0.1 finaltrascendence.com

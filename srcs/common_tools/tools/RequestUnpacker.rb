@@ -5,8 +5,6 @@ require 'json'
 # usage: RequestUnpacker::Unpacker.new.unpack(msg)
 module RequestUnpacker
   class Unpacker
-    def initialize()
-    end
     DEFAULT_RETURN_PAGE = {"method" => "request_page", "path" => "index.html"}
     def query_string_json(qs="")
       obj = {}

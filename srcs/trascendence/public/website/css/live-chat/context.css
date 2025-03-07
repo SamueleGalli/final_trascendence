@@ -1,0 +1,25 @@
+/* Menu Contestuale */
+.context-menu {
+    position: fixed;
+    background: #565957d9;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    display: none;
+    cursor: move;
+    overflow-y: auto;
+    padding-top: 20px;
+}
+
+.context-menu-item {
+    padding: 0.8rem 1.5rem;
+    color: var(--text-primary);
+    background: #043731c7;
+    cursor: pointer;
+    transition: background var(--transition-speed);
+    white-space: nowrap;
+}
+
+.context-menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
